@@ -15,4 +15,4 @@ if __name__ == "__main__":
     # If run from root, we need to be careful.
     # Let's assume this is run with cwd=backend or we just invoke uvicorn on main:app
     
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
+    uvicorn.run("app:app", host="127.0.0.1", port=8001, reload=True)

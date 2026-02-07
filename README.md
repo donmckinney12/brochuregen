@@ -2,7 +2,7 @@
 
 > **Turn any website URL into a professional, print-ready PDF brochure in seconds using AI.**
 
-![Project Banner](assets/demo.webp)
+![Project Banner](assets/preview.webp)
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
