@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+playwright
+sqlalchemy
+psycopg2-binary
+beautifulsoup4
+python-multipart
+requests
+jinja2
+openai
+python-dotenv
