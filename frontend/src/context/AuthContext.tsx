@@ -1,13 +1,20 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Plan = 'free' | 'pro' | null;
+type Plan = 'free' | 'pro' | 'agency' | null;
 
 interface User {
     name: string;
     email: string;
     plan: Plan;
-    credits: number; // For free tier (e.g. 1 free generation)
+    credits: number; // Generation credits
+    refineCredits: number; // AI tweak credits
+    brandVault: {
+        logo?: string;
+        colors?: string[];
+        active: boolean;
+    };
+    generationTimestamps: number[]; // For rate limiting
 }
 
 interface AuthContextType {
@@ -16,7 +23,7 @@ interface AuthContextType {
     login: (email: string) => void;
     logout: () => void;
     currentPlan: Plan;
-    decrementCredits: () => void;
+    deductCredit: (type: 'generate' | 'refine') => { success: boolean; error?: string };
     upgradeToPro: () => void;
 }
 
@@ -38,7 +45,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             name: email.split('@')[0],
             email,
             plan: 'free',
-            credits: 1 // Give 1 free credit initially
+            credits: 1, // 1 Generation credit
+            refineCredits: 0, // 0 Refine credits for free tier
+            brandVault: { active: false },
+            generationTimestamps: []
         };
         setUser(newUser);
         localStorage.setItem('brochuregen_user', JSON.stringify(newUser));
@@ -49,17 +59,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem('brochuregen_user');
     };
 
-    const decrementCredits = () => {
-        if (user) {
-            const updatedUser = { ...user, credits: Math.max(0, user.credits - 1) };
-            setUser(updatedUser);
-            localStorage.setItem('brochuregen_user', JSON.stringify(updatedUser));
+    const checkRateLimit = (timestamps: number[]) => {
+        const oneHourAgo = Date.now() - 3600000;
+        const recentGens = timestamps.filter(t => t > oneHourAgo);
+        return recentGens.length < 10; // Limit: 10 per hour
+    };
+
+    const deductCredit = (type: 'generate' | 'refine') => {
+        if (!user) return { success: false, error: 'Not logged in' };
+
+        // 1. Check Rate Limit (Fair Use)
+        if (type === 'generate') {
+            if (!checkRateLimit(user.generationTimestamps)) {
+                return { success: false, error: 'Rate limit reached (10/hour). Please try again later.' };
+            }
         }
+
+        // 2. Check & Deduct Credits
+        let updatedUser = { ...user };
+
+        if (type === 'generate') {
+            if (user.credits <= 0) return { success: false, error: 'Insufficient generation credits.' };
+            updatedUser.credits -= 1;
+            updatedUser.generationTimestamps = [...user.generationTimestamps, Date.now()];
+        } else if (type === 'refine') {
+            if (user.refineCredits <= 0 && user.plan !== 'agency') { // Agency might have unlimited
+                return { success: false, error: 'Insufficient refine credits.' };
+            }
+            if (user.plan !== 'agency') {
+                updatedUser.refineCredits -= 1;
+            }
+        }
+
+        setUser(updatedUser);
+        localStorage.setItem('brochuregen_user', JSON.stringify(updatedUser));
+        return { success: true };
     };
 
     const upgradeToPro = () => {
         if (user) {
-            const updatedUser = { ...user, plan: 'pro' as Plan, credits: 9999 };
+            const updatedUser: User = {
+                ...user,
+                plan: 'pro',
+                credits: 25,
+                refineCredits: 10,
+                brandVault: { active: true, colors: ['#2563EB', '#1E40AF', '#F3F4F6'] } // Mock brand data
+            };
             setUser(updatedUser);
             localStorage.setItem('brochuregen_user', JSON.stringify(updatedUser));
         }
@@ -72,7 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             login,
             logout,
             currentPlan: user?.plan || null,
-            decrementCredits,
+            deductCredit,
             upgradeToPro
         }}>
             {children}

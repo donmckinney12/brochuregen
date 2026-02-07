@@ -67,7 +67,7 @@ export default function Pricing() {
                             <ul className="space-y-3">
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300">5 Brochures / month</span>
+                                    <span className="text-slate-600 dark:text-slate-300"><span className="font-bold">5 Credits</span> / month</span>
                                 </li>
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
@@ -75,13 +75,13 @@ export default function Pricing() {
                                 </li>
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300">AI Copywriting</span>
+                                    <span className="text-slate-600 dark:text-slate-300">Basic AI Copywriting</span>
                                 </li>
                                 <li className="flex items-start gap-3 group/tooltip relative">
                                     <svg className="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300 border-b border-dotted border-slate-400 cursor-help">Basic Brand Scan</span>
+                                    <span className="text-slate-600 dark:text-slate-300 border-b border-dotted border-slate-400 cursor-help">Rollover Credits</span>
                                     <div className="absolute left-0 bottom-full mb-2 hidden group-hover/tooltip:block w-48 p-2 bg-slate-900 text-white text-xs rounded-lg shadow-lg z-20">
-                                        Scans your website for primary colors and logo.
+                                        Unused credits roll over to the next month (up to 15).
                                     </div>
                                 </li>
                             </ul>
@@ -113,22 +113,22 @@ export default function Pricing() {
                             <ul className="space-y-3">
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-700 dark:text-slate-200 font-medium">25 Brochures / month</span>
+                                    <span className="text-slate-700 dark:text-slate-200 font-medium"><span className="font-bold">25 Credits</span> / month</span>
                                 </li>
                                 <li className="flex items-start gap-3 group/tooltip relative">
                                     <svg className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                                     <span className="text-slate-700 dark:text-slate-200 font-medium border-b border-dotted border-slate-400 cursor-help">10 "Refine" AI Credits</span>
                                     <div className="absolute left-0 bottom-full mb-2 hidden group-hover/tooltip:block w-56 p-2 bg-slate-900 text-white text-xs rounded-lg shadow-lg z-20">
-                                        1 Credit = 1 full AI redesign or stylistic rewrite of a brochure section.
+                                        Perfectionist? Use Refine credits to tweak specific sections without spending a full generation credit.
                                     </div>
                                 </li>
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-700 dark:text-slate-200">High-Res CMYK Export</span>
+                                    <span className="text-slate-700 dark:text-slate-200">Brand Vault (Save Logos/Colors)</span>
                                 </li>
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-700 dark:text-slate-200">Custom Font Uploads</span>
+                                    <span className="text-slate-700 dark:text-slate-200">High-Res CMYK Export</span>
                                 </li>
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
@@ -161,15 +161,15 @@ export default function Pricing() {
                             <ul className="space-y-3">
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300">Unlimited Brochures</span>
+                                    <span className="text-slate-600 dark:text-slate-300"><span className="font-bold">Unlimited</span> Generation Credits</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <svg className="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span className="text-slate-600 dark:text-slate-300"><span className="font-bold">Unlimited</span> Refine Credits</span>
                                 </li>
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                                     <span className="text-slate-600 dark:text-slate-300">Team Collaboration</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300">API Access</span>
                                 </li>
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
@@ -272,8 +272,8 @@ export default function Pricing() {
                             <p className="text-slate-600 dark:text-slate-400">Yes, absolutely. There are no long-term contracts for the monthly plan. You can cancel your subscription at any time from your dashboard.</p>
                         </div>
                         <div className="bg-white/60 dark:bg-slate-800/40 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">What happens if I run out of brochures?</h3>
-                            <p className="text-slate-600 dark:text-slate-400">If you reach your limit, you can easily upgrade to the next tier or purchase a one-time brochure pack for $10/brochure.</p>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">What happens if I run out of credits?</h3>
+                            <p className="text-slate-600 dark:text-slate-400">If you reach your limit, you can easily upgrade to the next tier or purchase a one-time credit pack. Unused credits on the Professional plan roll over (up to 30).</p>
                         </div>
                         <div className="bg-white/60 dark:bg-slate-800/40 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
                             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Do I own the copyrights to the designs?</h3>
