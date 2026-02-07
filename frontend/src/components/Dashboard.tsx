@@ -223,153 +223,154 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
+                </div>
+
+
+                {!data && !loading && (
+                    <div className="animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-300">
+                        <FeaturedTemplates />
+                        <HowItWorks />
+                    </div>
                 )}
 
-                    {!data && !loading && (
-                        <div className="animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-300">
-                            <FeaturedTemplates />
-                            <HowItWorks />
+
+                {error && (
+                    <div className="max-w-3xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-2">
+                        <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-xl border border-red-100 dark:border-red-800 flex items-center gap-3">
+                            <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <span className="font-medium">{error}</span>
                         </div>
-                    )}
+                    </div>
+                )}
 
-
-                    {error && (
-                        <div className="max-w-3xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-2">
-                            <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-xl border border-red-100 dark:border-red-800 flex items-center gap-3">
-                                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                                <span className="font-medium">{error}</span>
-                            </div>
-                        </div>
-                    )}
-
-                    {data && (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in slide-in-from-bottom-10 fade-in duration-700">
-                            {/* Scraped Content Card */}
-                            <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur-md p-0 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-white/50 dark:border-slate-700 overflow-hidden group hover:border-blue-500/30 transition-all">
-                                <div className="p-6 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/80 flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                        </div>
-                                        <div>
-                                            <h2 className="text-lg font-bold text-slate-800 dark:text-white">Source Website</h2>
-                                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide uppercase">Analyzed Content</p>
-                                        </div>
+                {data && (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in slide-in-from-bottom-10 fade-in duration-700">
+                        {/* Scraped Content Card */}
+                        <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur-md p-0 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-white/50 dark:border-slate-700 overflow-hidden group hover:border-blue-500/30 transition-all">
+                            <div className="p-6 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/80 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                                     </div>
-                                    <div className="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-bold uppercase tracking-wider">
-                                        Active
+                                    <div>
+                                        <h2 className="text-lg font-bold text-slate-800 dark:text-white">Source Website</h2>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide uppercase">Analyzed Content</p>
                                     </div>
                                 </div>
-
-                                <div className="p-6">
-                                    <div className="mb-6">
-                                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Page Title</label>
-                                        <h3 className="text-xl font-medium text-slate-900 dark:text-white leading-snug">{data.title}</h3>
-                                    </div>
-
-                                    <div className="relative group/image overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 shadow-inner bg-slate-100 dark:bg-slate-900">
-                                        {data.screenshot ? (
-                                            <img
-                                                src={data.screenshot}
-                                                alt="Site Screenshot"
-                                                className="object-cover w-full h-auto transform transition-transform duration-700 group-hover/image:scale-105"
-                                            />
-                                        ) : (
-                                            <div className="aspect-video flex items-center justify-center text-slate-400">
-                                                <span className="flex flex-col items-center gap-2">
-                                                    <svg className="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                                    No preview available
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
+                                <div className="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-bold uppercase tracking-wider">
+                                    Active
                                 </div>
                             </div>
 
-                            {/* Brochure Preview Card */}
-                            <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur-md p-0 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-white/50 dark:border-slate-700 overflow-hidden flex flex-col h-full hover:border-purple-500/30 transition-all">
-                                <div className="p-6 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/80 flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 6.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                                        </div>
-                                        <div>
-                                            <h2 className="text-lg font-bold text-slate-800 dark:text-white">Generated Brochure</h2>
-                                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide uppercase">Print-Ready PDF</p>
-                                        </div>
-                                    </div>
-                                    <button className="text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                    </button>
+                            <div className="p-6">
+                                <div className="mb-6">
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Page Title</label>
+                                    <h3 className="text-xl font-medium text-slate-900 dark:text-white leading-snug">{data.title}</h3>
                                 </div>
 
-                                <div className="p-8 flex-1 flex flex-col bg-slate-50/50 dark:bg-slate-900/20 overflow-y-auto max-h-[500px]">
-                                    {data?.ai_content ? (
-                                        <div className="space-y-6 text-left animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                            <div>
-                                                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-2 block">Cover Headline</span>
-                                                <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white leading-tight mb-2">
-                                                    {data.ai_content.headline}
-                                                </h3>
-                                                <p className="text-lg text-slate-600 dark:text-slate-300">
-                                                    {data.ai_content.subheadline}
-                                                </p>
-                                            </div>
-
-                                            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
-                                                <h4 className="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-                                                    <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                                    Key Features
-                                                </h4>
-                                                <ul className="space-y-2">
-                                                    {data.ai_content.features?.map((feature: string, i: number) => (
-                                                        <li key={i} className="text-sm text-slate-600 dark:text-slate-300 flex items-start gap-2">
-                                                            <span className="mt-1.5 w-1 h-1 rounded-full bg-slate-400 shrink-0"></span>
-                                                            {feature}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-
-                                            <div>
-                                                <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1 uppercase tracking-wide">About Us</h4>
-                                                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                                                    {data.ai_content.about_us}
-                                                </p>
-                                            </div>
-
-                                            <div className="grid grid-cols-2 gap-4 mt-4">
-                                                <button
-                                                    onClick={handleRefine}
-                                                    className="px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg text-sm font-bold hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors flex items-center justify-center gap-2"
-                                                >
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                                    Refine with AI
-                                                </button>
-                                                <button className="px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-lg text-sm font-bold hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors flex items-center justify-center gap-2">
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                                    Export PDF
-                                                </button>
-                                            </div>
-                                        </div>
+                                <div className="relative group/image overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 shadow-inner bg-slate-100 dark:bg-slate-900">
+                                    {data.screenshot ? (
+                                        <img
+                                            src={data.screenshot}
+                                            alt="Site Screenshot"
+                                            className="object-cover w-full h-auto transform transition-transform duration-700 group-hover/image:scale-105"
+                                        />
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center h-full text-center">
-                                            <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-2xl shadow-lg flex items-center justify-center mb-6 animate-pulse">
-                                                <svg className="w-10 h-10 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>
-                                            </div>
-                                            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Ready to Design</h3>
-                                            <p className="text-slate-500 dark:text-slate-400 max-w-xs text-sm">
-                                                The AI is ready to transform the scraped text into a beautiful brochure layout.
-                                            </p>
-                                            <button className="mt-8 px-6 py-2 rounded-full border border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-300 text-sm font-semibold hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
-                                                Generate Preview
-                                            </button>
+                                        <div className="aspect-video flex items-center justify-center text-slate-400">
+                                            <span className="flex flex-col items-center gap-2">
+                                                <svg className="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                No preview available
+                                            </span>
                                         </div>
                                     )}
                                 </div>
                             </div>
                         </div>
-                    )}
+
+                        {/* Brochure Preview Card */}
+                        <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur-md p-0 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-white/50 dark:border-slate-700 overflow-hidden flex flex-col h-full hover:border-purple-500/30 transition-all">
+                            <div className="p-6 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/80 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 6.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                    </div>
+                                    <div>
+                                        <h2 className="text-lg font-bold text-slate-800 dark:text-white">Generated Brochure</h2>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide uppercase">Print-Ready PDF</p>
+                                    </div>
+                                </div>
+                                <button className="text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                </button>
+                            </div>
+
+                            <div className="p-8 flex-1 flex flex-col bg-slate-50/50 dark:bg-slate-900/20 overflow-y-auto max-h-[500px]">
+                                {data?.ai_content ? (
+                                    <div className="space-y-6 text-left animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        <div>
+                                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-2 block">Cover Headline</span>
+                                            <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white leading-tight mb-2">
+                                                {data.ai_content.headline}
+                                            </h3>
+                                            <p className="text-lg text-slate-600 dark:text-slate-300">
+                                                {data.ai_content.subheadline}
+                                            </p>
+                                        </div>
+
+                                        <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                                            <h4 className="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                                                <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Key Features
+                                            </h4>
+                                            <ul className="space-y-2">
+                                                {data.ai_content.features?.map((feature: string, i: number) => (
+                                                    <li key={i} className="text-sm text-slate-600 dark:text-slate-300 flex items-start gap-2">
+                                                        <span className="mt-1.5 w-1 h-1 rounded-full bg-slate-400 shrink-0"></span>
+                                                        {feature}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+
+                                        <div>
+                                            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1 uppercase tracking-wide">About Us</h4>
+                                            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                                {data.ai_content.about_us}
+                                            </p>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mt-4">
+                                            <button
+                                                onClick={handleRefine}
+                                                className="px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg text-sm font-bold hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors flex items-center justify-center gap-2"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                                Refine with AI
+                                            </button>
+                                            <button className="px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-lg text-sm font-bold hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors flex items-center justify-center gap-2">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                                Export PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center h-full text-center">
+                                        <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-2xl shadow-lg flex items-center justify-center mb-6 animate-pulse">
+                                            <svg className="w-10 h-10 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>
+                                        </div>
+                                        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Ready to Design</h3>
+                                        <p className="text-slate-500 dark:text-slate-400 max-w-xs text-sm">
+                                            The AI is ready to transform the scraped text into a beautiful brochure layout.
+                                        </p>
+                                        <button className="mt-8 px-6 py-2 rounded-full border border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-300 text-sm font-semibold hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
+                                            Generate Preview
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main>
 
             <Footer />
