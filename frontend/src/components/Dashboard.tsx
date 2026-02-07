@@ -4,6 +4,8 @@ import Navbar from './Navbar';
 import FeaturedTemplates from './FeaturedTemplates';
 import HowItWorks from './HowItWorks';
 import Footer from './Footer';
+import { useAuth } from '@/context/AuthContext';
+import AccessModal from './AccessModal';
 
 export default function Dashboard() {
     const [url, setUrl] = useState('');
@@ -11,8 +13,27 @@ export default function Dashboard() {
     const [data, setData] = useState<any>(null);
     const [error, setError] = useState('');
 
+    const { isAuthenticated, user, decrementCredits } = useAuth();
+    const [showModal, setShowModal] = useState(false);
+    const [modalMode, setModalMode] = useState<'guest' | 'limit'>('guest');
+
     const handleScrape = async () => {
         if (!url) return;
+
+        // AUTH CHECK
+        if (!isAuthenticated) {
+            setModalMode('guest');
+            setShowModal(true);
+            return;
+        }
+
+        // CREDIT CHECK
+        if (user?.plan === 'free' && (user.credits || 0) <= 0) {
+            setModalMode('limit');
+            setShowModal(true);
+            return;
+        }
+
         setLoading(true);
         setError('');
         setData(null);
@@ -25,7 +46,14 @@ export default function Dashboard() {
             });
             const result = await res.json();
             if (!res.ok) throw new Error(result.detail || 'Failed to scrape');
+
             setData(result);
+
+            // Deduct credit if successful
+            if (user?.plan === 'free') {
+                decrementCredits();
+            }
+
         } catch (err: any) {
             console.error(err);
             setError(err.message || 'Something went wrong');
@@ -36,6 +64,12 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-screen transition-colors duration-300 ease-in-out font-sans bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-slate-900 dark:bg-slate-950 dark:text-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
+
+            <AccessModal
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                mode={modalMode}
+            />
 
             <Navbar />
 
@@ -136,15 +170,6 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* New Sections (Only visible if no data/url yet? Or always? User implies Landing Page flow) 
-                    If we have a result, we probably want to focus on it. But 'featured templates' is also social proof.
-                    Let's hide them if loading or data is present to keep the UI clean for the user doing the task?
-                    Or maybe just if 'data' is present.
-                    User said "biggest gap on the home page right now is... can't see quality".
-                    I'll show them ALWAYS for now, unless it pushes the result too far down.
-                    Actually, if I generate, I want to see the result immediately.
-                    So I should probably hide them if `data` is present.
-                */}
                 {!data && !loading && (
                     <div className="animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-300">
                         <FeaturedTemplates />

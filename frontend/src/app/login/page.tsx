@@ -1,9 +1,28 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const { login } = useAuth();
+    const router = useRouter();
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Mock validation
+        if (!email.includes('@')) {
+            alert("Please enter a valid email");
+            return;
+        }
+
+        login(email);
+        router.push('/dashboard'); // or home
+    };
+
     return (
         <div className="min-h-screen relative overflow-hidden font-sans bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
             {/* Background Blob/Mesh Effects */}
@@ -59,14 +78,17 @@ export default function Login() {
                             </div>
                         </div>
 
-                        <form className="space-y-5">
+                        <form onSubmit={handleLogin} className="space-y-5">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Email Address</label>
                                 <div className="relative">
                                     <input
                                         type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                         className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-400"
                                         placeholder="name@company.com"
+                                        required
                                     />
                                 </div>
                             </div>
@@ -77,12 +99,15 @@ export default function Login() {
                                 </div>
                                 <input
                                     type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-400"
                                     placeholder="••••••••"
+                                    required
                                 />
                             </div>
 
-                            <button className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:shadow-lg hover:shadow-blue-500/25 hover:scale-[1.02] transition-all duration-200">
+                            <button type="submit" className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:shadow-lg hover:shadow-blue-500/25 hover:scale-[1.02] transition-all duration-200">
                                 Sign In
                             </button>
                         </form>
