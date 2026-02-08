@@ -85,7 +85,10 @@ export default function Dashboard() {
             const res = await fetch(`${apiUrl}/api/generate-pdf`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data.ai_content),
+                body: JSON.stringify({
+                    ...data.ai_content,
+                    user_id: user?.id
+                }),
             });
 
             if (!res.ok) throw new Error('Failed to generate PDF');

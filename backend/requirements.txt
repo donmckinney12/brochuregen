@@ -1,5 +1,6 @@
 fastapi
 uvicorn
+
 playwright==1.49.0
 sqlalchemy
 psycopg2-binary

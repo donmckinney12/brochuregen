@@ -47,12 +47,19 @@ def read_root():
 def health_check():
     return {"status": "ok"}
 
-from fastapi.responses import StreamingResponse
 from services.pdf_service import generate_brochure_pdf
+from services.db import deduct_credits_server
 import io
 
 @app.post("/api/generate-pdf")
 async def generate_pdf(request: dict):
+    # Check if user_id is provided for credit deduction
+    user_id = request.get("user_id")
+    if user_id:
+        result = deduct_credits_server(user_id)
+        if not result["success"]:
+            raise HTTPException(status_code=402, detail=result["error"])
+
     pdf_bytes = await generate_brochure_pdf(request)
     return StreamingResponse(
         io.BytesIO(pdf_bytes), 
