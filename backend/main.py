@@ -48,6 +48,7 @@ def health_check():
     return {"status": "ok"}
 
 from services.pdf_service import generate_brochure_pdf
+from fastapi.responses import StreamingResponse
 from services.db import deduct_credits_server
 import io
 
