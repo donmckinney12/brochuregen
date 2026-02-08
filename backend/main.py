@@ -46,3 +46,16 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+from fastapi.responses import StreamingResponse
+from services.pdf_service import generate_brochure_pdf
+import io
+
+@app.post("/api/generate-pdf")
+async def generate_pdf(request: dict):
+    pdf_bytes = await generate_brochure_pdf(request)
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes), 
+        media_type="application/pdf", 
+        headers={"Content-Disposition": "attachment; filename=brochure.pdf"}
+    )

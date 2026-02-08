@@ -9,7 +9,16 @@ async def scrape_website(url: str):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         # Use a consistent viewport for screenshots
-        context = await browser.new_context(viewport={"width": 1280, "height": 800})
+        context = await browser.new_context(
+            viewport={"width": 1280, "height": 800},
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        )
+        
+        # Manual Stealth
+        await context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        await context.add_init_script("Object.defineProperty(navigator, 'languages', {get: () => ['en-US', 'en']})")
+        await context.add_init_script("Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]})")
+
         page = await context.new_page()
         
         try:

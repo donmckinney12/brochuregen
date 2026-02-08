@@ -1,0 +1,16 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# Testing artifacts
+*.pdf
+test_*.txt
+error.log
+scan_error.txt
+take_screenshot_directly.py
+capture_screenshot.py
