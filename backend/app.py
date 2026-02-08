@@ -106,6 +106,19 @@ async def scrape_url(request: ScrapeRequest):
         
     return result
 
+@app.post("/api/cron/reset-credits")
+async def trigger_credit_reset(key: str):
+    """
+    Triggered by external cron service (e.g., GitHub Actions, EasyCron).
+    Requires a valid CRON_SECRET to execute.
+    """
+    if key != os.environ.get("CRON_SECRET", "my_super_secret_cron_key"):
+         raise HTTPException(status_code=401, detail="Invalid Cron Key")
+         
+    from services.scheduler import reset_credits
+    result = reset_credits()
+    return result
+
 if __name__ == "__main__":
     import uvicorn
     # Make sure to run with reload=False to avoid multiple process spawning issues
