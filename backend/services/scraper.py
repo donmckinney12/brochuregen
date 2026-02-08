@@ -21,9 +21,19 @@ async def scrape_website(url: str):
 
         page = await context.new_page()
         
+        if not url.startswith("http"):
+            url = "https://" + url
+
         try:
-            # Go to URL with a timeout
-            await page.goto(url, wait_until="networkidle", timeout=60000)
+            # Go to URL with a more lenient timeout strategy
+            # 1. Faster initial load
+            await page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            
+            # 2. Optional wait for network idle to let dynamic content load
+            try:
+                await page.wait_for_load_state("networkidle", timeout=10000)
+            except Exception:
+                print(f"Network idle timeout for {url}, proceeding with DOM content.")
             
             title = await page.title()
             
