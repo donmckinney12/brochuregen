@@ -1,5 +1,6 @@
 "use client";
 import Navbar from "@/components/Navbar";
+import { useState } from "react";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 
@@ -49,6 +50,12 @@ const TEMPLATES = [
 ];
 
 export default function TemplatesPage() {
+    const [selectedCategory, setSelectedCategory] = useState("All");
+
+    const filteredTemplates = TEMPLATES.filter(template =>
+        selectedCategory === "All" || template.category === selectedCategory
+    );
+
     return (
         <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white font-sans selection:bg-purple-100 dark:selection:bg-purple-900/30">
             <Navbar />
@@ -63,12 +70,13 @@ export default function TemplatesPage() {
                     </p>
                 </div>
 
-                {/* Filter Tabs (Visual Only for now) */}
+                {/* Filter Tabs */}
                 <div className="flex justify-center gap-2 mb-12 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 flex-wrap">
-                    {["All", "Real Estate", "Business", "Hospitality", "Events", "Retail"].map((category, i) => (
+                    {["All", "Real Estate", "Business", "Hospitality", "Events", "Retail", "Travel"].map((category) => (
                         <button
                             key={category}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${i === 0 ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}`}
+                            onClick={() => setSelectedCategory(category)}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === category ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}`}
                         >
                             {category}
                         </button>
@@ -76,7 +84,7 @@ export default function TemplatesPage() {
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {TEMPLATES.map((template, index) => (
+                    {filteredTemplates.map((template, index) => (
                         <div key={template.id} className={`group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-8`} style={{ animationDelay: `${index * 100}ms` }}>
                             <div className="aspect-[4/3] bg-slate-100 dark:bg-slate-800 relative overflow-hidden">
                                 <img
