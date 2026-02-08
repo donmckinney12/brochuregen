@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-playwright
+playwright==1.49.0
 sqlalchemy
 psycopg2-binary
 beautifulsoup4
