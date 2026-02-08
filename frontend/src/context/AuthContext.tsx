@@ -1,124 +1,182 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient';
+import { Session, User as SupabaseUser } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
 
 type Plan = 'free' | 'pro' | 'agency' | null;
 
-interface User {
-    name: string;
+interface UserProfile {
+    id: string;
     email: string;
+    full_name?: string;
     plan: Plan;
-    credits: number; // Generation credits
-    refineCredits: number; // AI tweak credits
-    brandVault: {
-        logo?: string;
-        colors?: string[];
-        active: boolean;
-    };
-    generationTimestamps: number[]; // For rate limiting
+    credits: number;
+    refine_credits: number; // Snake case to match likely DB column
+    brand_vault?: any;      // JSONB column
+    created_at?: string;
 }
 
 interface AuthContextType {
-    user: User | null;
+    user: UserProfile | null;
+    session: Session | null;
     isAuthenticated: boolean;
-    login: (email: string) => void;
-    logout: () => void;
+    isLoading: boolean;
+    signInWithGoogle: () => Promise<{ error: any }>;
+    signInWithPassword: (email: string, password: string) => Promise<{ data: any; error: any }>;
+    signUp: (email: string, password: string, fullName: string) => Promise<{ data: any; error: any }>;
+    signOut: () => Promise<void>;
+    refreshProfile: () => Promise<void>;
     currentPlan: Plan;
-    deductCredit: (type: 'generate' | 'refine') => { success: boolean; error?: string };
-    upgradeToPro: () => void;
+    deductCredit: (type: 'generate' | 'refine') => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<UserProfile | null>(null);
+    const [session, setSession] = useState<Session | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
-    // Load from local storage on mount
-    useEffect(() => {
-        const storedUser = localStorage.getItem('brochuregen_user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+    const fetchProfile = async (userId: string, userEmail: string) => {
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+
+            if (error && error.code === 'PGRST116') {
+                // Profile doesn't exist? Create one (fallback)
+                console.log("Profile missing, creating default...");
+                const newProfile = {
+                    id: userId,
+                    email: userEmail,
+                    plan: 'free',
+                    credits: 5,
+                    refine_credits: 0,
+                    brand_vault: { active: false }
+                };
+                const { error: insertError } = await supabase.from('profiles').insert([newProfile]);
+                if (!insertError) setUser(newProfile as any);
+            } else if (data) {
+                setUser({
+                    ...data,
+                    // Map DB snake_case to what frontend expects if needed, or update frontend types
+                    // For now, let's stick to the interface defined above
+                });
+            }
+        } catch (error) {
+            console.error("Error fetching profile:", error);
         }
+    };
+
+    useEffect(() => {
+        // 1. Check active session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+            if (session?.user) {
+                fetchProfile(session.user.id, session.user.email!);
+            } else {
+                setUser(null);
+            }
+            setIsLoading(false);
+        });
+
+        // 2. Listen for changes
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+            if (session?.user) {
+                fetchProfile(session.user.id, session.user.email!);
+            } else {
+                setUser(null);
+                // router.push('/login'); // Optional: Force redirect
+            }
+            setIsLoading(false);
+        });
+
+        return () => subscription.unsubscribe();
     }, []);
 
-    const login = (email: string) => {
-        const newUser: User = {
-            name: email.split('@')[0],
+    const signInWithGoogle = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: `${window.location.origin}/auth/callback`,
+            },
+        });
+        return { error };
+    };
+
+    const signInWithPassword = async (email: string, password: string) => {
+        const { data, error } = await supabase.auth.signInWithPassword({
             email,
-            plan: 'free',
-            credits: 1, // 1 Generation credit
-            refineCredits: 0, // 0 Refine credits for free tier
-            brandVault: { active: false },
-            generationTimestamps: []
-        };
-        setUser(newUser);
-        localStorage.setItem('brochuregen_user', JSON.stringify(newUser));
+            password,
+        });
+        return { data, error };
     };
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('brochuregen_user');
+    const signUp = async (email: string, password: string, fullName: string) => {
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: fullName,
+                },
+            },
+        });
+        // We rely on the useEffect to create the profile if it doesn't exist, 
+        // or we could create it here explicitly.
+        return { data, error };
     };
 
-    const checkRateLimit = (timestamps: number[]) => {
-        const oneHourAgo = Date.now() - 3600000;
-        const recentGens = timestamps.filter(t => t > oneHourAgo);
-        return recentGens.length < 10; // Limit: 10 per hour
+    const signOut = async () => {
+        await supabase.auth.signOut();
+        router.push('/');
     };
 
-    const deductCredit = (type: 'generate' | 'refine') => {
-        if (!user) return { success: false, error: 'Not logged in' };
+    // Temporary client-side deduction (Secure this later with RLS or Backend)
+    const deductCredit = async (type: 'generate' | 'refine') => {
+        if (!user || !session) return { success: false, error: 'Not logged in' };
 
-        // 1. Check Rate Limit (Fair Use)
-        if (type === 'generate') {
-            if (!checkRateLimit(user.generationTimestamps)) {
-                return { success: false, error: 'Rate limit reached (10/hour). Please try again later.' };
-            }
+        const currentBalance = type === 'generate' ? user.credits : user.refine_credits;
+        const column = type === 'generate' ? 'credits' : 'refine_credits';
+
+        if (currentBalance <= 0) {
+            return { success: false, error: `Insufficient ${type} credits.` };
         }
 
-        // 2. Check & Deduct Credits
-        let updatedUser = { ...user };
+        const { error } = await supabase
+            .from('profiles')
+            .update({ [column]: currentBalance - 1 })
+            .eq('id', user.id);
 
-        if (type === 'generate') {
-            if (user.credits <= 0) return { success: false, error: 'Insufficient generation credits.' };
-            updatedUser.credits -= 1;
-            updatedUser.generationTimestamps = [...user.generationTimestamps, Date.now()];
-        } else if (type === 'refine') {
-            if (user.refineCredits <= 0 && user.plan !== 'agency') { // Agency might have unlimited
-                return { success: false, error: 'Insufficient refine credits.' };
-            }
-            if (user.plan !== 'agency') {
-                updatedUser.refineCredits -= 1;
-            }
+        if (error) {
+            return { success: false, error: error.message };
         }
 
-        setUser(updatedUser);
-        localStorage.setItem('brochuregen_user', JSON.stringify(updatedUser));
+        // Optimistic update or refetch
+        await fetchProfile(user.id, user.email);
         return { success: true };
-    };
-
-    const upgradeToPro = () => {
-        if (user) {
-            const updatedUser: User = {
-                ...user,
-                plan: 'pro',
-                credits: 25,
-                refineCredits: 10,
-                brandVault: { active: true, colors: ['#2563EB', '#1E40AF', '#F3F4F6'] } // Mock brand data
-            };
-            setUser(updatedUser);
-            localStorage.setItem('brochuregen_user', JSON.stringify(updatedUser));
-        }
     };
 
     return (
         <AuthContext.Provider value={{
             user,
-            isAuthenticated: !!user,
-            login,
-            logout,
+            session,
+            isAuthenticated: !!session,
+            isLoading,
+            signInWithGoogle,
+            signInWithPassword,
+            signUp,
+            signOut,
+            refreshProfile: async () => { if (session?.user) await fetchProfile(session.user.id, session.user.email!) },
             currentPlan: user?.plan || null,
-            deductCredit,
-            upgradeToPro
+            deductCredit
         }}>
             {children}
         </AuthContext.Provider>

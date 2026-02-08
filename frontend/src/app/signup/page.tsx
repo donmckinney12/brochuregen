@@ -1,9 +1,47 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Signup() {
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const { signUp, signInWithGoogle } = useAuth();
+    const router = useRouter();
+
+    const handleSignup = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        if (password.length < 8) {
+            setError("Password must be at least 8 characters long.");
+            setLoading(false);
+            return;
+        }
+
+        const { error } = await signUp(email, password, fullName);
+
+        if (error) {
+            setError(error.message);
+            setLoading(false);
+        } else {
+            // Redirect to dashboard (or email confirmation page if enabled in Supabase)
+            // Ideally check if email confirmation is required.
+            // For now, assume auto-login or redirect.
+            router.push('/dashboard');
+        }
+    };
+
+    const handleGoogleSignup = async () => {
+        const { error } = await signInWithGoogle();
+        if (error) setError(error.message);
+    };
     return (
         <div className="min-h-screen relative overflow-hidden font-sans bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
             {/* Background Blob/Mesh Effects */}
@@ -117,37 +155,56 @@ export default function Signup() {
                                 </div>
                             </div>
 
-                            <form className="space-y-5">
+                            {error && (
+                                <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm rounded-xl border border-red-100 dark:border-red-800">
+                                    {error}
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSignup} className="space-y-5">
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Full Name</label>
                                     <input
                                         type="text"
+                                        value={fullName}
+                                        onChange={(e) => setFullName(e.target.value)}
                                         className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-400"
                                         placeholder="John Doe"
+                                        required
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Email Address</label>
                                     <input
                                         type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                         className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-400"
                                         placeholder="name@company.com"
+                                        required
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Password</label>
                                     <input
                                         type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                         className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-400"
                                         placeholder="••••••••"
+                                        required
                                     />
                                     <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 ml-1">
                                         Must be at least 8 characters.
                                     </p>
                                 </div>
 
-                                <button className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:shadow-lg hover:shadow-blue-500/25 hover:scale-[1.02] transition-all duration-200">
-                                    Create Account
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:shadow-lg hover:shadow-blue-500/25 hover:scale-[1.02] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+                                >
+                                    {loading ? 'Creating Account...' : 'Create Account'}
                                 </button>
                             </form>
 

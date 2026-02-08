@@ -8,7 +8,7 @@ import Logo from './Logo';
 export default function Navbar() {
     const [darkMode, setDarkMode] = useState(false);
     const pathname = usePathname();
-    const { isAuthenticated, user, logout } = useAuth();
+    const { isAuthenticated, user, signOut } = useAuth();
     const [scrolled, setScrolled] = useState(false);
 
     // Initialize theme
@@ -67,9 +67,9 @@ export default function Navbar() {
                         <div className="relative group/user">
                             <button className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 transition-colors">
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 text-white flex items-center justify-center font-bold shadow-md">
-                                    {user?.name?.[0]?.toUpperCase() || 'U'}
+                                    {user?.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
                                 </div>
-                                <span className="max-w-[100px] truncate">{user?.name}</span>
+                                <span className="max-w-[100px] truncate">{user?.full_name || user?.email}</span>
                             </button>
 
                             <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 opacity-0 invisible group-hover/user:opacity-100 group-hover/user:visible transition-all transform translate-y-2 group-hover/user:translate-y-0 p-2">
@@ -81,7 +81,7 @@ export default function Navbar() {
                                     Dashboard
                                 </Link>
                                 <button
-                                    onClick={logout}
+                                    onClick={signOut}
                                     className="w-full text-left px-4 py-2 text-sm rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 text-red-600 dark:text-red-400"
                                 >
                                     Sign Out
@@ -148,15 +148,15 @@ export default function Navbar() {
                             <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 text-white flex items-center justify-center font-bold">
-                                        {user?.name?.[0]?.toUpperCase()}
+                                        {user?.full_name?.[0]?.toUpperCase()}
                                     </div>
                                     <div>
-                                        <p className="font-bold text-slate-900 dark:text-white">{user?.name}</p>
+                                        <p className="font-bold text-slate-900 dark:text-white">{user?.full_name}</p>
                                         <p className="text-xs text-slate-500">{user?.email}</p>
                                     </div>
                                 </div>
                                 <button
-                                    onClick={() => { logout(); setIsMenuOpen(false); }}
+                                    onClick={() => { signOut(); setIsMenuOpen(false); }}
                                     className="w-full py-2 text-center rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-medium"
                                 >
                                     Sign Out

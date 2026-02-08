@@ -1,0 +1,72 @@
+﻿
+> frontend@0.1.0 build
+> next build
+
+node.exe : ΓÜá Warning: Next.js inferred your workspace root, 
+but it may not be correct.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\mckin\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~
+    + CategoryInfo          : NotSpecified: (ΓÜá Warning: Ne...n 
+   ot be correct.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ We detected multiple lockfiles and selected the directory of 
+C:\Users\mckin\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js 
+config, or consider removing one of the lockfiles if it's not 
+needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-conf
+ig-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\mckin\Desktop\ai-sass-business\frontend\package-loc
+k.json
+
+Γû▓ Next.js 16.1.6 (Turbopack)
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 9.3s
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+ΓÜá Using edge runtime on a page currently disables static 
+generation for that page
+  Generating static pages using 7 workers (0/18) ...
+Missing Supabase Environment Variables
+Error occurred prerendering page "/_not-found". Read more: 
+https://nextjs.org/docs/messages/prerender-error
+Error: supabaseUrl is required.
+    at <unknown> (C:\Users\mckin\Desktop\ai-sass-business\fronten
+d\.next\server\chunks\ssr\Desktop_ai-sass-business_frontend_04197
+5e0._.js:40:43440)
+    at new cf (C:\Users\mckin\Desktop\ai-sass-business\frontend\.
+next\server\chunks\ssr\Desktop_ai-sass-business_frontend_041975e0
+._.js:40:43691)
+    at module evaluation (C:\Users\mckin\Desktop\ai-sass-business
+\frontend\.next\server\chunks\ssr\Desktop_ai-sass-business_fronte
+nd_041975e0._.js:40:48181)
+    at instantiateModule (C:\Users\mckin\Desktop\ai-sass-business
+\frontend\.next\server\chunks\ssr\[turbopack]_runtime.js:740:9)
+    at getOrInstantiateModuleFromParent (C:\Users\mckin\Desktop\a
+i-sass-business\frontend\.next\server\chunks\ssr\[turbopack]_runt
+ime.js:763:12)
+    at Context.esmImport [as i] (C:\Users\mckin\Desktop\ai-sass-b
+usiness\frontend\.next\server\chunks\ssr\[turbopack]_runtime.js:2
+28:20)
+    at module evaluation (C:\Users\mckin\Desktop\ai-sass-business
+\frontend\.next\server\chunks\ssr\Desktop_ai-sass-business_fronte
+nd_src_components_837e4626._.js:1:782)
+    at instantiateModule (C:\Users\mckin\Desktop\ai-sass-business
+\frontend\.next\server\chunks\ssr\[turbopack]_runtime.js:740:9)
+    at getOrInstantiateModuleFromParent (C:\Users\mckin\Desktop\a
+i-sass-business\frontend\.next\server\chunks\ssr\[turbopack]_runt
+ime.js:763:12)
+    at Context.esmImport [as i] (C:\Users\mckin\Desktop\ai-sass-b
+usiness\frontend\.next\server\chunks\ssr\[turbopack]_runtime.js:2
+28:20) {
+  digest: '1434315929'
+}
+Export encountered an error on /_not-found/page: /_not-found, 
+exiting the build.
+Γ¿» Next.js build worker exited with code: 1 and signal: null

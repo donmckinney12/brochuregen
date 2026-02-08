@@ -41,7 +41,7 @@ export default function Dashboard() {
         try {
             // Deduct Credit & Check Rate Limit
             if (currentPlan === 'free') {
-                const result = deductCredit('generate');
+                const result = await deductCredit('generate');
                 if (!result.success) {
                     throw new Error(result.error);
                 }
@@ -65,10 +65,10 @@ export default function Dashboard() {
         }
     };
 
-    const handleRefine = () => {
-        const result = deductCredit('refine');
+    const handleRefine = async () => {
+        const result = await deductCredit('refine');
         if (result.success) {
-            alert("Refine successful! (Mock action - credit deducted)");
+            alert("Refine successful! (Credit deducted)");
         } else {
             alert(result.error || "Failed to refine.");
         }
@@ -95,7 +95,7 @@ export default function Dashboard() {
                         <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-2xl border border-blue-100 dark:border-blue-900 shadow-sm">
                             <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Generation Credits</h3>
                             <div className="flex items-end gap-2">
-                                <span className="text-3xl font-extrabold text-slate-900 dark:text-white">{user.credits}</span>
+                                <span className="text-3xl font-extrabold text-slate-900 dark:text-white">{user?.credits}</span>
                                 <span className="text-sm text-slate-500 mb-1">available</span>
                             </div>
                         </div>
@@ -104,7 +104,7 @@ export default function Dashboard() {
                         <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-2xl border border-purple-100 dark:border-purple-900 shadow-sm">
                             <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Refine Credits</h3>
                             <div className="flex items-end gap-2">
-                                <span className="text-3xl font-extrabold text-slate-900 dark:text-white">{user.refineCredits}</span>
+                                <span className="text-3xl font-extrabold text-slate-900 dark:text-white">{user?.refine_credits}</span>
                                 <span className="text-sm text-slate-500 mb-1">available</span>
                             </div>
                         </div>
@@ -114,13 +114,13 @@ export default function Dashboard() {
                             <div>
                                 <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Brand Vault</h3>
                                 <div className="flex items-center gap-2">
-                                    <span className={`w-2 h-2 rounded-full ${user.brandVault.active ? 'bg-green-500' : 'bg-slate-300'}`}></span>
-                                    <span className="font-bold text-slate-900 dark:text-white">{user.brandVault.active ? 'Active' : 'Empty'}</span>
+                                    <span className={`w-2 h-2 rounded-full ${user?.brand_vault?.active ? 'bg-green-500' : 'bg-slate-300'}`}></span>
+                                    <span className="font-bold text-slate-900 dark:text-white">{user?.brand_vault?.active ? 'Active' : 'Empty'}</span>
                                 </div>
                             </div>
-                            {user.brandVault.active ? (
+                            {user?.brand_vault?.active ? (
                                 <div className="flex -space-x-2">
-                                    {user.brandVault.colors?.map((color, i) => (
+                                    {user?.brand_vault?.colors?.map((color: string, i: number) => (
                                         <div key={i} className="w-6 h-6 rounded-full border-2 border-white dark:border-slate-800" style={{ backgroundColor: color }}></div>
                                     ))}
                                 </div>
