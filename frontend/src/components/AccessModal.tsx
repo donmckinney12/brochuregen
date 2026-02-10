@@ -5,10 +5,11 @@ import Link from 'next/link';
 interface AccessModalProps {
     isOpen: boolean;
     onClose: () => void;
-    mode: 'guest' | 'limit'; // 'guest' = needs to signup, 'limit' = out of credits
+    mode: 'guest' | 'limit';
+    onUpgrade?: () => void;
 }
 
-export default function AccessModal({ isOpen, onClose, mode }: AccessModalProps) {
+export default function AccessModal({ isOpen, onClose, mode, onUpgrade }: AccessModalProps) {
     if (!isOpen) return null;
 
     return (
@@ -57,7 +58,10 @@ export default function AccessModal({ isOpen, onClose, mode }: AccessModalProps)
                                 </Link>
                             </>
                         ) : (
-                            <button className="block w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:from-purple-500 hover:to-pink-500 transition-all shadow-lg shadow-purple-500/25">
+                            <button
+                                onClick={onUpgrade}
+                                className="block w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:from-purple-500 hover:to-pink-500 transition-all shadow-lg shadow-purple-500/25"
+                            >
                                 Upgrade to Pro
                             </button>
                         )}

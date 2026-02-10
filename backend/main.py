@@ -1,8 +1,18 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+import os
 
-load_dotenv()
+# Robust .env loading
+current_dir = os.path.dirname(os.path.abspath(__file__))
+env_path = os.path.join(current_dir, ".env")
+load_dotenv(env_path)
+
+if os.path.exists(env_path):
+    print(f"Loading .env from: {env_path}")
+else:
+    print(f"⚠️ .env NOT found at: {env_path}")
+
 from pydantic import BaseModel
 from services.scraper import scrape_website
 from services.ai_service import AIService
@@ -67,3 +77,59 @@ async def generate_pdf(request: dict):
         media_type="application/pdf", 
         headers={"Content-Disposition": "attachment; filename=brochure.pdf"}
     )
+
+# --- Stripe Integration ---
+import os
+from fastapi import Request
+from services.payment import create_checkout_session
+
+class CheckoutRequest(BaseModel):
+    user_id: str
+    email: str
+    plan: str = "professional"
+    billing_cycle: str = "monthly"
+
+@app.on_event("startup")
+async def startup_event():
+    print("BrochureGen API Starting...")
+    # Check for specific price keys to confirm .env loaded correctly
+    if os.environ.get("PRICE_PRO_MONTHLY"):
+        print("✅ PRICE_PRO_MONTHLY found")
+    elif os.environ.get("STRIPE_PRICE_ID"):
+        print("✅ STRIPE_PRICE_ID found (Fallback)")
+    else:
+        print("❌ No Price IDs found in .env")
+
+@app.post("/api/create-checkout-session")
+async def create_checkout(request: CheckoutRequest):
+    return create_checkout_session(request.user_id, request.email, request.plan, request.billing_cycle)
+
+@app.post("/api/webhook")
+async def stripe_webhook(request: Request):
+    import stripe
+    from services.db import add_credits_server
+    
+    payload = await request.body()
+    sig_header = request.headers.get('stripe-signature')
+    webhook_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
+    
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_secret
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail="Invalid payload")
+    except stripe.error.SignatureVerificationError as e:
+        raise HTTPException(status_code=400, detail="Invalid signature")
+
+    # Handle the event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        # Fulfill the purchase...
+        user_id = session.get('client_reference_id')
+        if user_id:
+             print(f"Payment successful for user {user_id}")
+             # Add 1000 credits for Pro plan
+             add_credits_server(user_id, 1000)
+             
+    return {"status": "success"}

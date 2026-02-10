@@ -3,9 +3,42 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import BrochureCarousel from '@/components/BrochureCarousel';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Pricing() {
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+    const { isAuthenticated, user } = useAuth();
+
+    const handleUpgrade = async (plan: string) => {
+        if (!user) {
+            window.location.href = '/signup';
+            return;
+        }
+
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002';
+            const res = await fetch(`${apiUrl}/api/create-checkout-session`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    email: user.email,
+                    plan: plan // We can pass this for future use
+                }),
+            });
+
+            const result = await res.json();
+            if (result.url) {
+                window.location.href = result.url;
+            } else {
+                console.error("Checkout Error:", result);
+                alert(`Failed to initiate checkout: ${result.detail || 'Unknown error'}`);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error communicating with payment server");
+        }
+    };
 
     const prices = {
         starter: billingCycle === 'monthly' ? 25 : 20,
@@ -87,9 +120,15 @@ export default function Pricing() {
                             </ul>
                         </div>
 
-                        <Link href={`/checkout?plan=starter&billing=${billingCycle}`} className="w-full py-3 rounded-xl border border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400 font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors block text-center">
-                            Start Free Trial
-                        </Link>
+                        {isAuthenticated ? (
+                            <button onClick={() => handleUpgrade('starter')} className="w-full py-3 rounded-xl border border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400 font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors block text-center">
+                                Subscribe
+                            </button>
+                        ) : (
+                            <Link href="/signup" className="w-full py-3 rounded-xl border border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400 font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors block text-center">
+                                Start Free Trial
+                            </Link>
+                        )}
                     </div>
 
                     {/* Professional Plan - Highlighted */}
@@ -137,9 +176,15 @@ export default function Pricing() {
                             </ul>
                         </div>
 
-                        <Link href={`/checkout?plan=professional&billing=${billingCycle}`} className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-1 block text-center">
-                            Start Free Trial
-                        </Link>
+                        {isAuthenticated ? (
+                            <button onClick={() => handleUpgrade('professional')} className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-1 block text-center">
+                                Upgrade to Pro
+                            </button>
+                        ) : (
+                            <Link href="/signup" className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-1 block text-center">
+                                Start Free Trial
+                            </Link>
+                        )}
                     </div>
 
                     {/* Agency Plan */}
@@ -153,7 +198,7 @@ export default function Pricing() {
                             </div>
                             {billingCycle === 'yearly' && <p className="text-xs text-green-500 font-semibold mt-1">Billed ${prices.agency * 12} yearly</p>}
                             <p className="mt-4 text-slate-600 dark:text-slate-300 text-sm h-10">
-                                For marketing agencies managing 10+ clients at scale.
+                                Built for agencies producing brochures for clients at scale.
                             </p>
                         </div>
 
@@ -182,9 +227,15 @@ export default function Pricing() {
                             </ul>
                         </div>
 
-                        <Link href={`/checkout?plan=agency&billing=${billingCycle}`} className="w-full py-3 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors block text-center">
-                            Start Free Trial
-                        </Link>
+                        {isAuthenticated ? (
+                            <button onClick={() => handleUpgrade('agency')} className="w-full py-3 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors block text-center">
+                                Contact Sales
+                            </button>
+                        ) : (
+                            <Link href="/signup" className="w-full py-3 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors block text-center">
+                                Start Free Trial
+                            </Link>
+                        )}
                     </div>
 
                 </div>

@@ -10,21 +10,33 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { signInWithPassword, signInWithGoogle } = useAuth();
+    const { signInWithPassword, signInWithGoogle, user, isLoading } = useAuth();
     const router = useRouter();
+
+    // Redirect if already logged in
+    React.useEffect(() => {
+        if (!isLoading && user) {
+            router.push('/dashboard');
+        }
+    }, [user, isLoading, router]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setLoading(true);
+        console.log("Attempting login...");
 
-        const { error } = await signInWithPassword(email, password);
+        const { error, data } = await signInWithPassword(email, password);
+        console.log("Login result:", { error, data });
 
         if (error) {
+            console.error("Login error:", error.message);
             setError(error.message);
             setLoading(false);
         } else {
-            router.push('/dashboard');
+            console.log("Login success! Redirecting to /dashboard...");
+            // Force full page reload to ensure auth state is fresh
+            window.location.href = '/dashboard';
         }
     };
 

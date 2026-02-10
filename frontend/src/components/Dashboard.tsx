@@ -110,6 +110,32 @@ export default function Dashboard() {
         }
     };
 
+    const handleUpgrade = async () => {
+        if (!user) return;
+
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002';
+            const res = await fetch(`${apiUrl}/api/create-checkout-session`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    email: user.email
+                }),
+            });
+
+            const result = await res.json();
+            if (result.url) {
+                window.location.href = result.url;
+            } else {
+                alert("Failed to initiate checkout");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error communicating with payment server");
+        }
+    };
+
     return (
         <div className="min-h-screen transition-colors duration-300 ease-in-out font-sans bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-slate-900 dark:bg-slate-950 dark:text-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
 
@@ -117,6 +143,7 @@ export default function Dashboard() {
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
                 mode={modalMode}
+                onUpgrade={handleUpgrade}
             />
 
             <Navbar />

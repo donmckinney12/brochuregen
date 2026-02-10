@@ -20,9 +20,9 @@
 
 -   **🤖 AI Content Extraction**: Automatically pulls text, images, and brand colors from any URL.
 -   **🎨 Auto-Branding**: Matches the brochure's color palette and typography to the source website.
--   **📄 Print-Ready PDFs**: Generates CMYK-compatible, high-resolution PDFs (300 DPI).
--   **⚡ Real-Time Preview**: Edit and refine your brochure in the browser before exporting.
--   **🔌 Developer API**: Integrate brochure generation into your own CRM or app.
+-   **📄 Print-Ready PDFs**: Generates CMYK-compatible, high-resolution PDFs (A4 Landscape).
+-   **💳 Credit System**: Users purchase credits or subscribe to generate brochures.
+-   **🔐 Secure Dashboard**: Manage account, view credits, and access generation history.
 -   **📱 Responsive & Modern**: Built with a mobile-first, dark-mode-ready UI.
 
 ---
@@ -39,9 +39,44 @@
 ### Backend (`/backend`)
 -   **API**: FastAPI (Python)
 -   **Scraping**: Playwright (Headless Chromium)
--   **PDF Engine**: FPDF / ReportLab
--   **AI**: OpenAI API / Custom NLP logic
--   **Database**: PostgreSQL (Supabase ready)
+-   **PDF Engine**: **Playwright** (HTML to PDF conversion)
+-   **AI**: OpenAI API (GPT-4o)
+-   **Database**: PostgreSQL (Supabase)
+-   **Payments**: Stripe (Checkout & Webhooks)
+
+---
+
+## ⚡ Admin Tools (God Mode)
+
+Manage users and credits directly from the command line.
+
+```bash
+cd backend
+# Give unlimited credits to a user
+python admin_tools.py user@example.com --credits 1000000 --name "Super User"
+```
+
+---
+
+## 💳 Stripe Configuration (Required for Payments)
+
+To enable the "Upgrade to Pro" feature, you need to configure Stripe.
+
+1.  **Create a Stripe Account**: Go to [dashboard.stripe.com](https://dashboard.stripe.com).
+2.  **Get API Keys**: 
+    -   Copy your `Secret Key` (`sk_test_...`) and add it to `backend/.env` as `STRIPE_SECRET_KEY`.
+3.  **Create a Product**:
+    -   Create a product (e.g., "Pro Subscription") in Stripe Dashboard.
+    -   Copy the `API ID` of the price (starts with `price_...`) and add it to `backend/.env` as `STRIPE_PRICE_ID`.
+4.  **Setup Webhooks**:
+    -   **Local Development**: Use Stripe CLI.
+        ```bash
+        stripe listen --forward-to localhost:8002/api/webhook
+        ```
+        Copy the returned `whsec_...` secret to `backend/.env` as `STRIPE_WEBHOOK_SECRET`.
+    -   **Production**: Set your webhook endpoint in the Stripe Dashboard to:
+        `https://<your-domain>/api/webhook`
+
 
 ---
 
@@ -79,7 +114,7 @@ playwright install chromium
 # Run the server
 python run.py
 ```
-*Backend runs on: `http://localhost:5001`*
+*Backend runs on: `http://localhost:8002`*
 
 ### 3. Frontend Setup
 The frontend is the user interface.
@@ -99,9 +134,8 @@ npm run dev
 
 ## 📖 Documentation
 
--   [**API Reference**](/developers): Endpoints for programmatic generation.
--   [**Templates Gallery**](/templates): View available brochure designs.
--   [**Contributing Guide**](CONTRIBUTING.md): How to help build BrochureGen.
+-   [**Walkthrough**](walkthrough.md): Full development guide and setup instructions.
+-   [**Implementation Plan**](implementation_plan.md): Technical architecture and decisions.
 
 ---
 
@@ -120,9 +154,9 @@ npm run dev
 ## 🗺️ Roadmap
 
 - [x] MVP Launch (Landing, Auth, Basic Gen)
-- [x] Blog & Content Marketing Engine
-- [x] Developer API (Beta)
-- [ ] User Accounts & Saved Brochures
+- [x] **Stripe Payments Integration** (Subscriptions + Credits)
+- [x] **Brochure Generator** (Scraper + AI + PDF)
+- [x] **User Dashboard** (Credit tracking & History)
 - [ ] Team Collaboration Features
 - [ ] Multi-Page Booklet Support
 

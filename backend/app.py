@@ -19,6 +19,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+async def startup_event():
+    print("BrochureGen API Starting...")
+    if os.environ.get("STRIPE_SECRET_KEY"):
+        print("✅ STRIPE_SECRET_KEY found")
+    else:
+        print("❌ STRIPE_SECRET_KEY NOT found")
+        
+    if os.environ.get("STRIPE_PRICE_ID"):
+        print("✅ STRIPE_PRICE_ID found")
+    else:
+        print("❌ STRIPE_PRICE_ID NOT found")
+
+from services.payment import create_checkout_session
+from fastapi import Request
+
+class CheckoutRequest(BaseModel):
+    user_id: str
+    email: str
+
 class ScrapeRequest(BaseModel):
     url: str
 
@@ -105,6 +125,46 @@ async def scrape_url(request: ScrapeRequest):
         raise HTTPException(status_code=500, detail=result['error'])
         
     return result
+
+    return result
+
+@app.post("/api/create-checkout-session")
+async def create_checkout(request: CheckoutRequest):
+    return create_checkout_session(request.user_id, request.email)
+
+@app.post("/api/webhook")
+async def stripe_webhook(request: Request):
+    import stripe
+    from services.db import add_credits_server
+    
+    payload = await request.body()
+    sig_header = request.headers.get('stripe-signature')
+    webhook_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
+    
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_secret
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail="Invalid payload")
+    except stripe.error.SignatureVerificationError as e:
+        raise HTTPException(status_code=400, detail="Invalid signature")
+
+    # Handle the event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        # Fulfill the purchase...
+        user_id = session.get('client_reference_id')
+        # Check if it was a subscription or one-time
+        # For now, we assume subscription grants credits effectively or unlimited
+        # But we'll just add a bunch of credits for now as a "Pro" logic
+        if user_id:
+             print(f"Payment successful for user {user_id}")
+             # Add 1000 credits for Pro plan
+             add_credits_server(user_id, 1000)
+             # You might also want to update a 'plan' column in DB if it exists
+             
+    return {"status": "success"}
 
 @app.post("/api/cron/reset-credits")
 async def trigger_credit_reset(key: str):

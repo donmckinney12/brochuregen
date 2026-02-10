@@ -11,8 +11,15 @@ export default function Signup() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { signUp, signInWithGoogle } = useAuth();
+    const { signUp, signInWithGoogle, user, isLoading } = useAuth();
     const router = useRouter();
+
+    // Redirect if already logged in
+    React.useEffect(() => {
+        if (!isLoading && user) {
+            router.push('/dashboard');
+        }
+    }, [user, isLoading, router]);
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,7 +41,7 @@ export default function Signup() {
             // Redirect to dashboard (or email confirmation page if enabled in Supabase)
             // Ideally check if email confirmation is required.
             // For now, assume auto-login or redirect.
-            router.push('/dashboard');
+            window.location.href = '/dashboard';
         }
     };
 

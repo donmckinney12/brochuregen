@@ -61,3 +61,15 @@ def deduct_credits_server(user_id: str, amount: int = 1, credit_type: str = 'cre
             
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+def add_credits_server(user_id: str, amount: int = 100, credit_type: str = 'credits'):
+    if not engine: return {"success": False, "error": "DB not connected"}
+    
+    try:
+        with engine.begin() as conn:
+            conn.execute(text(f"UPDATE profiles SET {credit_type} = {credit_type} + :amt WHERE id = :uid"), {"amt": amount, "uid": user_id})
+            return {"success": True}
+    except Exception as e:
+        print(f"Error adding credits: {e}")
+        return {"success": False, "error": str(e)}
+
