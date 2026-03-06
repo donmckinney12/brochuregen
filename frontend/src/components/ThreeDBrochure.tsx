@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import LeadForm from './LeadForm';
 
 export default function ThreeDBrochure({
     data,
@@ -8,7 +9,7 @@ export default function ThreeDBrochure({
     activeVault
 }: {
     data: any,
-    onOpenRefiner?: (text: string, type: string) => void,
+    onOpenRefiner?: (text: string, type: string, index?: number) => void,
     activeVault?: { primaryColor: string; secondaryColor: string; font: string; logoUrl?: string } | null
 }) {
     const [isHovered, setIsHovered] = useState(false);
@@ -27,6 +28,7 @@ export default function ThreeDBrochure({
     const getCoverBackground = () => {
         if (layout === 'classic') return `linear-gradient(180deg, ${currentSecondary} 0%, ${currentPrimary} 100%)`;
         if (layout === 'playful') return `radial-gradient(circle at top right, ${currentPrimary}, ${currentSecondary})`;
+        if (layout === 'holographic') return 'transparent';
         return `linear-gradient(135deg, ${currentPrimary}, ${currentSecondary})`;
     };
 
@@ -37,7 +39,8 @@ export default function ThreeDBrochure({
             onMouseLeave={() => setIsHovered(false)}
         >
             <motion.div
-                className="relative w-[300px] h-[450px] preserve-3d"
+                className="relative w-[300px] h-[450px] preserve-3d will-change-transform"
+                style={{ willChange: 'transform' }}
                 animate={{
                     rotateY: isHovered ? -15 : -35,
                     rotateX: isHovered ? 5 : 10,
@@ -47,25 +50,32 @@ export default function ThreeDBrochure({
             >
                 {/* Right Panel (Front Cover) */}
                 <motion.div
-                    className="absolute inset-0 bg-white origin-left border border-slate-200 shadow-2xl overflow-hidden flex flex-col justify-center items-center p-8 z-30"
+                    className={`absolute inset-0 origin-left border shadow-lg overflow-hidden flex flex-col justify-center items-center p-8 z-30 transition-colors duration-500 ${layout === 'holographic' ? 'hologram-theme' : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'}`}
                     style={{
+                        willChange: 'transform',
                         background: getCoverBackground(),
                         fontFamily: currentFont,
                         alignItems: layout === 'classic' ? 'flex-start' : 'center',
-                        textAlign: layout === 'classic' ? 'left' : 'center'
+                        textAlign: layout === 'classic' ? 'left' : 'center',
+                        color: 'white' // Front cover usually stays colored/white text
                     }}
                     animate={{ rotateY: isHovered ? 180 : 0 }}
                     transition={{ type: 'spring', stiffness: 40, damping: 20 }}
                 >
-                    <div className="absolute inset-0 bg-black/10 backface-hidden" style={{ transform: 'rotateY(180deg)' }}>
+                    <div className="absolute inset-0 bg-[var(--card-bg)] backdrop-blur-3xl backface-hidden flex flex-col items-center justify-center p-6" style={{ transform: 'rotateY(180deg)' }}>
                         {/* This constitutes the back of the front cover (Inside Right) */}
-                        <div className="w-full h-full bg-slate-50 p-6 flex items-center justify-center">
-                            <p className="text-slate-400 font-medium opacity-50">Inside Right Fold</p>
+                        <div className="w-full text-center mb-6">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--accent-primary)] mb-2">Neural Lead Capture</h3>
+                            <p className="text-[var(--foreground)]/40 text-[10px] font-bold uppercase tracking-widest">Connect with our protocol</p>
                         </div>
+                        <LeadForm
+                            shareUuid={data.share_uuid}
+                            primaryColor={currentPrimary}
+                        />
                     </div>
 
                     <div className="relative z-10 w-full h-full flex flex-col justify-center items-center text-white backface-visible">
-                        <div className="w-16 h-16 mb-8 flex items-center justify-center bg-white/20 rounded-2xl backdrop-blur-md">
+                        <div className="w-16 h-16 mb-8 flex items-center justify-center bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 shadow-lg">
                             {currentLogo ? (
                                 <img src={currentLogo} alt="Logo" className="max-w-full max-h-full object-contain p-2" />
                             ) : (
@@ -93,7 +103,7 @@ export default function ThreeDBrochure({
                         )}
 
                         <div className="mt-auto pt-8">
-                            <span className="px-6 py-2 bg-white text-slate-900 text-xs font-bold rounded-full uppercase tracking-widest shadow-lg">
+                            <span className="px-6 py-2 bg-white text-black text-[10px] font-black rounded-lg uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                                 Open
                             </span>
                         </div>
@@ -101,7 +111,7 @@ export default function ThreeDBrochure({
                 </motion.div>
 
                 {/* Middle Panel (Back Cover) */}
-                <div className="absolute inset-0 bg-white border border-slate-200 shadow-[inset_0_0_20px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col justify-between p-8 z-20 text-center text-slate-800">
+                <div className="absolute inset-0 bg-[var(--card-bg)] backdrop-blur-2xl border border-[var(--glass-border)] shadow-xl overflow-hidden flex flex-col justify-between p-8 z-20 text-center text-[var(--foreground)] transition-colors duration-500">
                     <div style={{ fontFamily: currentFont }}>
                         <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">About Us</h3>
                         <p
@@ -124,12 +134,12 @@ export default function ThreeDBrochure({
 
                 {/* Left Panel (Inside Flap) */}
                 <motion.div
-                    className="absolute inset-0 bg-white origin-right border border-slate-200 shadow-xl overflow-hidden p-8 z-10"
+                    className={`absolute inset-0 origin-right border shadow-xl overflow-hidden p-8 z-10 transition-colors duration-500 ${layout === 'holographic' ? 'hologram-theme' : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'}`}
                     style={{ transform: 'translateX(-100%)' }}
                     animate={{ rotateY: isHovered ? -160 : 0 }}
                     transition={{ type: 'spring', stiffness: 30, damping: 20, delay: 0.1 }}
                 >
-                    <div className="absolute inset-0 bg-slate-50 backface-hidden" style={{ transform: 'rotateY(-180deg)' }}>
+                    <div className="absolute inset-0 bg-[var(--background)] backface-hidden" style={{ transform: 'rotateY(-180deg)' }}>
                         {/* Outside of the left fold */}
                         <div className="w-full h-full bg-slate-200 flex items-center justify-center p-6 text-center">
                             <p className="text-slate-400 font-medium opacity-50 text-sm">Fold Inner Left</p>
@@ -142,9 +152,9 @@ export default function ThreeDBrochure({
                             {features?.map((feature: string, i: number) => (
                                 <li
                                     key={i}
-                                    className={`text-sm bg-slate-50 p-4 ${layout === 'playful' ? 'rounded-3xl shadow-md border-b-4' : 'rounded-xl shadow-sm border'} border-slate-100 text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer flex gap-3`}
+                                    className={`text-sm p-4 ${layout === 'playful' ? 'rounded-3xl border-b-4 border-cyan-500/30' : layout === 'holographic' ? 'hologram-card' : 'rounded-xl border border-[var(--glass-border)]'} bg-[var(--foreground)]/5 text-[var(--foreground)]/80 hover:bg-[var(--foreground)]/10 transition-colors cursor-pointer flex gap-3`}
                                     style={layout === 'playful' ? { borderBottomColor: currentSecondary } : {}}
-                                    onClick={(e) => { e.stopPropagation(); onOpenRefiner?.(feature, 'feature'); }}
+                                    onClick={(e) => { e.stopPropagation(); onOpenRefiner?.(feature, 'features', i); }}
                                 >
                                     <span className={`w-1.5 h-1.5 mt-1.5 shrink-0 ${layout === 'classic' ? 'rounded-none rotate-45' : 'rounded-full'}`} style={{ backgroundColor: currentSecondary }}></span>
                                     {feature}

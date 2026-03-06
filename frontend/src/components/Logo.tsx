@@ -12,8 +12,8 @@ export default function Logo({ className = "", showText = true }: LogoProps) {
                 <span className="text-white font-bold text-lg">B</span>
             </div>
             {showText && (
-                <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">
-                    Brochure<span className="font-light text-slate-500 dark:text-slate-400">Gen</span>
+                <span className="font-bold text-xl tracking-tight text-[var(--foreground)]">
+                    Brochure<span className="font-light text-[var(--foreground)]/40">Gen</span>
                 </span>
             )}
         </div>

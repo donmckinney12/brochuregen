@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import BrochureCarousel from '@/components/BrochureCarousel';
 import { useAuth } from '@/context/AuthContext';
 
@@ -28,7 +27,8 @@ export default function Pricing() {
                 body: JSON.stringify({
                     user_id: user.id,
                     email: user.email,
-                    plan: plan
+                    plan: plan,
+                    billing_cycle: billingCycle
                 }),
             });
 
@@ -46,247 +46,182 @@ export default function Pricing() {
     };
 
     const prices = {
-        starter: billingCycle === 'monthly' ? 79 : 63,
-        professional: billingCycle === 'monthly' ? 199 : 159,
-        agency: billingCycle === 'monthly' ? 499 : 399,
+        starter: billingCycle === 'monthly' ? 99 : 79,
+        professional: billingCycle === 'monthly' ? 299 : 239,
+        enterprise: billingCycle === 'monthly' ? 999 : 799,
+        ultimate: billingCycle === 'monthly' ? 2499 : 1999,
     };
 
     return (
-        <div className="min-h-screen transition-colors duration-300 ease-in-out font-sans bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-slate-900 dark:bg-slate-950 dark:text-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
+        <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--accent-primary)]/30 selection:text-[var(--foreground)] transition-colors duration-500">
             <Navbar />
+            <div className="fixed inset-0 scanline opacity-[0.03] dark:opacity-20 pointer-events-none z-50"></div>
 
-            <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-                <div className="text-center mb-12 animate-in slide-in-from-bottom-5 fade-in duration-700">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 mb-6 mx-auto">
+            <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto relative z-10">
+                <div className="text-center mb-12 animate-in slide-in-from-bottom-5 fade-in duration-1000">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-[var(--foreground)]/5 border border-[var(--glass-border)] text-[10px] font-black uppercase tracking-[0.3em] text-[var(--accent-primary)] mb-8 mx-auto">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        Powerful AI Studio
+                        Neural Upgrade Protocol
                     </div>
-                    <h1 className="text-5xl md:text-6xl font-black mb-6 text-slate-900 dark:text-white tracking-tight">
-                        Power your growth <br />
-                        <span className="gradient-text bg-gradient-to-r from-blue-600 to-indigo-600">with professional design.</span>
+                    <h1 className="text-5xl md:text-7xl font-black mb-8 text-[var(--foreground)] tracking-tighter italic uppercase">
+                        Scale your impact <br />
+                        <span className="gradient-text">with God-Tier Design.</span>
                     </h1>
-                    <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
-                        The professional way to generate AI brochures. Build your marketing collateral instantly.
+                    <p className="text-lg text-[var(--foreground)]/40 font-bold max-w-2xl mx-auto mb-12 uppercase tracking-widest leading-relaxed">
+                        The ultimate AI Studio for precision marketing. <br />Initialize your protocol today.
                     </p>
 
                     {/* Billing Toggle */}
-                    <div className="flex items-center justify-center gap-4 mb-16">
-                        <span className={`text-sm font-semibold ${billingCycle === 'monthly' ? 'text-slate-900 dark:text-white' : 'text-slate-500'}`}>Monthly Billing</span>
+                    <div className="flex items-center justify-center gap-6 mb-20 p-2 bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-2xl w-fit mx-auto">
                         <button
-                            onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-                            className="relative w-14 h-8 rounded-full bg-slate-200 dark:bg-slate-700 transition-colors focus:outline-none ring-offset-2 focus:ring-2 focus:ring-blue-500"
+                            onClick={() => setBillingCycle('monthly')}
+                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${billingCycle === 'monthly' ? 'bg-[var(--foreground)] text-[var(--background)] shadow-lg' : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]/60'}`}
                         >
-                            <span
-                                className={`absolute top-1 left-1 bg-white dark:bg-slate-900 w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${billingCycle === 'yearly' ? 'translate-x-6' : ''}`}
-                            ></span>
+                            Monthly Sync
                         </button>
-                        <span className={`text-sm font-semibold ${billingCycle === 'yearly' ? 'text-slate-900 dark:text-white' : 'text-slate-500'}`}>
-                            Yearly <span className="text-green-500 font-bold ml-1">(-20% OFF)</span>
-                        </span>
+                        <button
+                            onClick={() => setBillingCycle('yearly')}
+                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${billingCycle === 'yearly' ? 'bg-[var(--accent-secondary)] text-white shadow-lg' : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]/60'}`}
+                        >
+                            Annual Sync <span className="ml-2 opacity-60">(-20%)</span>
+                        </button>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mb-24">
-
-                    {/* Starter Plan */}
-                    <div className="premium-card p-8 flex flex-col relative group">
-                        <div className="mb-6">
-                            <h3 className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Starter</h3>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-4xl font-black text-slate-900 dark:text-white">${prices.starter}</span>
-                                <span className="text-slate-500 dark:text-slate-400 text-sm">/mo</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto mb-32">
+                    {[
+                        {
+                            name: 'Starter',
+                            price: prices.starter,
+                            features: [
+                                '15 Neural Syncs',
+                                'Leads Vault Basic',
+                                'Neural SEO Meta',
+                                'Modern Themes',
+                                'Standard Export'
+                            ],
+                            color: 'cyan',
+                            border: 'border-white/10'
+                        },
+                        {
+                            name: 'Professional',
+                            price: prices.professional,
+                            features: [
+                                '60 Neural Syncs',
+                                'Studio Insights (Analytics)',
+                                'Leads Pro (CSV Export)',
+                                'A/B Testing Protocol',
+                                'Precision Refiner'
+                            ],
+                            color: 'fuchsia',
+                            border: 'border-fuchsia-500/50',
+                            popular: true
+                        },
+                        {
+                            name: 'Enterprise',
+                            price: prices.enterprise,
+                            features: [
+                                '250 Neural Syncs',
+                                'Enterprise Matrix (Teams)',
+                                'Neural Follow-up Sync',
+                                'Brand Vault Synchronization',
+                                'Priority Synthesis'
+                            ],
+                            color: 'amber',
+                            border: 'border-white/10'
+                        },
+                        {
+                            name: 'Ultimate',
+                            price: prices.ultimate,
+                            features: [
+                                'Unlimited Neural Syncs',
+                                'White-Label Protocol',
+                                'SSO / Enterprise Sync',
+                                'Custom Model Tuning',
+                                'Executive Concierge'
+                            ],
+                            color: 'white',
+                            border: 'border-white/20'
+                        }
+                    ].map((plan, i) => (
+                        <div key={i} className={`premium-card p-10 flex flex-col relative group overflow-hidden ${plan.border} ${plan.popular ? 'scale-105 shadow-[0_0_50px_rgba(255,0,255,0.1)]' : ''}`}>
+                            {plan.popular && (
+                                <div className="absolute top-0 right-0 bg-fuchsia-500 text-white text-[8px] font-black px-4 py-1.5 uppercase tracking-widest">
+                                    Status: Optimal
+                                </div>
+                            )}
+                            <div className="mb-8">
+                                <h3 className={`text-[10px] font-black uppercase tracking-[0.3em] mb-4 ${plan.color === 'cyan' ? 'text-[var(--accent-primary)]' : plan.color === 'fuchsia' ? 'text-[var(--accent-secondary)]' : plan.color === 'amber' ? 'text-[var(--accent-tertiary)]' : 'text-[var(--foreground)]'}`}>
+                                    {plan.name}
+                                </h3>
+                                <div className="flex items-baseline gap-2 text-[var(--foreground)]">
+                                    <span className="text-5xl font-black italic tracking-tighter">${plan.price}</span>
+                                    {typeof plan.price === 'number' && <span className="text-[var(--foreground)]/20 text-[10px] font-black uppercase tracking-widest">/sync cycle</span>}
+                                </div>
                             </div>
-                            <p className="mt-4 text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                                Essential AI tools for solo creators and niche websites.
-                            </p>
-                        </div>
 
-                        <div className="flex-1 space-y-4 mb-8">
-                            <ul className="space-y-4">
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300 text-sm"><b>10 Credits</b> / mo</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300 text-sm">Modern & Classic Themes</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300 text-sm">Standard PDF Export</span>
-                                </li>
+                            <ul className="flex-1 space-y-5 mb-10">
+                                {plan.features.map((feat, fi) => (
+                                    <li key={fi} className="flex items-center gap-3 text-[var(--foreground)]/60 text-xs font-bold uppercase tracking-wide">
+                                        <div className={`w-1.5 h-1.5 rounded-full ${plan.color === 'cyan' ? 'bg-[var(--accent-primary)]' : plan.color === 'fuchsia' ? 'bg-[var(--accent-secondary)]' : plan.color === 'amber' ? 'bg-[var(--accent-tertiary)]' : 'bg-[var(--foreground)]'}`} />
+                                        {feat}
+                                    </li>
+                                ))}
                             </ul>
+
+                            {plan.name === 'Ultimate' ? (
+                                <Link href="/enterprise" className="w-full py-4 text-center bg-[var(--foreground)] text-[var(--background)] font-black text-[10px] uppercase tracking-[0.2em] rounded-xl hover:scale-105 transition-all">
+                                    Contact Intake
+                                </Link>
+                            ) : (
+                                <button
+                                    onClick={() => handleUpgrade(plan.name.toLowerCase())}
+                                    className={`w-full py-4 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl transition-all hover:scale-105 active:scale-95 ${plan.popular ? 'bg-[var(--accent-secondary)] text-white shadow-lg' : 'bg-[var(--foreground)] text-[var(--background)] shadow-lg'}`}
+                                >
+                                    Initialize Protocol
+                                </button>
+                            )}
                         </div>
-
-                        <button onClick={() => handleUpgrade('starter')} className="w-full py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all text-sm">
-                            Get Started
-                        </button>
-                    </div>
-
-                    {/* Professional Plan */}
-                    <div className="premium-card p-8 border-2 border-blue-500 scale-105 shadow-2xl z-10 flex flex-col relative bg-white dark:bg-slate-900">
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg">
-                            Value King
-                        </div>
-                        <div className="mb-6">
-                            <h3 className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Professional</h3>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-4xl font-black text-slate-900 dark:text-white">${prices.professional}</span>
-                                <span className="text-slate-500 dark:text-slate-400 text-sm">/mo</span>
-                            </div>
-                            <p className="mt-4 text-slate-600 dark:text-slate-300 text-xs leading-relaxed font-medium">
-                                Growth tracking & advanced themes for serious marketers.
-                            </p>
-                        </div>
-
-                        <div className="flex-1 space-y-4 mb-8">
-                            <ul className="space-y-4">
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-700 dark:text-slate-200 text-sm font-bold">25 Credits / mo</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-700 dark:text-slate-200 text-sm"><b>Advanced Analytics</b> Hub</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-700 dark:text-slate-200 text-sm">All Dynamic Layout Themes</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-700 dark:text-slate-200 text-sm">AI Refine Engine</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <button onClick={() => handleUpgrade('professional')} className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black hover:shadow-xl hover:shadow-blue-500/30 transition-all transform hover:-translate-y-1 text-sm uppercase tracking-wider">
-                            Upgrade Now
-                        </button>
-                    </div>
-
-                    {/* Agency Plan */}
-                    <div className="premium-card p-8 flex flex-col relative group">
-                        <div className="mb-6">
-                            <h3 className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Agency</h3>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-4xl font-black text-slate-900 dark:text-white">${prices.agency}</span>
-                                <span className="text-slate-500 dark:text-slate-400 text-sm">/mo</span>
-                            </div>
-                            <p className="mt-4 text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                                White-labeling & multisite management for agencies.
-                            </p>
-                        </div>
-
-                        <div className="flex-1 space-y-4 mb-8">
-                            <ul className="space-y-4">
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300 text-sm"><b>100 Credits</b> / mo</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300 text-sm">Team Workspaces (Clerk Org)</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300 text-sm">Full API Hub Access</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-600 dark:text-slate-300 text-sm font-bold text-blue-500">White-label Branding</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <button onClick={() => handleUpgrade('agency')} className="w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:opacity-90 transition-all text-sm">
-                            Become Agency
-                        </button>
-                    </div>
-
-                    {/* Enterprise Plan */}
-                    <div className="premium-card p-8 flex flex-col relative group bg-slate-950 border-slate-800">
-                        <div className="mb-6">
-                            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Enterprise</h3>
-                            <div className="flex items-baseline gap-1 text-white">
-                                <span className="text-4xl font-black">Custom</span>
-                            </div>
-                            <p className="mt-4 text-slate-400 text-xs leading-relaxed">
-                                Bespoke AI compliance & unlimited scaling for global teams.
-                            </p>
-                        </div>
-
-                        <div className="flex-1 space-y-4 mb-8">
-                            <ul className="space-y-4">
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-300 text-sm">Unlimited API Throttling</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-300 text-sm">SSO / SAML Support</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-300 text-sm">Dedicated AI Tuning</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <svg className="w-5 h-5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                    <span className="text-slate-300 text-sm">24/7 Priority Concierge</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <Link href="/enterprise" className="w-full py-3 rounded-xl bg-white text-slate-900 font-black hover:bg-blue-50 transition-all text-sm text-center">
-                            Contact Sales
-                        </Link>
-                    </div>
-
+                    ))}
                 </div>
 
-                {/* FAQ Section */}
-                <div className="max-w-4xl mx-auto mb-20 bg-white/30 dark:bg-slate-900/30 backdrop-blur-3xl rounded-[3rem] p-12 border border-white/20 dark:border-slate-800">
-                    <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-12 text-center tracking-tight">Got Questions?</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">What are credits used for?</h3>
-                            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Each credit allows you to generate one full-sized, print-ready tri-fold brochure with original AI copywriting and imagery.</p>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Can I change my plan?</h3>
-                            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Yes! You can upgrade or downgrade at any time. Your billing will be pro-rated automatically by Stripe.</p>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">What is "Campaign Mode"?</h3>
-                            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Professional and Agency users get automatic social media assets and email drip text generated for every brochure they create.</p>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Is there a free tier?</h3>
-                            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Yes, we offer free credits to every new user so you can test our AI Studio before committing.</p>
-                        </div>
+                {/* System FAQ */}
+                <div className="max-w-4xl mx-auto mb-32 premium-card p-16 border-[var(--glass-border)] glass relative overflow-hidden transition-colors duration-500">
+                    <div className="absolute inset-0 scanline opacity-5 pointer-events-none"></div>
+                    <h2 className="text-3xl font-black text-[var(--foreground)] mb-16 text-center italic tracking-tighter uppercase">Protocol Diagnostics</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        {[
+                            { q: "What are Neural Syncs?", a: "Each sync facilitates one full-spectrum AI brochure generation, including SEO metadata, OpenGraph tags, and persistent storage in your Enterprise Suite." },
+                            { q: "What is the Leads Vault?", a: "A centralized node for capturing and managing prospects directly from your brochure assets. Professional and Enterprise tiers include advanced CSV exports and AI-generated follow-up sequences." },
+                            { q: "Is Studio Insights included?", a: "Affirmative. Real-time engagement analytics and Protocol A/B variant testing are active on all Professional and Enterprise operational nodes." },
+                            { q: "Does it support team collaboration?", a: "The Enterprise Matrix allows for shared organization-level ownership of brochures, brand assets, and leads, powered by the Clerk Enterprise infrastructure." }
+                        ].map((faq, i) => (
+                            <div key={i}>
+                                <h3 className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em] mb-4">{faq.q}</h3>
+                                <p className="text-[var(--foreground)]/40 text-xs font-bold leading-relaxed uppercase tracking-widest">{faq.a}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Final CTA Banner */}
-                <div className="max-w-5xl mx-auto mb-20 p-16 rounded-[4rem] bg-slate-900 dark:bg-blue-600 text-center relative overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)]">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-[120px] -mr-32 -mt-32"></div>
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-[120px] -ml-32 -mb-32"></div>
+                {/* Final Protocol CTA */}
+                <div className="max-w-5xl mx-auto p-20 premium-card bg-gradient-to-br from-[var(--background)] via-[var(--accent-secondary)]/5 to-[var(--background)] border-[var(--accent-secondary)]/20 text-center relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-secondary)]/10 rounded-full blur-[150px] -mr-32 -mt-32"></div>
+                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--accent-primary)]/10 rounded-full blur-[150px] -ml-32 -mb-32"></div>
 
-                    <h2 className="text-4xl md:text-6xl font-black text-white mb-8 relative z-10 tracking-tight">
-                        Scale your marketing <br /> with BrochureGen.
+                    <h2 className="text-4xl md:text-7xl font-black text-[var(--foreground)] mb-12 relative z-10 italic tracking-tighter uppercase">
+                        Master the matrix. <br /> Initialize BrochureGen.
                     </h2>
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 relative z-10">
-                        <Link href="/signup" className="px-12 py-5 bg-white text-slate-900 font-black text-xl rounded-2xl shadow-2xl hover:scale-105 transition-all">
-                            Get Started
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-8 relative z-10">
+                        <Link href="/signup" className="px-16 py-6 bg-[var(--foreground)] text-[var(--background)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all">
+                            SYNC NOW
                         </Link>
-                        <Link href="/enterprise" className="px-12 py-5 bg-transparent border-2 border-white/30 text-white font-black text-xl rounded-2xl hover:bg-white/10 transition-all">
-                            Enterprise Sales
+                        <Link href="/enterprise" className="px-16 py-6 bg-transparent border border-[var(--foreground)] text-[var(--foreground)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:bg-[var(--foreground)]/5 transition-all">
+                            ENTERPRISE INTAKE
                         </Link>
                     </div>
                 </div>
-
             </main>
-            <Footer />
         </div>
     );
 }

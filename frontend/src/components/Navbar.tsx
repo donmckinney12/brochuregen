@@ -46,70 +46,69 @@ export default function Navbar() {
         }
     };
 
+    // Determine if user is authenticated for conditional rendering
+    const isAuthenticated = !!user;
+
     return (
-        <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg shadow-sm py-4' : 'bg-transparent py-6'}`}>
-            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-                <Link href="/" className="group" onClick={() => setIsMenuOpen(false)}>
-                    <Logo />
-                </Link>
-
-                {/* Desktop Menu */}
-                <div className="hidden md:flex items-center gap-8">
-                    {pathname !== '/checkout' && (
-                        <>
-                            <Link href="/features" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/features' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Features</Link>
-                            <Link href="/pricing" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/pricing' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Pricing</Link>
-                            <Link href="/enterprise" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/enterprise' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Enterprise</Link>
-                            <Link href="/partners" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/partners' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Partners</Link>
-                            <Link href="/blog" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/blog' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Blog</Link>
-                            <SignedIn>
-                                <Link href="/dashboard" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/dashboard' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Dashboard</Link>
-                            </SignedIn>
-                        </>
-                    )}
-
-                    <div className="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
-
-                    <SignedIn>
-                        <div className="flex items-center gap-4">
-                            <OrganizationSwitcher
-                                hidePersonal={false}
-                                appearance={{
-                                    baseTheme: darkMode ? dark : undefined,
-                                    elements: {
-                                        organizationSwitcherTrigger: "focus:shadow-none focus:outline-none",
-                                        organizationPreviewTextContainer: "text-slate-600 dark:text-slate-300",
-                                        organizationSwitcherTriggerIcon: "text-slate-400"
-                                    }
-                                }}
-                            />
-                            <div className="hidden sm:flex flex-col items-end border-r border-slate-200 dark:border-slate-700 pr-4 mr-2">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Credits</span>
-                                <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400 leading-none">{user?.credits}</span>
-                            </div>
-                            <UserButton afterSignOutUrl="/" />
+        <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-[var(--glass-bg)] backdrop-blur-xl border-b border-[var(--glass-border)] py-3 shadow-lg' : 'bg-transparent py-6'}`}>
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 items-center">
+                {/* Logo Section */}
+                <div className="flex items-center justify-start">
+                    <Link href="/" className="flex items-center gap-3 group transition-transform hover:scale-[1.02]">
+                        <div className="relative w-10 h-10 flex items-center justify-center bg-[var(--foreground)] border border-[var(--accent-primary)]/30 rounded-xl overflow-hidden shadow-lg">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent-primary)]/20 to-[var(--accent-secondary)]/20 group-hover:opacity-100 opacity-60 transition-opacity"></div>
+                            <span className="relative text-xl font-black text-[var(--background)] italic tracking-tighter">BG</span>
                         </div>
-                    </SignedIn>
+                        <span className="text-xl font-black tracking-tighter text-[var(--foreground)] uppercase italic group-hover:text-[var(--accent-primary)] transition-colors">
+                            Brochure<span className="text-[var(--foreground)]">Gen</span>
+                        </span>
+                    </Link>
+                </div>
 
-                    <SignedOut>
-                        <div className="flex items-center gap-4">
+                {/* Centered Navigation Links */}
+                <div className="hidden md:flex items-center justify-center gap-10">
+                    {['Features', 'Pricing', 'Use-Cases'].map((item) => (
+                        <Link
+                            key={item}
+                            href={`/${item.toLowerCase()}`}
+                            className={`text-[11px] font-black uppercase tracking-[0.3em] hover:text-[var(--accent-primary)] transition-all ${pathname === `/${item.toLowerCase()}` ? 'text-[var(--accent-primary)] font-black' : 'text-[var(--foreground)]/40'}`}
+                        >
+                            {item}
+                        </Link>
+                    ))}
+                    {isAuthenticated && (
+                        <Link href="/dashboard" className={`text-[11px] font-bold uppercase tracking-[0.2em] hover:text-[var(--accent-primary)] transition-all ${pathname === '/dashboard' ? 'text-[var(--accent-primary)]' : 'text-[var(--foreground)]/60'}`}>Dashboard</Link>
+                    )}
+                </div>
+
+                {/* Right Side Actions */}
+                <div className="flex items-center justify-end gap-4">
+                    <div className="flex items-center gap-3">
+                        <SignedOut>
                             <SignInButton mode="modal">
-                                <button className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer">
-                                    Sign In
+                                <button className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)]/80 hover:text-[var(--foreground)] px-4 py-2 transition-all">
+                                    Login
                                 </button>
                             </SignInButton>
                             <SignUpButton mode="modal">
-                                <button className="px-5 py-2.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer">
-                                    Get Started
+                                <button className="text-[10px] font-bold uppercase tracking-widest bg-[var(--foreground)] text-[var(--background)] px-6 py-2.5 rounded-lg hover:bg-[var(--accent-primary)] hover:text-white transition-all shadow-lg active:scale-95">
+                                    Join
                                 </button>
                             </SignUpButton>
-                        </div>
-                    </SignedOut>
+                        </SignedOut>
+                        <SignedIn>
+                            <div className="hidden sm:flex flex-col items-end border-r border-[var(--glass-border)] pr-4 mr-2">
+                                <span className="text-[10px] font-bold text-[var(--foreground)]/40 uppercase leading-none mb-1">Matrix</span>
+                                <span className="text-sm font-extrabold text-[var(--accent-primary)] leading-none">{user?.credits}</span>
+                            </div>
+                            <UserButton afterSignOutUrl="/" appearance={{ baseTheme: darkMode ? dark : undefined }} />
+                        </SignedIn>
+                    </div>
 
                     <button
                         onClick={toggleTheme}
-                        className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-slate-600 dark:text-slate-300"
-                        aria-label="Toggle Dark Mode"
+                        className="p-2 rounded-full hover:bg-[var(--foreground)]/10 transition-colors text-[var(--foreground)]/60"
+                        aria-label="Toggle Theme"
                     >
                         {darkMode ? (
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -117,24 +116,8 @@ export default function Navbar() {
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                         )}
                     </button>
-                </div>
 
-                {/* Mobile Menu Button */}
-                <div className="md:hidden flex items-center gap-4">
-                    <button
-                        onClick={toggleTheme}
-                        className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-slate-600 dark:text-slate-300"
-                    >
-                        {darkMode ? (
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                        ) : (
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                        )}
-                    </button>
-                    <button
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="p-2 text-slate-600 dark:text-slate-300 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg"
-                    >
+                    <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 text-[var(--foreground)]/60 hover:bg-[var(--foreground)]/10 rounded-lg">
                         {isMenuOpen ? (
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         ) : (
@@ -146,62 +129,29 @@ export default function Navbar() {
 
             {/* Mobile Menu Dropdown */}
             {isMenuOpen && (
-                <div className="md:hidden absolute top-full left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 animate-in slide-in-from-top-2 shadow-xl">
-                    <div className="px-6 py-4 flex flex-col gap-4">
-                        <Link href="/features" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Features</Link>
-                        <Link href="/pricing" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Pricing</Link>
-                        <Link href="/enterprise" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Enterprise</Link>
-                        <Link href="/partners" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Partners</Link>
-                        <Link href="/wall-of-love" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Wall of Love</Link>
-                        <Link href="/blog" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Blog</Link>
-
+                <div className="md:hidden absolute top-full left-0 w-full bg-[var(--background)] border-b border-[var(--glass-border)] animate-in slide-in-from-top-2 shadow-2xl">
+                    <div className="px-6 py-8 flex flex-col gap-6">
+                        {['Features', 'Pricing', 'Use-Cases'].map((item) => (
+                            <Link key={item} href={`/${item.toLowerCase()}`} onClick={() => setIsMenuOpen(false)} className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--foreground)]/40 hover:text-[var(--accent-primary)]">
+                                {item}
+                            </Link>
+                        ))}
                         <SignedIn>
-                            <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                                <div className="flex flex-col gap-4 mb-6">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <UserButton afterSignOutUrl="/" showName />
-                                        </div>
-                                        <div className="flex flex-col items-end">
-                                            <span className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Credits</span>
-                                            <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400 leading-none">{user?.credits}</span>
-                                        </div>
-                                    </div>
-                                    <div className="py-2 px-1 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
-                                        <OrganizationSwitcher
-                                            hidePersonal={false}
-                                            appearance={{
-                                                baseTheme: darkMode ? dark : undefined,
-                                                elements: {
-                                                    rootBox: "w-full",
-                                                    organizationSwitcherTrigger: "w-full justify-between focus:shadow-none focus:outline-none py-2",
-                                                }
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                                <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="block w-full py-2 text-center rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium mb-2">
-                                    Dashboard
-                                </Link>
-                            </div>
+                            <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--foreground)]/60 hover:text-[var(--accent-primary)]">Dashboard</Link>
                         </SignedIn>
                         <SignedOut>
-                            <div className="flex flex-col gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <div className="flex flex-col gap-4 pt-4 border-t border-white/5">
                                 <SignInButton mode="modal">
-                                    <button onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2 text-left">
-                                        Sign In
-                                    </button>
+                                    <button onClick={() => setIsMenuOpen(false)} className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/60 text-left">Login</button>
                                 </SignInButton>
                                 <SignUpButton mode="modal">
-                                    <button onClick={() => setIsMenuOpen(false)} className="text-center w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold">
-                                        Get Started
-                                    </button>
+                                    <button onClick={() => setIsMenuOpen(false)} className="w-full py-4 rounded-xl bg-white text-black font-bold text-[10px] uppercase tracking-widest">Join Protocol</button>
                                 </SignUpButton>
                             </div>
                         </SignedOut>
                     </div>
                 </div>
             )}
-        </nav>
+        </nav >
     );
 }

@@ -10,6 +10,7 @@ venv/
 # Testing artifacts
 *.pdf
 test_*.txt
+*.db
 error.log
 scan_error.txt
 take_screenshot_directly.py

@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 
 export default function Error({
     error,
@@ -37,7 +36,6 @@ export default function Error({
                     Try again
                 </button>
             </main>
-            <Footer />
         </div>
     )
 }

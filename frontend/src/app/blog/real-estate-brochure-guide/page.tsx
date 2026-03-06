@@ -1,6 +1,5 @@
 "use client";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import Link from "next/link";
 
 export default function RealEstateGuideArticle() {
@@ -98,8 +97,6 @@ export default function RealEstateGuideArticle() {
                     </div>
                 </article>
             </main>
-
-            <Footer />
         </div>
     );
 }

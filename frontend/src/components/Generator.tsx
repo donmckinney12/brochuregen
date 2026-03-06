@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import ThreeDBrochure from '@/components/ThreeDBrochure';
 import AIRefinerModal from '@/components/AIRefinerModal';
+import NeuralLoading from '@/components/NeuralLoading';
+import { AnimatePresence } from 'framer-motion';
 
 type Step = 'input' | 'processing' | 'preview' | 'generating' | 'success';
 
@@ -155,7 +157,14 @@ export default function Generator() {
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all duration-300 relative">
+        <div className="w-full max-w-4xl mx-auto bg-[var(--background)]/40 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-[var(--glass-border)] overflow-hidden transition-all duration-500 relative group">
+            <div className="absolute inset-0 scanline opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity"></div>
+
+            <AnimatePresence>
+                {(step === 'processing' || step === 'generating') && (
+                    <NeuralLoading />
+                )}
+            </AnimatePresence>
 
             {/* Refiner Modal */}
             <AIRefinerModal
@@ -167,81 +176,100 @@ export default function Generator() {
             />
 
             {/* Header / Progress */}
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 text-sm">
-                        {step === 'input' ? '1' : step === 'processing' ? '2' : step === 'preview' ? '3' : step === 'generating' ? '4' : '✓'}
-                    </span>
-                    Brochure Generator
-                </h2>
+            <div className="bg-[var(--foreground)]/5 p-8 border-b border-[var(--glass-border)] flex items-center justify-between relative overflow-hidden">
+                <div className="relative z-10">
+                    <h2 className="text-xl font-black text-[var(--foreground)] italic tracking-tighter uppercase flex items-center gap-4">
+                        <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 text-[var(--accent-primary)] text-sm font-black animate-pulse">
+                            0{step === 'input' ? '1' : step === 'processing' ? '2' : step === 'preview' ? '3' : step === 'generating' ? '4' : '5'}
+                        </span>
+                        Neural Brochure Engine
+                    </h2>
+                    <p className="text-[9px] font-bold text-[var(--foreground)]/30 tracking-[0.3em] uppercase mt-2 ml-14">Protocol Version 4.8.2 // Active</p>
+                </div>
                 {step === 'preview' && (
-                    <button onClick={() => setStep('input')} className="text-sm text-slate-500 hover:text-red-500">
-                        Cancel
+                    <button onClick={() => setStep('input')} className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/20 hover:text-rose-500 transition-colors">
+                        ABORT_SYNC
                     </button>
                 )}
             </div>
 
-            <div className="p-8">
+            <div className="p-10">
                 {error && (
-                    <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl flex items-center gap-3">
-                        <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        {error}
+                    <div className="mb-10 p-6 bg-fuchsia-900/20 border border-fuchsia-500/30 text-fuchsia-400 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-top-4">
+                        <svg className="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div className="text-xs font-black uppercase tracking-widest">
+                            {error}
+                        </div>
                     </div>
                 )}
 
                 {/* STEP 1: INPUT */}
                 {step === 'input' && (
-                    <form onSubmit={handleScrape} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                            Website URL to Convert
-                        </label>
-                        <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                            <input
-                                type="text"
-                                value={url}
-                                onChange={(e) => setUrl(e.target.value)}
-                                placeholder="example.com"
-                                className="flex-1 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all w-full min-w-0"
-                                required
-                            />
-                            <div className="flex gap-3">
-                                <select
-                                    value={layoutTheme}
-                                    onChange={(e) => setLayoutTheme(e.target.value)}
-                                    className="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-semibold"
-                                >
-                                    <option value="modern">Modern Theme</option>
-                                    <option value="classic">Classic Theme</option>
-                                    <option value="playful">Playful Theme</option>
-                                </select>
-                                <button
-                                    type="submit"
-                                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/30 whitespace-nowrap"
-                                >
-                                    Generate
-                                </button>
+                    <form onSubmit={handleScrape} className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+                        <div>
+                            <label className="block text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.3em] mb-4 ml-1">
+                                Remote Node URL
+                            </label>
+                            <div className="flex flex-col lg:flex-row gap-4 mb-4">
+                                <div className="flex-1 relative group">
+                                    <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                                        <span className="text-[var(--accent-primary)]/40 text-[10px] font-mono">HTTPS://</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        value={url}
+                                        onChange={(e) => setUrl(e.target.value)}
+                                        placeholder="target-domain.io"
+                                        className="w-full pl-24 pr-6 py-5 rounded-2xl bg-[var(--background)] border border-[var(--glass-border)] text-[var(--foreground)] font-mono text-xs focus:ring-1 focus:ring-[var(--accent-primary)]/50 focus:border-[var(--accent-primary)]/30 outline-none transition-all placeholder:text-[var(--foreground)]/10"
+                                        required
+                                    />
+                                </div>
+                                <div className="flex gap-4">
+                                    <select
+                                        value={layoutTheme}
+                                        onChange={(e) => setLayoutTheme(e.target.value)}
+                                        className="px-6 py-5 rounded-2xl bg-[var(--background)] border border-[var(--glass-border)] text-[10px] font-black uppercase tracking-widest text-[var(--foreground)] outline-none focus:ring-1 focus:ring-[var(--foreground)]/30 transition-all cursor-pointer hover:border-[var(--foreground)]/20"
+                                    >
+                                        <option value="modern">Modern Matrix</option>
+                                        <option value="classic">Classic Monolith</option>
+                                        <option value="playful">Neon Pulse</option>
+                                        <option value="holographic">Holographic Nexus</option>
+                                    </select>
+                                    <button
+                                        type="submit"
+                                        className="px-10 py-5 bg-[var(--foreground)] text-[var(--background)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:opacity-90 hover:scale-105 transition-all shadow-lg active:scale-95 whitespace-nowrap"
+                                    >
+                                        Initialize
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <p className="text-xs text-slate-500 animate-in fade-in">
-                            Credits available: <span className="font-bold text-slate-800 dark:text-slate-200">
-                                {user?.credits && user.credits > 10000 ? 'Unlimited' : (user?.credits || 0)}
-                            </span>
-                        </p>
+                        <div className="flex items-center justify-between px-2">
+                            <p className="text-[10px] text-[var(--foreground)]/20 font-black uppercase tracking-widest animate-pulse">
+                                High-bandwidth scanning enabled
+                            </p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/40">
+                                Available Frequency: <span className="text-[var(--accent-primary)] ml-2">
+                                    {user?.credits && user.credits > 10000 ? 'GOD_MODE' : (user?.credits || 0)}
+                                </span>
+                            </p>
+                        </div>
                     </form>
                 )}
 
                 {/* STEP 2: PROCESSING */}
                 {step === 'processing' && (
-                    <div className="py-12 flex flex-col items-center justify-center text-center animate-in fade-in duration-500">
-                        <div className="relative w-16 h-16 mb-6">
-                            <div className="absolute inset-0 border-4 border-slate-200 dark:border-slate-700 rounded-full"></div>
-                            <div className="absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+                    <div className="py-20 flex flex-col items-center justify-center text-center animate-in fade-in duration-500">
+                        <div className="relative w-24 h-24 mb-10">
+                            <div className="absolute inset-0 border-[3px] border-[var(--foreground)]/5 rounded-full"></div>
+                            <div className="absolute inset-0 border-[3px] border-[var(--accent-primary)] rounded-full border-t-transparent animate-spin shadow-lg"></div>
+                            <div className="absolute inset-4 border border-[var(--accent-secondary)]/30 rounded-full animate-pulse"></div>
                         </div>
-                        <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Analyzing Website...</h3>
-                        <div className="space-y-1">
+                        <h3 className="text-2xl font-black text-[var(--foreground)] mb-4 italic tracking-tighter uppercase glitch-text">Neural Scraper Active</h3>
+                        <div className="space-y-2">
                             {logs.map((log, i) => (
-                                <p key={i} className="text-sm text-slate-500 dark:text-slate-400 animate-in slide-in-from-bottom-2 fade-in">
-                                    {log}
+                                <p key={i} className="text-[10px] font-bold text-[var(--accent-primary)]/60 uppercase tracking-[0.3em] animate-in slide-in-from-bottom-2 fade-in italic">
+                                    {`> ${log}`}
                                 </p>
                             ))}
                         </div>
@@ -251,24 +279,25 @@ export default function Generator() {
                 {/* STEP 3: PREVIEW / EDIT */}
                 {step === 'preview' && data && (
                     <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                        <div className="mb-6 flex items-center justify-between">
+                        <div className="mb-10 flex flex-col md:flex-row items-center justify-between gap-6">
                             <div>
-                                <h3 className="text-lg font-bold text-slate-800 dark:text-white">Review Presentation</h3>
-                                <p className="text-sm text-slate-500">Interact with your 3D brochure. Click elements to refine with AI.</p>
+                                <h3 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Visual Configuration</h3>
+                                <p className="text-[10px] font-bold text-[var(--foreground)]/30 uppercase tracking-[0.2em] mt-1">Refine neural weights via direct manipulation.</p>
                             </div>
-                            <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-xs font-bold rounded-full uppercase tracking-wider">
-                                Draft
+                            <span className="px-5 py-2 bg-[var(--accent-tertiary)]/10 border border-[var(--accent-tertiary)]/30 text-[var(--accent-tertiary)] text-[10px] font-black uppercase tracking-[0.3em] rounded-full backdrop-blur-md animate-pulse">
+                                Provisional Node
                             </span>
                         </div>
 
-                        <div className="w-full bg-slate-100 dark:bg-slate-950/50 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-8 relative">
+                        <div className="w-full bg-[var(--background)] rounded-[2.5rem] overflow-hidden border border-[var(--glass-border)] mb-10 relative shadow-2xl group/preview">
+                            <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[var(--background)] to-transparent z-10 pointer-events-none opacity-60"></div>
                             {/* 3D Preview Environment */}
                             <ThreeDBrochure
                                 data={{
                                     ai_content: data,
                                     brand_logo: user?.brand_logo_url,
-                                    primary_color: user?.brand_primary_color || '#4F46E5',
-                                    secondary_color: user?.brand_secondary_color || '#EC4899',
+                                    primary_color: user?.brand_primary_color || '#00f3ff',
+                                    secondary_color: user?.brand_secondary_color || '#ff00ff',
                                     brand_font: user?.brand_font || 'Outfit',
                                     bespoke_image: localStorage.getItem('bespoke_image_url') || undefined,
                                     layout_theme: layoutTheme
@@ -277,21 +306,22 @@ export default function Generator() {
                                     setRefinerState({ isOpen: true, text, fieldType });
                                 }}
                             />
+                            <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[var(--background)] to-transparent z-10 pointer-events-none opacity-60"></div>
                         </div>
 
-                        <div className="flex justify-between items-center pt-6 border-t border-slate-100 dark:border-slate-800">
+                        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-10 border-t border-[var(--glass-border)]">
                             <button
                                 onClick={() => setStep('input')}
-                                className="px-5 py-2.5 text-slate-500 hover:text-slate-800 dark:hover:text-white font-bold transition-colors"
+                                className="w-full sm:w-auto px-8 py-4 text-[var(--foreground)]/40 hover:text-[var(--foreground)] text-[10px] font-black uppercase tracking-[0.3em] transition-all"
                             >
-                                Back
+                                Back to Control
                             </button>
                             <button
                                 onClick={handleGeneratePDF}
-                                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-[1.02] text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition-all flex items-center gap-2"
+                                className="w-full sm:w-auto px-10 py-5 bg-[var(--foreground)] text-[var(--background)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:opacity-90 hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-4 group"
                             >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                Download PDF (1 Credit)
+                                <svg className="w-7 h-7 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Compile PDF Asset
                             </button>
                         </div>
                     </div>
@@ -299,31 +329,32 @@ export default function Generator() {
 
                 {/* STEP 4: GENERATING */}
                 {step === 'generating' && (
-                    <div className="py-12 flex flex-col items-center justify-center text-center animate-in fade-in duration-500">
-                        <div className="relative w-16 h-16 mb-6">
-                            <div className="absolute inset-0 border-4 border-slate-200 dark:border-slate-700 rounded-full"></div>
-                            <div className="absolute inset-0 border-4 border-purple-500 rounded-full border-t-transparent animate-spin"></div>
+                    <div className="py-20 flex flex-col items-center justify-center text-center animate-in fade-in duration-500">
+                        <div className="relative w-24 h-24 mb-10">
+                            <div className="absolute inset-0 border-[3px] border-[var(--foreground)]/5 rounded-full"></div>
+                            <div className="absolute inset-0 border-[3px] border-[var(--accent-secondary)] rounded-full border-t-transparent animate-spin shadow-lg"></div>
                         </div>
-                        <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Generating PDF...</h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">Rendering high-quality graphics. This may take a moment.</p>
+                        <h3 className="text-2xl font-black text-[var(--foreground)] mb-4 italic uppercase tracking-tighter">Compiling Raster Data</h3>
+                        <p className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.4em] animate-pulse">Rendering 300DPI Neural Matrix...</p>
                     </div>
                 )}
 
                 {/* STEP 5: SUCCESS */}
                 {step === 'success' && (
-                    <div className="py-12 flex flex-col items-center justify-center text-center animate-in zoom-in duration-500">
-                        <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-green-500/20">
-                            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                    <div className="py-20 flex flex-col items-center justify-center text-center animate-in zoom-in duration-500">
+                        <div className="w-24 h-24 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] rounded-3xl border border-[var(--accent-primary)]/30 flex items-center justify-center mb-10 shadow-lg relative">
+                            <div className="absolute inset-0 bg-[var(--accent-primary)]/20 blur-2xl rounded-full"></div>
+                            <svg className="w-12 h-12 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7"></path></svg>
                         </div>
-                        <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">Brochure Ready!</h3>
-                        <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-sm">
-                            Your download should have started automatically. You can also find it in your downloads folder.
+                        <h3 className="text-4xl font-black text-[var(--foreground)] mb-4 italic tracking-tighter uppercase glitch-text">Sync Complete</h3>
+                        <p className="text-[var(--foreground)]/60 mb-12 max-w-sm text-sm font-medium leading-relaxed italic">
+                            Asset successfully exported to your local file system. Protocol remains active for further generation.
                         </p>
                         <button
                             onClick={() => { setStep('input'); setUrl(''); setData(null); }}
-                            className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl hover:scale-105 transition-all"
+                            className="px-12 py-5 bg-[var(--foreground)] text-[var(--background)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:opacity-90 hover:scale-105 transition-all shadow-lg"
                         >
-                            Create Another
+                            Reset Protocol
                         </button>
                     </div>
                 )}

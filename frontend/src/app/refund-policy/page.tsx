@@ -1,6 +1,5 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 export const metadata = {
     title: 'Refund Policy - BrochureGen AI',
@@ -67,8 +66,6 @@ export default function RefundPolicy() {
                     </p>
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 }

@@ -6,62 +6,45 @@
 
 ## 🗺️ Roadmap
 
-- [x] **v0.1** - MVP (Scraping & Basic PDF)
-- [x] **v0.2** - Stripe Integration & Auth (Complete)
-- [ ] **v0.3** - Brand Vault & Credit Scheduler
-- [ ] **v0.4** - Enterprise API & CRM Sync
-- [ ] **v1.0** - Official Launch
+- [x] **v8.5** - Solarized Genesis (Light Mode Overhaul)
+- [x] **v9.0** - Conversion Protocol (Lead Magnets & Voice Training)
+- [ ] **v9.5** - Multichannel Neural Sync (Email & Social)
+- [ ] **v10.0** - Enterprise Matrix Launch
 
 ---
 
-## 📄 License
+## 🌟 Conversion Protocol (v9.0)
 
-MIT © BrochureGen Team
+BrochureGen now features the **Conversion Protocol**, a suite of tools designed to maximize lead generation:
 
-<p align="center">
-  Built with ❤️ for High-Impact Growth.
-</p>
-![Project Banner](assets/preview.png)
-
-[![Next.js](https://img.shields.io/badge/Next.js-16.1-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Clerk](https://img.shields.io/badge/Auth-Clerk-6C47FF?style=for-the-badge&logo=clerk)](https://clerk.com/)
-[![Playwright](https://img.shields.io/badge/Playwright-Browsers-45ba4b?style=for-the-badge&logo=playwright)](https://playwright.dev/)
+-   **🧲 Neural Lead Magnets**: Theme-adaptive capture forms integrated directly into the brochure viewer.
+-   **🖋️ Refinement Matrix**: A high-precision editor for direct manual overrides and AI-driven tonal shifts.
+-   **🎙️ Voice Calibration**: Autonomic brand voice scanning to synchronize AI generation with your unique tonal markers.
 
 ---
 
-## 🚀 Overview
+## 🌗 Solarized Genesis & Tech Noir
 
-**BrochureGen** is a SaaS engine for automated marketing collateral generation. It allows users to scrape any URL, analyze brand identity via AI, and deliver professional, industry-specific brochures.
-
-### ✨ Key Features
-
--   **🤖 AI Engine**: Advanced content extraction and copywriting using GPT-4o.
--   **🏦 Brand Vault**: Centralized management of brand logos, colors, and voice.
--   **💳 Stripe Integration**: Seamless subscription management and automated billing.
--   **📈 Credit Scheduler**: Automated monthly credit resets with intelligent rollover.
--   **📊 Shared Analytics**: Privacy-first performance tracking for your brochures.
--   **🌗 Dynamic Theming System**: Toggles between Corporate, Modern, and Creative layouts.
--   **📄 Print-Ready CMYK PDFs**: Professional grade output for high-end printing.
+Experience the application in two premium, "God-Tier" aesthetics:
+-   **Solarized Genesis**: A high-clarity, warm light mode for professional precision.
+-   **Tech Noir**: The classic holographic dark mode for immersive synthesis.
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend (`/frontend`)
--   **Framework**: Next.js 16 (App Router)
+-   **Framework**: Next.js 15 (App Router / Suspense Optimized)
 -   **Runtime**: React 19
--   **Auth**: Clerk
+-   **Auth**: Clerk (Enterprise)
 -   **Styling**: Tailwind CSS 4.0
--   **Analytics**: Recharts
--   **Motion**: Framer Motion
+-   **Motion**: Framer Motion (Neural Transitions)
 
 ### Backend (`/backend`)
 -   **API**: FastAPI (Python 3.12+)
--   **Scraping & PDF**: Playwright 1.49
--   **AI**: OpenAI API (GPT-4o)
--   **Database**: PostgreSQL (via SQLAlchemy)
+-   **Scraping**: Playwright (Neural Crawler)
+-   **AI**: OpenAI GPT-4o
+-   **Database**: PostgreSQL
 -   **Payments**: Stripe
 
 ---
@@ -88,4 +71,14 @@ cd frontend
 npm install
 npm run dev
 ```
+
+---
+
+## 📄 License
+
+MIT © BrochureGen Team
+
+<p align="center">
+  Built with ❤️ for High-Impact Growth.
+</p>
 

@@ -23,17 +23,17 @@ export default function FeaturedTemplates() {
     return (
         <section className="py-20">
             <div className="text-center mb-12">
-                <span className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm">Professional Output</span>
-                <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2 mb-4">Featured Templates</h2>
-                <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                <span className="text-[var(--accent-primary)] font-bold tracking-wider uppercase text-sm">Professional Output</span>
+                <h2 className="text-3xl font-bold text-[var(--foreground)] mt-2 mb-4">Featured Templates</h2>
+                <p className="text-[var(--foreground)]/60 max-w-2xl mx-auto">
                     Choose from our library of high-converting designs. Our AI automatically adapts your content to fit perfectly.
                 </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
                 {templates.map((template, index) => (
-                    <div key={index} className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        <div className="aspect-[4/5] relative overflow-hidden bg-slate-100 dark:bg-slate-900">
+                    <div key={index} className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                        <div className="aspect-[4/5] relative overflow-hidden bg-[var(--foreground)]/5">
                             <div className={`absolute inset-0 bg-gradient-to-br ${template.color} opacity-0 group-hover:opacity-20 transition-opacity z-10`} />
                             {/* Placeholder for actual screenshot/image */}
                             <img

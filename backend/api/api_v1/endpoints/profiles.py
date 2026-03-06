@@ -51,7 +51,9 @@ def sync_profile(profile: ProfileCreate, db: Session = Depends(get_db), current_
         
         db_profile = get_profile(db, profile.id)
         if db_profile:
+            print(f"DEBUG: Found existing profile: {db_profile.id}, plan: {db_profile.plan}")
             return db_profile
+        print(f"DEBUG: Creating new profile for: {profile.id}")
         return create_profile(db, profile)
     except Exception as e:
         print(f"Error in sync_profile: {e}")

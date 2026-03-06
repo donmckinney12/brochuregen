@@ -29,12 +29,21 @@ async def scrape_url(request: ScrapeRequest, db: Session = Depends(get_db), curr
         raise HTTPException(status_code=402, detail=f"Insufficient credits. Requires {credit_cost} credits.")
     
     try:
+        from services.db_orm import get_profile
+        db_profile = get_profile(db, user_id)
+        brand_voice = db_profile.brand_voice_calibration if db_profile else None
+
         result = await scrape_website(request.url)
         if "error" in result:
             raise HTTPException(status_code=500, detail=result["error"])
             
         # Generate AI content
-        ai_content = await ai_service.generate_brochure_content(result.get("text", ""), request.url, request.is_campaign)
+        ai_content = await ai_service.generate_brochure_content(
+            result.get("text", ""), 
+            request.url, 
+            request.is_campaign,
+            brand_voice=brand_voice
+        )
         result["ai_content"] = ai_content
         result["is_campaign"] = request.is_campaign
         
@@ -66,3 +75,27 @@ async def refine_text(request: RefineRequest, db: Session = Depends(get_db), cur
         raise HTTPException(status_code=500, detail=result["error"])
         
     return result
+
+class VoiceExtractRequest(BaseModel):
+    url: str
+
+@router.post("/extract-voice")
+async def extract_voice(request: VoiceExtractRequest, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user_id = current_user["sub"]
+    
+    # Check subscription tier
+    from services.db_orm import get_profile
+    profile = get_profile(db, user_id)
+    if not profile or (profile.plan != 'pro' and profile.plan != 'agency' and profile.plan != 'enterprise'):
+        raise HTTPException(status_code=403, detail="Automated Voice Extraction requires a Premium plan.")
+
+    try:
+        from services.scraper import scrape_website
+        result = await scrape_website(request.url)
+        if "error" in result:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+        voice_res = await ai_service.extract_brand_voice(result.get("text", ""))
+        return voice_res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

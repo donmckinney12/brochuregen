@@ -1,6 +1,5 @@
 "use client";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import Link from "next/link";
 
 export default function BlogIndex() {
@@ -57,8 +56,6 @@ export default function BlogIndex() {
                     </div>
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 }

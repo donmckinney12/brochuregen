@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { Sparkles } from 'lucide-react';
 
 interface AIRefinerModalProps {
     isOpen: boolean;
@@ -70,43 +71,64 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-slate-900 dark:text-white">
-            <div className="absolute inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm" onClick={onClose}></div>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-[var(--foreground)]">
+            <div className="absolute inset-0 bg-[var(--background)]/60 backdrop-blur-sm" onClick={onClose}></div>
 
-            <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+            <div className="relative w-full max-w-2xl bg-[var(--background)] rounded-3xl shadow-2xl border border-[var(--glass-border)] overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
 
                 {/* Header */}
-                <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-950">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                <div className="px-8 py-6 border-b border-[var(--glass-border)] flex justify-between items-center bg-gradient-to-r from-[var(--foreground)]/5 to-transparent">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] flex items-center justify-center shadow-inner border border-[var(--accent-primary)]/20">
+                            <Sparkles className="w-6 h-6" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold">AI Content Refiner</h2>
-                            <p className="text-sm text-slate-500">Editing: <span className="uppercase tracking-wider font-bold">{fieldType}</span></p>
+                            <h2 className="text-2xl font-black italic tracking-tighter uppercase text-[var(--foreground)]">Refinement Matrix</h2>
+                            <div className="flex items-center gap-2 mt-1">
+                                <span className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.2em]">Node: {fieldType}</span>
+                                <span className="w-1 h-1 rounded-full bg-[var(--accent-primary)] animate-pulse"></span>
+                                <span className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em]">Manual Override Active</span>
+                            </div>
                         </div>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <button
+                        onClick={onClose}
+                        className="p-3 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 rounded-full transition-all hover:rotate-90"
+                    >
+                        <svg className="w-5 h-5 text-[var(--foreground)]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
 
-                <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-6">
+                <div className="p-8 overflow-y-auto flex-1 flex flex-col gap-8 custom-scrollbar">
                     {/* Input Area */}
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Current Text</label>
-                        <textarea
-                            value={currentText}
-                            onChange={(e) => setCurrentText(e.target.value)}
-                            className="w-full h-32 p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none resize-none"
-                        />
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.3em] ml-2">Direct Content Stream</label>
+                            <button
+                                onClick={() => setCurrentText(initialText)}
+                                disabled={currentText === initialText}
+                                className="text-[8px] font-black text-[var(--accent-primary)] uppercase tracking-widest hover:opacity-70 disabled:opacity-20 transition-all flex items-center gap-1"
+                            >
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                Reset to Original
+                            </button>
+                        </div>
+                        <div className="relative group">
+                            <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent-primary)]/20 to-transparent rounded-2xl blur opacity-25 group-focus-within:opacity-50 transition-opacity"></div>
+                            <textarea
+                                value={currentText}
+                                onChange={(e) => setCurrentText(e.target.value)}
+                                className="relative w-full h-40 p-6 bg-[var(--background)] border border-[var(--glass-border)] rounded-2xl focus:ring-1 focus:ring-[var(--accent-primary)]/50 outline-none resize-none text-[var(--foreground)] font-medium leading-relaxed transition-all shadow-inner"
+                                placeholder="Enter manual precision data..."
+                            />
+                        </div>
                     </div>
 
                     {/* AI Actions */}
                     <div>
                         <div className="flex items-center justify-between mb-3">
-                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">AI Magic Actions</label>
-                            <span className="text-xs font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md">
+                            <label className="block text-sm font-bold text-[var(--foreground)]/70">AI Magic Actions</label>
+                            <span className="text-xs font-bold text-[var(--foreground)]/50 bg-[var(--foreground)]/5 px-2 py-1 rounded-md">
                                 {user?.refine_credits ?? 0} Credits Left
                             </span>
                         </div>
@@ -123,9 +145,9 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                                     key={action.id}
                                     onClick={() => handleRefine(action.prompt)}
                                     disabled={isRefining}
-                                    className="p-3 text-left border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-purple-200 dark:hover:border-purple-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+                                    className="p-3 text-left border border-[var(--glass-border)] rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-purple-200 dark:hover:border-purple-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
                                 >
-                                    <span className="block text-sm font-bold mb-1 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                                    <span className="block text-sm font-bold mb-1 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-[var(--foreground)]">
                                         {action.label}
                                     </span>
                                 </button>
@@ -135,11 +157,11 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                 </div>
 
                 {/* Footer Controls */}
-                <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex justify-between items-center">
+                <div className="p-6 border-t border-[var(--glass-border)] bg-[var(--foreground)]/5 flex justify-between items-center">
                     <button
                         onClick={() => setCurrentText(initialText)}
                         disabled={isRefining || currentText === initialText}
-                        className="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white disabled:opacity-30 transition-colors"
+                        className="px-4 py-2 text-sm font-bold text-[var(--foreground)]/50 hover:text-[var(--foreground)] disabled:opacity-30 transition-colors"
                     >
                         Revert to Original
                     </button>
@@ -147,7 +169,7 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                     <button
                         onClick={() => { onApply(currentText, fieldType); onClose(); }}
                         disabled={isRefining}
-                        className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                        className="px-6 py-3 bg-[var(--foreground)] text-[var(--background)] font-bold rounded-xl shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
                     >
                         {isRefining ? (
                             <>

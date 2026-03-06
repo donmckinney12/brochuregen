@@ -5,7 +5,7 @@ def add_columns():
     retries = 5
     for i in range(retries):
         try:
-            conn = sqlite3.connect('sql_app.db', timeout=10)
+            conn = sqlite3.connect('backend/sql_app.db', timeout=10)
             c = conn.cursor()
             
             columns_to_add = [

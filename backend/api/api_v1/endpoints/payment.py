@@ -63,15 +63,15 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
         if user_id:
              print(f"Payment successful for user {user_id}")
              
-             # Calculate credits based on plan
+             # v8.0 Credit Synthesis Mapping
              plan_credits = {
-                 "starter": 10,
-                 "professional": 25,
-                 "pro": 25, # support both aliases
-                 "agency": 100,
-                 "enterprise": 1000 # Default high for enterprise, can be manual
+                 "starter": 15,
+                 "professional": 60,
+                 "pro": 60,
+                 "enterprise": 250,
+                 "ultimate": 1000
              }
-             amount = plan_credits.get(plan.lower(), 10) # default to starter if unknown
+             amount = plan_credits.get(plan.lower(), 15) # default to starter v8
              
              # Add credits
              add_credits_orm(db, user_id, amount)

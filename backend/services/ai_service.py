@@ -9,7 +9,7 @@ class AIService:
             print("Warning: OPENAI_API_KEY is not set.")
         self.client = AsyncOpenAI(api_key=self.api_key)
 
-    async def generate_brochure_content(self, text_content: str, url: str, is_campaign: bool = False) -> dict:
+    async def generate_brochure_content(self, text_content: str, url: str, is_campaign: bool = False, brand_voice: str = None) -> dict:
         """
         Uses OpenAI (gpt-4o) to analyze the provided website text and generate 
         marketing copy for a 3-fold brochure, and optionally a full campaign.
@@ -46,6 +46,10 @@ class AIService:
         {campaign_instructions}
         
         Return ONLY valid JSON.
+        
+        BRAND VOICE CALIBRATION (CRITICAL):
+        The user has specific brand guidelines you must follow. 
+        Tone/Style: {brand_voice if brand_voice else "Professional, modern, and engaging."}
         """
 
         try:
@@ -143,6 +147,87 @@ class AIService:
             print(f"Error calling OpenAI for translation: {e}")
             return {"error": f"Failed to translate content: {str(e)}"}
 
+    async def extract_brand_voice(self, text_content: str) -> dict:
+        """
+        Analyzes website content to extract a brand voice profile.
+        """
+        if not self.api_key:
+            return {"error": "OpenAI API key missing"}
+
+        truncated_text = text_content[:15000]
+        
+        prompt = f"""
+        You are an expert brand strategist. Analyze the following website content and extract a high-fidelity "Neural Voice Profile".
+        
+        Content:
+        {truncated_text}
+        
+        Please provide a concise but deep distillation of the brand's identity:
+        1. "tone": The primary emotional frequency (e.g., "Executive & Stoic", "Playful & Disruptive").
+        2. "messaging_pillars": 3 key value drivers found in the copy.
+        3. "target_audience": Who is this copy speaking to?
+        4. "calibration_snippet": A 1-paragraph synthesis (3-4 sentences) that can be used to "train" an AI to write like this brand.
+        
+        Return ONLY valid JSON.
+        """
+
+        try:
+            response = await self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": "You are a brand strategy assistant that outputs only JSON."},
+                    {"role": "user", "content": prompt}
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.5
+            )
+            
+            content = response.choices[0].message.content
+            return {"status": "success", "voice_profile": json.loads(content)}
+            
+        except Exception as e:
+            print(f"Error extracting brand voice: {e}")
+            return {"error": f"Failed to extract brand voice: {str(e)}"}
+
+    async def generate_variant(self, original_content: dict) -> dict:
+        """
+        Generates a high-conversion variant of existing brochure content for A/B testing.
+        """
+        if not self.api_key:
+            return {"error": "OpenAI API key missing"}
+
+        prompt = f"""
+        You are a conversion optimization expert. Generate a "Challenger" variant (Variant B) of the following brochure content to A/B test against the original.
+        
+        Original Content:
+        {original_content}
+        
+        Requirements for Variant B:
+        1. "headline": Create a more aggressive, more emotional, or more curiosity-driven headline.
+        2. "subheadline": Refine the subheadline to focus on a different pain point or a more specific benefit.
+        3. "cta_text": Create a high-friction or ultra-low-friction alternative (e.g., "Get Immediate Access" vs "Talk to a Strategist").
+        
+        Keep the "about_us" and "features" similar but feel free to punch up the copy.
+        
+        Return ONLY valid JSON matching the structure of the original content but with these modifications.
+        """
+
+        try:
+            response = await self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": "You are a conversion copywriter that outputs only JSON."},
+                    {"role": "user", "content": prompt}
+                ],
+                response_format={"type": "json_object"}
+            )
+            
+            variant_data = json.loads(response.choices[0].message.content)
+            return {"status": "success", "variant": variant_data}
+        except Exception as e:
+            print(f"Error generating variant: {e}")
+            return {"error": str(e)}
+
     async def generate_bespoke_image(self, prompt: str) -> dict:
         """
         Uses DALL-E 3 to generate a high-quality marketing hero image based on
@@ -166,3 +251,89 @@ class AIService:
         except Exception as e:
             print(f"Error calling DALL-E: {e}")
             return {"error": f"Failed to generate image: {str(e)}"}
+
+    async def generate_followup_sequence(self, lead_data: dict, brochure_context: dict) -> dict:
+        """
+        Generates a 3-step personalized email follow-up sequence.
+        """
+        if not self.api_key:
+            return {"error": "OpenAI API key missing"}
+
+        try:
+            prompt = f"""
+            System: You are an elite sales growth strategist specialized in lead nurturing.
+            Task: Generate a 3-step personalized "Neural Follow-up" email sequence for the following lead.
+            
+            Target Lead:
+            - Name: {lead_data.get('name')}
+            - Company: {lead_data.get('company')}
+            - Inquiry: "{lead_data.get('message')}"
+            
+            Context (The brochure they just viewed):
+            - Topic: {brochure_context.get('title')}
+            - Headline: {brochure_context.get('headline')}
+            
+            Protocol Requirements:
+            1. Step 1 (Immediate Sync): A follow-up that acknowledges their specific inquiry and provides immediate value (e.g., a relevant insight or a link to a resource).
+            2. Step 2 (Strategic Anchor): Sent 2 days later. PIVOT to a deeper strategic question or case study reference.
+            3. Step 3 (Hard Conversion): Sent 5 days later. A strong, bold call-to-action to book a strategy sync.
+            
+            Tone: High-end, assertive, professional, and bespoke.
+            
+            Return format: Return ONLY a JSON object with a 'sequence' key which is an array of 3 objects: [{{ "step": 1, "subject": "...", "body": "..." }}, ...]
+            """
+            
+            response = await self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": "You are a sales automation expert that outputs only JSON."},
+                    {"role": "user", "content": prompt}
+                ],
+                response_format={"type": "json_object"}
+            )
+            
+            res = json.loads(response.choices[0].message.content)
+            return {"status": "success", "sequence": res.get("sequence", [])}
+        except Exception as e:
+            print(f"Error generating follow-up: {e}")
+            return {"error": str(e)}
+
+    async def generate_seo_metadata(self, title: str, content: dict) -> dict:
+        """
+        Generates high-CTR SEO meta tags for a brochure.
+        """
+        if not self.api_key:
+            return {"error": "OpenAI API key missing"}
+
+        try:
+            prompt = f"""
+            System: You are an SEO and Meta-Tag conversion specialist.
+            Task: Generate optimized HTML meta tags for the following brochure content.
+            
+            Brochure Title: {title}
+            Key Content: {json.dumps(content, indent=2)}
+            
+            Requirements:
+            1. "meta_title": A provocative, benefit-driven title (max 60 chars).
+            2. "meta_description": A high-conversion summary that creates curiosity (max 160 chars).
+            3. "og_title": Optimized for social sharing (bold, punchy).
+            4. "og_description": Engaging social snippet.
+            5. "keywords": 5-7 high-intent keywords.
+            
+            Return ONLY a valid JSON object.
+            """
+            
+            response = await self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": "You are an SEO expert that outputs only JSON."},
+                    {"role": "user", "content": prompt}
+                ],
+                response_format={"type": "json_object"}
+            )
+            
+            res = json.loads(response.choices[0].message.content)
+            return {"status": "success", "metadata": res}
+        except Exception as e:
+            print(f"Error generating SEO metadata: {e}")
+            return {"error": str(e)}

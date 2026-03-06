@@ -1,6 +1,5 @@
 "use client";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { useState } from "react";
 
 export default function Contact() {
@@ -151,8 +150,6 @@ export default function Contact() {
                     </div>
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 }

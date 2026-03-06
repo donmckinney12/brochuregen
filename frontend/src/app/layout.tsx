@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
+import Footer from "@/components/Footer";
 import { AuthProvider } from '@/context/AuthContext';
 
 const geistSans = Geist({
@@ -66,10 +67,22 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} antialiased selection:bg-[var(--accent-primary)]/30 selection:text-[var(--foreground)] bg-[var(--background)] transition-colors duration-500`}
         >
+          <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+            {/* Unified Base layer */}
+            <div className="absolute inset-0 bg-[var(--background)]"></div>
+            <div className="absolute inset-0 mesh-gradient opacity-30"></div>
+            {/* Single optimized glow layer */}
+            <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-b from-[var(--accent-primary)]/10 via-[var(--accent-secondary)]/10 to-transparent blur-[120px] opacity-40"></div>
+            {/* Animated decorative layer */}
+            <div className="absolute inset-0 animate-aurora mix-blend-screen opacity-20"></div>
+            {/* Optimize Scanline visibility */}
+            <div className="scanline"></div>
+          </div>
           <AuthProvider>
             {children}
+            <Footer />
           </AuthProvider>
           <ChatWidget />
         </body>

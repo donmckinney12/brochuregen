@@ -52,10 +52,39 @@ def update_profile_plan(db: Session, user_id: str, plan: str, customer_id: str) 
         return True
     return False
 
-from models.profile import Profile, Brochure
+from models.profile import Profile, Brochure, Organization
 from schemas.brochure import BrochureCreate
 
-def get_user_brochures(db: Session, user_id: str):
+def sync_enterprise_context(db: Session, user_id: str, org_id: Optional[str], org_name: Optional[str] = "Unified Org"):
+    """
+    Syncs the Clerk Org context with our internal models.
+    """
+    if not org_id:
+        return None
+        
+    # 1. Upsert Organization
+    db_org = db.query(Organization).filter(Organization.id == org_id).first()
+    if not db_org:
+        db_org = Organization(id=org_id, name=org_name or "New Team Node")
+        db.add(db_org)
+        db.commit()
+        db.refresh(db_org)
+    
+    # 2. Link Profile
+    db_profile = get_profile(db, user_id)
+    if db_profile and db_profile.org_id != org_id:
+        db_profile.org_id = org_id
+        db.commit()
+        db.refresh(db_profile)
+        
+    return org_id
+
+def get_user_brochures(db: Session, user_id: str, org_id: Optional[str] = None):
+    """
+    Returns brochures for a user. If org_id is provided, returns all org brochures.
+    """
+    if org_id:
+        return db.query(Brochure).filter(Brochure.org_id == org_id).order_by(Brochure.created_at.desc()).all()
     return db.query(Brochure).filter(Brochure.user_id == user_id).order_by(Brochure.created_at.desc()).all()
 
 def get_shared_brochure(db: Session, share_uuid: str):
@@ -63,8 +92,11 @@ def get_shared_brochure(db: Session, share_uuid: str):
     from sqlalchemy.orm import joinedload
     return db.query(Brochure).options(joinedload(Brochure.owner)).filter(Brochure.share_uuid == share_uuid).first()
 
-def create_brochure(db: Session, brochure: BrochureCreate) -> Brochure:
-    db_item = Brochure(**brochure.dict())
+def create_brochure(db: Session, brochure: BrochureCreate, org_id: Optional[str] = None) -> Brochure:
+    data = brochure.dict()
+    if org_id:
+        data["org_id"] = org_id
+    db_item = Brochure(**data)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)

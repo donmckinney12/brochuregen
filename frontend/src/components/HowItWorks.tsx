@@ -27,28 +27,28 @@ export default function HowItWorks() {
     ];
 
     return (
-        <section className="py-20 bg-slate-50/50 dark:bg-white/5 border-y border-slate-200 dark:border-slate-800">
+        <section className="py-20 bg-[var(--foreground)]/5 border-y border-[var(--glass-border)] transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-16">
-                    <span className="text-purple-600 dark:text-purple-400 font-bold tracking-wider uppercase text-sm">Simple Process</span>
-                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">How It Works</h2>
+                    <span className="text-[var(--accent-secondary)] font-bold tracking-wider uppercase text-sm">Simple Process</span>
+                    <h2 className="text-3xl font-bold text-[var(--foreground)] mt-2">How It Works</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
                     {/* Connector Line (Desktop) */}
-                    <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 dark:from-slate-700 dark:via-slate-700 dark:to-slate-700 -z-10" />
+                    <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-[var(--accent-primary)]/20 via-[var(--accent-secondary)]/20 to-[var(--accent-tertiary)]/20 -z-10" />
 
                     {steps.map((step, index) => (
                         <div key={index} className="flex flex-col items-center text-center group">
                             <div className={`w-24 h-24 rounded-3xl ${step.color} shadow-lg shadow-blue-500/20 flex items-center justify-center mb-6 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 relative`}>
                                 <div className="absolute inset-0 bg-white opacity-20 rounded-3xl group-hover:opacity-10 transition-opacity" />
                                 {step.icon}
-                                <div className="absolute -bottom-3 bg-white dark:bg-slate-800 px-3 py-1 rounded-full text-xs font-black shadow-sm border border-slate-100 dark:border-slate-700">
+                                <div className="absolute -bottom-3 bg-[var(--background)] px-3 py-1 rounded-full text-xs font-black shadow-sm border border-[var(--glass-border)]">
                                     Step {index + 1}
                                 </div>
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{step.title}</h3>
-                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed max-w-xs">
+                            <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">{step.title}</h3>
+                            <p className="text-[var(--foreground)]/60 leading-relaxed max-w-xs">
                                 {step.description}
                             </p>
                         </div>

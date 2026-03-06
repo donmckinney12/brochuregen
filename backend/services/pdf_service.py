@@ -23,7 +23,8 @@ async def generate_brochure_pdf(data: dict) -> bytes:
         primary_color=data.get("primary_color", "#4F46E5"),
         secondary_color=data.get("secondary_color", "#EC4899"),
         brand_font=data.get("brand_font", "Outfit"),
-        layout_theme=data.get("layout_theme", "modern")
+        layout_theme=data.get("layout_theme", "modern"),
+        share_url=data.get("share_url")
     )
 
     # 2. Convert to PDF using Playwright

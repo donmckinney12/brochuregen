@@ -1,7 +1,6 @@
 "use client";
 import Navbar from "@/components/Navbar";
 import { useState } from "react";
-import Footer from "@/components/Footer";
 import Link from "next/link";
 
 const TEMPLATES = [
@@ -122,8 +121,6 @@ export default function TemplatesPage() {
                     </Link>
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 }

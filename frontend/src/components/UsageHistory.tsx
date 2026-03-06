@@ -29,42 +29,46 @@ export default function UsageHistory() {
         fetchBrochures();
     }, [user?.id, getToken]);
 
-    if (isLoading) return <div className="animate-pulse space-y-4"><div className="h-20 bg-slate-100 dark:bg-slate-800 rounded-xl w-full"></div></div>;
+    if (isLoading) return <div className="animate-pulse space-y-4"><div className="h-20 bg-[var(--foreground)]/5 rounded-xl w-full"></div></div>;
 
     if (brochures.length === 0) {
         return (
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-12 text-center border-dashed">
-                <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300 dark:text-slate-600">
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <div className="bg-[var(--background)]/60 rounded-2xl border border-[var(--glass-border)] p-12 text-center border-dashed backdrop-blur-md">
+                <div className="w-16 h-16 bg-[var(--foreground)]/5 rounded-full flex items-center justify-center mx-auto mb-4 text-[var(--foreground)]/20 border border-[var(--glass-border)]">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                 </div>
-                <h4 className="text-lg font-medium text-slate-900 dark:text-white mb-2">No brochures yet</h4>
-                <p className="text-slate-500 mb-6 max-w-sm mx-auto">Generate your first brochure above to see it appear here.</p>
+                <h4 className="text-lg font-bold text-[var(--foreground)] mb-2 uppercase tracking-tighter">Void History</h4>
+                <p className="text-[var(--foreground)]/40 mb-6 max-w-sm mx-auto text-sm">Synchronize with the network to generate your first document.</p>
             </div>
         );
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
             {brochures.map((item: any) => (
-                <div key={item.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-xl transition-all group">
-                    <div className="p-6">
-                        <div className="flex justify-between items-start mb-4">
-                            <h4 className="font-bold text-lg truncate pr-4">{item.title}</h4>
-                            <span className="text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-md font-medium whitespace-nowrap">
-                                Generated
-                            </span>
+                <div key={item.id} className="premium-card overflow-hidden hover:shadow-[var(--accent-primary)]/10 transition-all group border-[var(--glass-border)]">
+                    <div className="aspect-[3/4] bg-[var(--background)]/40 relative overflow-hidden flex items-center justify-center border-b border-[var(--glass-border)]">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent-primary)]/5 to-[var(--accent-secondary)]/5 group-hover:opacity-100 opacity-60 transition-opacity"></div>
+                        <svg className="w-12 h-12 text-[var(--foreground)]/10 group-hover:text-[var(--accent-primary)]/20 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <div className="absolute bottom-4 left-4 right-4">
+                            <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div className="h-full bg-cyan-500 w-[70%]" />
+                            </div>
                         </div>
-                        <p className="text-xs text-slate-500 mb-4 truncate">{item.url}</p>
-                        <div className="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
-                            <span className="text-xs text-slate-400">
+                    </div>
+                    <div className="p-6">
+                        <h4 className="font-black text-[var(--foreground)] truncate uppercase tracking-tighter mb-1 select-none">{item.title || 'Untitled Prototype'}</h4>
+                        <p className="text-[10px] text-[var(--accent-primary)] font-bold mb-4 truncate italic opacity-50">{item.url}</p>
+                        <div className="flex items-center justify-between pt-4 border-t border-[var(--glass-border)]">
+                            <span className="text-[10px] text-[var(--foreground)]/40 font-bold uppercase tracking-widest">
                                 {new Date(item.created_at).toLocaleDateString()}
                             </span>
-                            <div className="flex gap-2">
-                                <button className="p-2 text-slate-400 hover:text-blue-600 transition-colors">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            <div className="flex gap-1">
+                                <button className="p-2 text-[var(--foreground)]/40 hover:text-[var(--accent-primary)] transition-colors">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 </button>
-                                <button className="p-2 text-slate-400 hover:text-red-600 transition-colors">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <button className="p-2 text-[var(--foreground)]/40 hover:text-[var(--accent-secondary)] transition-colors">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
                             </div>
                         </div>

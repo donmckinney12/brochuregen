@@ -2,15 +2,48 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 export default function EnterprisePage() {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        company: '',
+        size: '50 - 200 employees',
+        useCase: 'Brand Scalability',
+        message: ''
+    });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('loading');
-        setTimeout(() => setStatus('success'), 1500);
+
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const res = await fetch(`${apiUrl}/api/v1/enterprise/intake`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: `${formData.firstName} ${formData.lastName}`,
+                    email: formData.email,
+                    company: formData.company,
+                    size: formData.size,
+                    use_case: formData.useCase,
+                    message: formData.message
+                }),
+            });
+
+            if (res.ok) {
+                setStatus('success');
+            } else {
+                throw new Error('Failed to submit protocol');
+            }
+        } catch (err) {
+            console.error(err);
+            setStatus('idle');
+            alert('Protocol Sync Failed. Please try again.');
+        }
     };
 
     return (
@@ -53,38 +86,85 @@ export default function EnterprisePage() {
                     >
                         <div className="absolute inset-0 bg-blue-500/10 blur-[100px] rounded-full"></div>
                         <div className="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800">
-                            <h3 className="text-2xl font-bold mb-6">Request a Demo</h3>
+                            <h3 className="text-2xl font-bold mb-6 italic tracking-tighter uppercase">Protocol Intake</h3>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">First Name</label>
-                                        <input type="text" required className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">First Name</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.firstName}
+                                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold"
+                                        />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Last Name</label>
-                                        <input type="text" required className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Last Name</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.lastName}
+                                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold"
+                                        />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Work Email</label>
-                                    <input type="email" required className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Work Email</label>
+                                    <input
+                                        type="email"
+                                        required
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold"
+                                    />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Organization Size</label>
-                                    <select className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none cursor-pointer">
-                                        <option>50 - 200 employees</option>
-                                        <option>201 - 500 employees</option>
-                                        <option>500+ employees</option>
-                                    </select>
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Company / Node</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={formData.company}
+                                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                                        className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Org Size</label>
+                                        <select
+                                            value={formData.size}
+                                            onChange={(e) => setFormData({ ...formData, size: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none cursor-pointer text-sm font-bold"
+                                        >
+                                            <option>50 - 200 units</option>
+                                            <option>201 - 500 units</option>
+                                            <option>500+ units</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Primary Objective</label>
+                                        <select
+                                            value={formData.useCase}
+                                            onChange={(e) => setFormData({ ...formData, useCase: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none cursor-pointer text-sm font-bold"
+                                        >
+                                            <option>Brand Scalability</option>
+                                            <option>Custom AI Training</option>
+                                            <option>API Integration</option>
+                                            <option>SSO / Security</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <button
                                     type="submit"
                                     disabled={status !== 'idle'}
-                                    className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl transition-all shadow-xl shadow-blue-500/25 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
+                                    className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-blue-500/25 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
                                 >
-                                    {status === 'loading' ? 'Sending...' : status === 'success' ? 'Message Sent!' : 'Contact Sales'}
+                                    {status === 'loading' ? 'Establishing Link...' : status === 'success' ? 'Protocol Synchronized' : 'Initiate Contact'}
                                 </button>
-                                <p className="text-[10px] text-slate-500 text-center uppercase tracking-widest font-bold">Priority response within 24 hours</p>
+                                <p className="text-[10px] text-slate-500 text-center uppercase tracking-[0.2em] font-black">Secure transmission active</p>
                             </form>
                         </div>
                     </motion.div>
@@ -150,8 +230,6 @@ export default function EnterprisePage() {
                     </div>
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 }

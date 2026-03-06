@@ -2,7 +2,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import Link from 'next/link';
 
 export default function PartnersPage() {
@@ -146,8 +145,6 @@ export default function PartnersPage() {
                     </div>
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 }

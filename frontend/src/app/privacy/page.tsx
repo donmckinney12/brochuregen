@@ -1,16 +1,15 @@
 "use client";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 export default function PrivacyPolicy() {
     return (
-        <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white font-sans text-sm md:text-base">
+        <div className="min-h-screen text-[var(--foreground)] font-sans text-sm md:text-base bg-transparent">
             <Navbar />
 
             <main className="pt-32 pb-20 px-6 max-w-4xl mx-auto">
-                <header className="mb-12 border-b border-slate-200 dark:border-slate-800 pb-8">
-                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Privacy Policy</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Last Updated: February 6, 2026</p>
+                <header className="mb-12 border-b border-[var(--glass-border)] pb-8">
+                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 text-[var(--foreground)]">Privacy Policy</h1>
+                    <p className="text-[var(--foreground)]/50">Last Updated: February 6, 2026</p>
                 </header>
 
                 <article className="prose prose-slate dark:prose-invert max-w-none">
@@ -56,8 +55,6 @@ export default function PrivacyPolicy() {
                     </p>
                 </article>
             </main>
-
-            <Footer />
         </div>
     );
 }

@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useUser, useClerk, useAuth as useClerkAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 
-type Plan = 'free' | 'pro' | 'agency' | null;
+type Plan = 'free' | 'pro' | 'agency' | 'enterprise' | null;
 
 interface UserProfile {
     id: string;
@@ -17,6 +17,7 @@ interface UserProfile {
     brand_secondary_color?: string;
     brand_font?: string;
     brand_voice_tone?: string;
+    brand_voice_calibration?: string;
     created_at?: string;
 }
 
@@ -93,6 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const data = await response.json();
                 console.log("✅ Profile fetched successfully:", data.id);
                 setUser(data);
+                console.log("📊 Fetched plan:", data.plan);
             } else {
                 const errText = await response.text();
                 console.error(`❌ Backend error (${response.status}):`, errText);

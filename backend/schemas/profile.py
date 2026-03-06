@@ -15,6 +15,7 @@ class ProfileBase(BaseModel):
     brand_secondary_color: Optional[str] = "#EC4899"
     brand_font: Optional[str] = "Outfit"
     brand_voice_tone: Optional[str] = "Professional"
+    brand_voice_calibration: Optional[str] = None
 
 class ProfileCreate(ProfileBase):
     id: str # UUID from Auth provider
@@ -26,6 +27,7 @@ class ProfileUpdate(BaseModel):
     brand_secondary_color: Optional[str] = None
     brand_font: Optional[str] = None
     brand_voice_tone: Optional[str] = None
+    brand_voice_calibration: Optional[str] = None
 
 class Profile(ProfileBase):
     id: str
