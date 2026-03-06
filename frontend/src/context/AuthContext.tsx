@@ -1,7 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import { Session, User as SupabaseUser } from '@supabase/supabase-js';
+import { useUser, useClerk, useAuth as useClerkAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 
 type Plan = 'free' | 'pro' | 'agency' | null;
@@ -12,171 +11,157 @@ interface UserProfile {
     full_name?: string;
     plan: Plan;
     credits: number;
-    refine_credits: number; // Snake case to match likely DB column
-    brand_vault?: any;      // JSONB column
+    refine_credits: number;
+    brand_logo_url?: string;
+    brand_primary_color?: string;
+    brand_secondary_color?: string;
+    brand_font?: string;
+    brand_voice_tone?: string;
     created_at?: string;
 }
 
 interface AuthContextType {
     user: UserProfile | null;
-    session: Session | null;
     isAuthenticated: boolean;
     isLoading: boolean;
-    signInWithGoogle: () => Promise<{ error: any }>;
-    signInWithPassword: (email: string, password: string) => Promise<{ data: any; error: any }>;
-    signUp: (email: string, password: string, fullName: string) => Promise<{ data: any; error: any }>;
     signOut: () => Promise<void>;
     refreshProfile: () => Promise<void>;
     currentPlan: Plan;
     deductCredit: (type: 'generate' | 'refine') => Promise<{ success: boolean; error?: string }>;
+    getToken: (options?: any) => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+    const { user: clerkUser, isLoaded: isClerkLoaded, isSignedIn } = useUser();
+    const { signOut: clerkSignOut } = useClerk();
+    const { getToken } = useClerkAuth();
     const [user, setUser] = useState<UserProfile | null>(null);
-    const [session, setSession] = useState<Session | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const router = useRouter();
 
-    const fetchProfile = async (userId: string, userEmail: string) => {
-        try {
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', userId)
-                .single();
+    const fetchProfile = async () => {
+        console.log("🔄 Starting fetchProfile...");
+        if (!clerkUser) {
+            console.log("ℹ️ No Clerk user found, skipping fetchProfile");
+            setUser(null);
+            setIsLoadingProfile(false);
+            return;
+        }
 
-            if (error && error.code === 'PGRST116') {
-                // Profile doesn't exist? Create one (fallback)
-                console.log("Profile missing, creating default...");
-                const newProfile = {
-                    id: userId,
-                    email: userEmail,
-                    plan: 'free',
-                    credits: 5,
-                    refine_credits: 0,
-                    brand_vault: { active: false }
-                };
-                const { error: insertError } = await supabase.from('profiles').insert([newProfile]);
-                if (!insertError) setUser(newProfile as any);
-            } else if (data) {
-                setUser({
-                    ...data,
-                    // Map DB snake_case to what frontend expects if needed, or update frontend types
-                    // For now, let's stick to the interface defined above
-                });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+            console.warn("⚠️ fetchProfile timed out after 30s");
+            controller.abort();
+            setIsLoadingProfile(false);
+        }, 30000);
+
+        try {
+            console.log("🛡️ Getting Clerk token...");
+            const token = await getToken();
+            if (!token) {
+                console.error("❌ Failed to get Clerk token");
+                setIsLoadingProfile(false);
+                return;
             }
-        } catch (error) {
-            console.error("Error fetching profile:", error);
+            console.log("🎟️ Token received, prefix:", token.substring(0, 10));
+
+            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            console.log(`🌐 Syncing with backend: ${apiBase}/api/v1/profiles/`);
+
+            const response = await fetch(`${apiBase}/api/v1/profiles/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                signal: controller.signal,
+                body: JSON.stringify({
+                    id: clerkUser.id,
+                    email: clerkUser.primaryEmailAddress?.emailAddress,
+                    full_name: clerkUser.fullName,
+                    plan: 'free',
+                    credits: 10,
+                    refine_credits: 5
+                })
+            });
+
+            clearTimeout(timeoutId);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("✅ Profile fetched successfully:", data.id);
+                setUser(data);
+            } else {
+                const errText = await response.text();
+                console.error(`❌ Backend error (${response.status}):`, errText);
+            }
+        } catch (error: any) {
+            if (error.name === 'AbortError') {
+                console.error("❌ Profile fetch aborted due to timeout");
+            } else {
+                console.error("❌ Error fetching profile:", error);
+            }
+        } finally {
+            setIsLoadingProfile(false);
+            console.log("🏁 fetchProfile finished");
         }
     };
 
     useEffect(() => {
-        // 1. Check active session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            if (session?.user) {
-                fetchProfile(session.user.id, session.user.email!);
-            } else {
-                setUser(null);
-            }
-            setIsLoading(false);
-        });
-
-        // 2. Listen for changes
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-            if (session?.user) {
-                fetchProfile(session.user.id, session.user.email!);
-            } else {
-                setUser(null);
-                // router.push('/login'); // Optional: Force redirect
-            }
-            setIsLoading(false);
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    const signInWithGoogle = async () => {
-        const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: `${window.location.origin}/auth/callback`,
-            },
-        });
-        return { error };
-    };
-
-    const signInWithPassword = async (email: string, password: string) => {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-        return { data, error };
-    };
-
-    const signUp = async (email: string, password: string, fullName: string) => {
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    full_name: fullName,
-                },
-            },
-        });
-        // We rely on the useEffect to create the profile if it doesn't exist, 
-        // or we could create it here explicitly.
-        return { data, error };
-    };
+        if (isClerkLoaded) {
+            fetchProfile();
+        }
+    }, [clerkUser?.id, isClerkLoaded]);
 
     const signOut = async () => {
-        await supabase.auth.signOut();
+        await clerkSignOut();
+        setUser(null);
         router.push('/');
     };
 
-    // Temporary client-side deduction (Secure this later with RLS or Backend)
     const deductCredit = async (type: 'generate' | 'refine') => {
-        if (!user || !session) return { success: false, error: 'Not logged in' };
+        if (!user) return { success: false, error: 'Not logged in' };
 
-        const currentBalance = type === 'generate' ? user.credits : user.refine_credits;
-        const column = type === 'generate' ? 'credits' : 'refine_credits';
+        try {
+            const token = await getToken();
+            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const response = await fetch(`${apiBase}/api/v1/profiles/deduct`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    type: type
+                })
+            });
 
-        if (currentBalance <= 0) {
-            return { success: false, error: `Insufficient ${type} credits.` };
+            if (response.ok) {
+                const data = await response.json();
+                setUser(prev => prev ? { ...prev, credits: data.new_balance } : null);
+                return { success: true };
+            } else {
+                const err = await response.json();
+                return { success: false, error: err.detail || 'Failed to deduct credits' };
+            }
+        } catch (error) {
+            return { success: false, error: 'Connection error' };
         }
-
-        const { error } = await supabase
-            .from('profiles')
-            .update({ [column]: currentBalance - 1 })
-            .eq('id', user.id);
-
-        if (error) {
-            return { success: false, error: error.message };
-        }
-
-        // Optimistic update or refetch
-        await fetchProfile(user.id, user.email);
-        return { success: true };
     };
 
     return (
         <AuthContext.Provider value={{
             user,
-            session,
-            isAuthenticated: !!session,
-            isLoading,
-            signInWithGoogle,
-            signInWithPassword,
-            signUp,
+            isAuthenticated: !!isSignedIn,
+            isLoading: !isClerkLoaded || isLoadingProfile,
             signOut,
-            refreshProfile: async () => { if (session?.user) await fetchProfile(session.user.id, session.user.email!) },
+            refreshProfile: fetchProfile,
             currentPlan: user?.plan || null,
-            deductCredit
+            deductCredit,
+            getToken
         }}>
             {children}
         </AuthContext.Provider>

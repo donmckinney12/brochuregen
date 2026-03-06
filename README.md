@@ -1,173 +1,91 @@
 # BrochureGen 🎨✨
 
-> **Turn any website URL into a professional, print-ready PDF brochure in seconds using AI.**
+> **The world's most advanced AI brochure generation platform. Turn any URL into a high-converting, print-ready marketing powerhouse in seconds.**
 
+---
+
+## 🗺️ Roadmap
+
+- [x] **v0.1** - MVP (Scraping & Basic PDF)
+- [x] **v0.2** - Stripe Integration & Auth (Complete)
+- [ ] **v0.3** - Brand Vault & Credit Scheduler
+- [ ] **v0.4** - Enterprise API & CRM Sync
+- [ ] **v1.0** - Official Launch
+
+---
+
+## 📄 License
+
+MIT © BrochureGen Team
+
+<p align="center">
+  Built with ❤️ for High-Impact Growth.
+</p>
 ![Project Banner](assets/preview.png)
 
-[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python)](https://python.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.1-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Clerk](https://img.shields.io/badge/Auth-Clerk-6C47FF?style=for-the-badge&logo=clerk)](https://clerk.com/)
 [![Playwright](https://img.shields.io/badge/Playwright-Browsers-45ba4b?style=for-the-badge&logo=playwright)](https://playwright.dev/)
 
 ---
 
 ## 🚀 Overview
 
-**BrochureGen** is an AI-powered SaaS platform that automates the creation of marketing materials. By simply pasting a URL (e.g., a Zillow listing, a LinkedIn profile, or a company home page), our engine scrapes the content, analyzes the brand identity, and generates a stunning, high-resolution PDF brochure ready for print or digital distribution.
+**BrochureGen** is a SaaS engine for automated marketing collateral generation. It allows users to scrape any URL, analyze brand identity via AI, and deliver professional, industry-specific brochures.
 
 ### ✨ Key Features
 
--   **🤖 AI Content Extraction**: Automatically pulls text, images, and brand colors from any URL.
--   **🎨 Auto-Branding**: Matches the brochure's color palette and typography to the source website.
--   **📄 Print-Ready PDFs**: Generates CMYK-compatible, high-resolution PDFs (A4 Landscape).
--   **💳 Credit System**: Users purchase credits or subscribe to generate brochures.
--   **🔐 Secure Dashboard**: Manage account, view credits, and access generation history.
--   **📱 Responsive & Modern**: Built with a mobile-first, dark-mode-ready UI.
+-   **🤖 AI Engine**: Advanced content extraction and copywriting using GPT-4o.
+-   **🏦 Brand Vault**: Centralized management of brand logos, colors, and voice.
+-   **💳 Stripe Integration**: Seamless subscription management and automated billing.
+-   **📈 Credit Scheduler**: Automated monthly credit resets with intelligent rollover.
+-   **📊 Shared Analytics**: Privacy-first performance tracking for your brochures.
+-   **🌗 Dynamic Theming System**: Toggles between Corporate, Modern, and Creative layouts.
+-   **📄 Print-Ready CMYK PDFs**: Professional grade output for high-end printing.
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend (`/frontend`)
--   **Framework**: Next.js 14 (App Router)
--   **Styling**: Tailwind CSS + custom glassmorphism effects
--   **Icons**: Heroicons & lucide-react
--   **Motion**: Framer Motion (animate-in/out)
--   **State**: React Hooks + Context
+-   **Framework**: Next.js 16 (App Router)
+-   **Runtime**: React 19
+-   **Auth**: Clerk
+-   **Styling**: Tailwind CSS 4.0
+-   **Analytics**: Recharts
+-   **Motion**: Framer Motion
 
 ### Backend (`/backend`)
--   **API**: FastAPI (Python)
--   **Scraping**: Playwright (Headless Chromium)
--   **PDF Engine**: **Playwright** (HTML to PDF conversion)
+-   **API**: FastAPI (Python 3.12+)
+-   **Scraping & PDF**: Playwright 1.49
 -   **AI**: OpenAI API (GPT-4o)
--   **Database**: PostgreSQL (Supabase)
--   **Payments**: Stripe (Checkout & Webhooks)
-
----
-
-## ⚡ Admin Tools (God Mode)
-
-Manage users and credits directly from the command line.
-
-```bash
-cd backend
-# Give unlimited credits to a user
-python admin_tools.py user@example.com --credits 1000000 --name "Super User"
-```
-
----
-
-## 💳 Stripe Configuration (Required for Payments)
-
-To enable the "Upgrade to Pro" feature, you need to configure Stripe.
-
-1.  **Create a Stripe Account**: Go to [dashboard.stripe.com](https://dashboard.stripe.com).
-2.  **Get API Keys**: 
-    -   Copy your `Secret Key` (`sk_test_...`) and add it to `backend/.env` as `STRIPE_SECRET_KEY`.
-3.  **Create a Product**:
-    -   Create a product (e.g., "Pro Subscription") in Stripe Dashboard.
-    -   Copy the `API ID` of the price (starts with `price_...`) and add it to `backend/.env` as `STRIPE_PRICE_ID`.
-4.  **Setup Webhooks**:
-    -   **Local Development**: Use Stripe CLI.
-        ```bash
-        stripe listen --forward-to localhost:8002/api/webhook
-        ```
-        Copy the returned `whsec_...` secret to `backend/.env` as `STRIPE_WEBHOOK_SECRET`.
-    -   **Production**: Set your webhook endpoint in the Stripe Dashboard to:
-        `https://<your-domain>/api/webhook`
-
+-   **Database**: PostgreSQL (via SQLAlchemy)
+-   **Payments**: Stripe
 
 ---
 
 ## 🏁 Getting Started
 
-### Prerequisites
--   Node.js 18+
--   Python 3.9+
--   Pip & Virtualenv
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/donmckinney12/brochuregen.git
-cd brochuregen
-```
+### 1. Prerequisites
+-   Node.js 20+
+-   Python 3.12+
 
 ### 2. Backend Setup
-The backend handles scraping and PDF generation.
-
 ```bash
 cd backend
-
-# Create virtual environment
-python -m venv venv
-
-# Activate (Windows)
-.\venv\Scripts\activate
-# Activate (Mac/Linux)
-# source venv/bin/activate
-
-# Install dependencies
+python -m venv .venv
+source .venv/bin/activate # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 playwright install chromium
-
-# Run the server
 python run.py
 ```
-*Backend runs on: `http://localhost:8002`*
 
 ### 3. Frontend Setup
-The frontend is the user interface.
-
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Run development server
 npm run dev
 ```
-*Frontend runs on: `http://localhost:3000`*
 
----
-
-## 📖 Documentation
-
--   [**Walkthrough**](walkthrough.md): Full development guide and setup instructions.
--   [**Implementation Plan**](implementation_plan.md): Technical architecture and decisions.
-
----
-
-## 📸 Screenshots
-
-| Landing Page | Dashboard |
-|:---:|:---:|
-| ![Landing](https://placehold.co/600x400/1e293b/FFF?text=Landing+Page) | ![Dashboard](https://placehold.co/600x400/1e293b/FFF?text=Dashboard+UI) |
-
-| Editor | Mobile View |
-|:---:|:---:|
-| ![Editor](https://placehold.co/600x400/1e293b/FFF?text=Editor+View) | ![Mobile](https://placehold.co/600x400/1e293b/FFF?text=Mobile+Responsive) |
-
----
-
-## 🗺️ Roadmap
-
-- [x] MVP Launch (Landing, Auth, Basic Gen)
-- [x] **Stripe Payments Integration** (Subscriptions + Credits)
-- [x] **Brochure Generator** (Scraper + AI + PDF)
-- [x] **User Dashboard** (Credit tracking & History)
-- [ ] Team Collaboration Features
-- [ ] Multi-Page Booklet Support
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">
-  Built with ❤️ by the BrochureGen Team
-</p># brochuregen

@@ -5,6 +5,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Generator from '@/components/Generator';
+import UsageHistory from '@/components/UsageHistory';
+import OnboardingWizard from '@/components/OnboardingWizard';
 
 function DashboardContent() {
     const { user, isLoading, refreshProfile } = useAuth();
@@ -42,6 +44,7 @@ function DashboardContent() {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300">
             <Navbar />
+            <OnboardingWizard />
 
             <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
 
@@ -111,33 +114,13 @@ function DashboardContent() {
                     <Generator />
                 </div>
 
-                {/* Recent Brochures (Placeholder) */}
+                {/* Recent Brochures Section */}
                 <div className="mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
                     <h3 className="text-xl font-bold mb-6 text-slate-800 dark:text-white flex items-center gap-2">
                         Recent Brochures
-                        <span className="bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs px-2 py-1 rounded-full">0</span>
                     </h3>
 
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-12 text-center border-dashed">
-                        <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300 dark:text-slate-600">
-                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        </div>
-                        <h4 className="text-lg font-medium text-slate-900 dark:text-white mb-2">No brochures yet</h4>
-                        <p className="text-slate-500 mb-6 max-w-sm mx-auto">
-                            Generate your first brochure above to see it appear here in your history.
-                        </p>
-                        <div className="flex flex-col items-center gap-3">
-                            <button
-                                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                                className="text-blue-600 dark:text-blue-400 font-bold hover:underline"
-                            >
-                                Start Generating &rarr;
-                            </button>
-                            <button className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
-                                View example brochures
-                            </button>
-                        </div>
-                    </div>
+                    <UsageHistory />
                 </div>
 
             </main>

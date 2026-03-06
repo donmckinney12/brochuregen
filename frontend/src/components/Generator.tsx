@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import ThreeDBrochure from '@/components/ThreeDBrochure';
+import AIRefinerModal from '@/components/AIRefinerModal';
 
 type Step = 'input' | 'processing' | 'preview' | 'generating' | 'success';
 
@@ -14,12 +16,16 @@ interface BrochureData {
 }
 
 export default function Generator() {
-    const { user, refreshProfile } = useAuth();
+    const { user, refreshProfile, getToken } = useAuth();
     const [url, setUrl] = useState('');
     const [step, setStep] = useState<Step>('input');
     const [data, setData] = useState<BrochureData | null>(null);
     const [error, setError] = useState('');
     const [logs, setLogs] = useState<string[]>([]);
+    const [layoutTheme, setLayoutTheme] = useState('modern');
+
+    // Refiner State
+    const [refinerState, setRefinerState] = useState({ isOpen: false, text: '', fieldType: '' });
 
     const addLog = (msg: string) => setLogs(prev => [...prev, msg]);
 
@@ -36,10 +42,14 @@ export default function Generator() {
                 targetUrl = 'https://' + targetUrl;
             }
 
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/scrape`, {
+            const token = await getToken();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/scrape/scrape`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: targetUrl })
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ url: targetUrl, layout_theme: layoutTheme })
             });
 
             if (!res.ok) {
@@ -72,12 +82,17 @@ export default function Generator() {
         setStep('generating');
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/generate-pdf`, {
+            const token = await getToken();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/pdf/generate-pdf`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     ...data,
-                    user_id: user.id
+                    user_id: user.id,
+                    layout_theme: layoutTheme
                 })
             });
 
@@ -123,8 +138,33 @@ export default function Generator() {
         setData({ ...data, features: newFeatures });
     };
 
+    const handleRefineApply = (refinedText: string, fieldType: string) => {
+        if (!data) return;
+        if (fieldType === 'feature') {
+            // Need a smarter way to know WHICH feature if we support multiple, 
+            // but for now, we'll assume the refiner modal returns the whole string to replace,
+            // we will need to find which one it was or pass an index.
+            // A quick fix for this demo is changing the fieldType to include the index or just matching.
+            const index = data.features.findIndex(f => f === refinerState.text);
+            if (index !== -1) {
+                updateFeature(index, refinedText);
+            }
+        } else {
+            updateField(fieldType as keyof BrochureData, refinedText);
+        }
+    };
+
     return (
-        <div className="w-full max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all duration-300">
+        <div className="w-full max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all duration-300 relative">
+
+            {/* Refiner Modal */}
+            <AIRefinerModal
+                isOpen={refinerState.isOpen}
+                initialText={refinerState.text}
+                fieldType={refinerState.fieldType}
+                onClose={() => setRefinerState({ ...refinerState, isOpen: false })}
+                onApply={handleRefineApply}
+            />
 
             {/* Header / Progress */}
             <div className="bg-slate-50 dark:bg-slate-800/50 p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
@@ -155,21 +195,32 @@ export default function Generator() {
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                             Website URL to Convert
                         </label>
-                        <div className="flex gap-3 mb-4">
+                        <div className="flex flex-col sm:flex-row gap-3 mb-4">
                             <input
                                 type="text"
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
                                 placeholder="example.com"
-                                className="flex-1 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                className="flex-1 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all w-full min-w-0"
                                 required
                             />
-                            <button
-                                type="submit"
-                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/30"
-                            >
-                                Generate
-                            </button>
+                            <div className="flex gap-3">
+                                <select
+                                    value={layoutTheme}
+                                    onChange={(e) => setLayoutTheme(e.target.value)}
+                                    className="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-semibold"
+                                >
+                                    <option value="modern">Modern Theme</option>
+                                    <option value="classic">Classic Theme</option>
+                                    <option value="playful">Playful Theme</option>
+                                </select>
+                                <button
+                                    type="submit"
+                                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/30 whitespace-nowrap"
+                                >
+                                    Generate
+                                </button>
+                            </div>
                         </div>
                         <p className="text-xs text-slate-500 animate-in fade-in">
                             Credits available: <span className="font-bold text-slate-800 dark:text-slate-200">
@@ -202,67 +253,39 @@ export default function Generator() {
                     <div className="animate-in fade-in slide-in-from-right-4 duration-500">
                         <div className="mb-6 flex items-center justify-between">
                             <div>
-                                <h3 className="text-lg font-bold text-slate-800 dark:text-white">Review Content</h3>
-                                <p className="text-sm text-slate-500">Edit any details before generating the PDF.</p>
+                                <h3 className="text-lg font-bold text-slate-800 dark:text-white">Review Presentation</h3>
+                                <p className="text-sm text-slate-500">Interact with your 3D brochure. Click elements to refine with AI.</p>
                             </div>
                             <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-xs font-bold rounded-full uppercase tracking-wider">
                                 Draft
                             </span>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-xs uppercase text-slate-400 font-bold mb-1">Headline</label>
-                                    <input
-                                        value={data.headline}
-                                        onChange={(e) => updateField('headline', e.target.value)}
-                                        className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-blue-500 outline-none transition-colors font-bold text-lg"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs uppercase text-slate-400 font-bold mb-1">Subheadline</label>
-                                    <textarea
-                                        value={data.subheadline}
-                                        onChange={(e) => updateField('subheadline', e.target.value)}
-                                        className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-blue-500 outline-none transition-colors h-20 resize-none"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs uppercase text-slate-400 font-bold mb-1">Contact Info</label>
-                                    <input
-                                        value={data.contact_info}
-                                        onChange={(e) => updateField('contact_info', e.target.value)}
-                                        className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-blue-500 outline-none transition-colors"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-xs uppercase text-slate-400 font-bold mb-1">About Us</label>
-                                    <textarea
-                                        value={data.about_us}
-                                        onChange={(e) => updateField('about_us', e.target.value)}
-                                        className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-blue-500 outline-none transition-colors h-24 resize-none"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs uppercase text-slate-400 font-bold mb-1">Key Features</label>
-                                    {Array.isArray(data.features) && data.features.map((feature, i) => (
-                                        <div key={i} className="mb-2">
-                                            <input
-                                                value={feature}
-                                                onChange={(e) => updateFeature(i, e.target.value)}
-                                                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-blue-500 outline-none transition-colors text-sm"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+                        <div className="w-full bg-slate-100 dark:bg-slate-950/50 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-8 relative">
+                            {/* 3D Preview Environment */}
+                            <ThreeDBrochure
+                                data={{
+                                    ai_content: data,
+                                    brand_logo: user?.brand_logo_url,
+                                    primary_color: user?.brand_primary_color || '#4F46E5',
+                                    secondary_color: user?.brand_secondary_color || '#EC4899',
+                                    brand_font: user?.brand_font || 'Outfit',
+                                    bespoke_image: localStorage.getItem('bespoke_image_url') || undefined,
+                                    layout_theme: layoutTheme
+                                }}
+                                onOpenRefiner={(text, fieldType) => {
+                                    setRefinerState({ isOpen: true, text, fieldType });
+                                }}
+                            />
                         </div>
 
-                        <div className="flex justify-end gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+                        <div className="flex justify-between items-center pt-6 border-t border-slate-100 dark:border-slate-800">
+                            <button
+                                onClick={() => setStep('input')}
+                                className="px-5 py-2.5 text-slate-500 hover:text-slate-800 dark:hover:text-white font-bold transition-colors"
+                            >
+                                Back
+                            </button>
                             <button
                                 onClick={handleGeneratePDF}
                                 className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-[1.02] text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition-all flex items-center gap-2"

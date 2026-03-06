@@ -41,6 +41,48 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.5,
         },
         {
+            url: `${baseUrl}/enterprise`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/partners`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.7,
+        },
+        {
+            url: `${baseUrl}/wall-of-love`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.7,
+        },
+        {
+            url: `${baseUrl}/developers`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.7,
+        },
+        {
+            url: `${baseUrl}/use-cases/real-estate`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/use-cases/saas`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/use-cases/education`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
+        },
+        {
             url: `${baseUrl}/login`,
             lastModified: new Date(),
             changeFrequency: 'yearly',

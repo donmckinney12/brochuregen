@@ -5,11 +5,15 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Logo from './Logo';
 
+import { SignInButton, SignUpButton, UserButton, SignedIn, SignedOut, OrganizationSwitcher } from '@clerk/nextjs';
+import { dark } from '@clerk/themes';
+
 export default function Navbar() {
     const [darkMode, setDarkMode] = useState(false);
     const pathname = usePathname();
-    const { isAuthenticated, user, signOut } = useAuth();
+    const { user } = useAuth();
     const [scrolled, setScrolled] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Initialize theme
     useEffect(() => {
@@ -42,8 +46,6 @@ export default function Navbar() {
         }
     };
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     return (
         <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg shadow-sm py-4' : 'bg-transparent py-6'}`}>
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
@@ -55,49 +57,54 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-8">
                     {pathname !== '/checkout' && (
                         <>
-                            <Link href="/features" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Features</Link>
-                            <Link href="/pricing" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Pricing</Link>
-                            <Link href="/blog" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Blog</Link>
+                            <Link href="/features" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/features' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Features</Link>
+                            <Link href="/pricing" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/pricing' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Pricing</Link>
+                            <Link href="/enterprise" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/enterprise' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Enterprise</Link>
+                            <Link href="/partners" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/partners' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Partners</Link>
+                            <Link href="/blog" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/blog' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Blog</Link>
+                            <SignedIn>
+                                <Link href="/dashboard" className={`text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${pathname === '/dashboard' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>Dashboard</Link>
+                            </SignedIn>
                         </>
                     )}
 
                     <div className="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
 
-                    {isAuthenticated ? (
-                        <div className="relative group/user">
-                            <button className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 transition-colors">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 text-white flex items-center justify-center font-bold shadow-md">
-                                    {user?.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
-                                </div>
-                                <span className="max-w-[100px] truncate">{user?.full_name || user?.email}</span>
-                            </button>
-
-                            <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 opacity-0 invisible group-hover/user:opacity-100 group-hover/user:visible transition-all transform translate-y-2 group-hover/user:translate-y-0 p-2">
-                                <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-700 mb-1">
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Plan: <span className="text-blue-600 dark:text-blue-400 uppercase">{user?.plan}</span></p>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400">Credits: {user?.credits}</p>
-                                </div>
-                                <Link href="/dashboard" className="block px-4 py-2 text-sm rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200">
-                                    Dashboard
-                                </Link>
-                                <button
-                                    onClick={signOut}
-                                    className="w-full text-left px-4 py-2 text-sm rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 text-red-600 dark:text-red-400"
-                                >
-                                    Sign Out
-                                </button>
-                            </div>
-                        </div>
-                    ) : (
+                    <SignedIn>
                         <div className="flex items-center gap-4">
-                            <Link href="/login" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                Sign In
-                            </Link>
-                            <Link href="/signup" className="px-5 py-2.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold hover:shadow-lg hover:scale-105 transition-all duration-200">
-                                Get Started
-                            </Link>
+                            <OrganizationSwitcher
+                                hidePersonal={false}
+                                appearance={{
+                                    baseTheme: darkMode ? dark : undefined,
+                                    elements: {
+                                        organizationSwitcherTrigger: "focus:shadow-none focus:outline-none",
+                                        organizationPreviewTextContainer: "text-slate-600 dark:text-slate-300",
+                                        organizationSwitcherTriggerIcon: "text-slate-400"
+                                    }
+                                }}
+                            />
+                            <div className="hidden sm:flex flex-col items-end border-r border-slate-200 dark:border-slate-700 pr-4 mr-2">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Credits</span>
+                                <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400 leading-none">{user?.credits}</span>
+                            </div>
+                            <UserButton afterSignOutUrl="/" />
                         </div>
-                    )}
+                    </SignedIn>
+
+                    <SignedOut>
+                        <div className="flex items-center gap-4">
+                            <SignInButton mode="modal">
+                                <button className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer">
+                                    Sign In
+                                </button>
+                            </SignInButton>
+                            <SignUpButton mode="modal">
+                                <button className="px-5 py-2.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer">
+                                    Get Started
+                                </button>
+                            </SignUpButton>
+                        </div>
+                    </SignedOut>
 
                     <button
                         onClick={toggleTheme}
@@ -143,33 +150,55 @@ export default function Navbar() {
                     <div className="px-6 py-4 flex flex-col gap-4">
                         <Link href="/features" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Features</Link>
                         <Link href="/pricing" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Pricing</Link>
+                        <Link href="/enterprise" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Enterprise</Link>
+                        <Link href="/partners" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Partners</Link>
+                        <Link href="/wall-of-love" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Wall of Love</Link>
+                        <Link href="/blog" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Blog</Link>
 
-                        {isAuthenticated ? (
+                        <SignedIn>
                             <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 text-white flex items-center justify-center font-bold">
-                                        {user?.full_name?.[0]?.toUpperCase()}
+                                <div className="flex flex-col gap-4 mb-6">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <UserButton afterSignOutUrl="/" showName />
+                                        </div>
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Credits</span>
+                                            <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400 leading-none">{user?.credits}</span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="font-bold text-slate-900 dark:text-white">{user?.full_name}</p>
-                                        <p className="text-xs text-slate-500">{user?.email}</p>
+                                    <div className="py-2 px-1 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                                        <OrganizationSwitcher
+                                            hidePersonal={false}
+                                            appearance={{
+                                                baseTheme: darkMode ? dark : undefined,
+                                                elements: {
+                                                    rootBox: "w-full",
+                                                    organizationSwitcherTrigger: "w-full justify-between focus:shadow-none focus:outline-none py-2",
+                                                }
+                                            }}
+                                        />
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => { signOut(); setIsMenuOpen(false); }}
-                                    className="w-full py-2 text-center rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-medium"
-                                >
-                                    Sign Out
-                                </button>
-                            </div>
-                        ) : (
-                            <>
-                                <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2">Sign In</Link>
-                                <Link href="/signup" onClick={() => setIsMenuOpen(false)} className="text-center w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold">
-                                    Get Started
+                                <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="block w-full py-2 text-center rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium mb-2">
+                                    Dashboard
                                 </Link>
-                            </>
-                        )}
+                            </div>
+                        </SignedIn>
+                        <SignedOut>
+                            <div className="flex flex-col gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                                <SignInButton mode="modal">
+                                    <button onClick={() => setIsMenuOpen(false)} className="text-slate-600 dark:text-slate-300 font-medium py-2 text-left">
+                                        Sign In
+                                    </button>
+                                </SignInButton>
+                                <SignUpButton mode="modal">
+                                    <button onClick={() => setIsMenuOpen(false)} className="text-center w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold">
+                                        Get Started
+                                    </button>
+                                </SignUpButton>
+                            </div>
+                        </SignedOut>
                     </div>
                 </div>
             )}
