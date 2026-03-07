@@ -10,6 +10,15 @@ class Organization(Base):
     name = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
+    # Brand Settings (Shared for Org)
+    brand_logo_url = Column(String, nullable=True)
+    brand_primary_color = Column(String, nullable=True)
+    brand_secondary_color = Column(String, nullable=True)
+    brand_voice_tone = Column(String, nullable=True)
+    brand_voice_calibration = Column(Text, nullable=True)
+    brand_identity_snippet = Column(Text, nullable=True)
+    last_intent_scan = Column(DateTime, nullable=True)
+
     profiles = relationship("Profile", back_populates="organization")
     brochures = relationship("Brochure", back_populates="organization")
 
@@ -38,6 +47,7 @@ class Profile(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     brochures = relationship("Brochure", back_populates="owner")
+    activities = relationship("ActivityLog", back_populates="user")
 
     def __repr__(self):
         return f"<Profile(id={self.id}, email={self.email}, credits={self.credits})>"
@@ -57,6 +67,7 @@ class Brochure(Base):
     email_sequence = Column(String, nullable=True) # JSON array of emails
     layout_theme = Column(String, default="modern") # e.g. modern, classic, playful
     seo_metadata = Column(Text, nullable=True) # JSON string of meta tags
+    status = Column(String, default="active") # active, proactive_draft, archived
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     owner = relationship("Profile", back_populates="brochures")
@@ -81,6 +92,7 @@ class BrochureComment(Base):
     brochure_id = Column(Integer, ForeignKey("brochures.id"))
     text = Column(Text, nullable=False)
     section_id = Column(String, nullable=True) # e.g., 'headline', 'feature_0'
+    is_read = Column(Integer, default=0) # 0 for unread, 1 for read
     created_at = Column(DateTime, default=datetime.utcnow)
     
     brochure = relationship("Brochure", back_populates="comments")
@@ -94,6 +106,7 @@ class LeadCapture(Base):
     name = Column(String, nullable=True)
     company = Column(String, nullable=True)
     message = Column(Text, nullable=True)
+    is_read = Column(Integer, default=0) # 0 for unread, 1 for read
     created_at = Column(DateTime, default=datetime.utcnow)
     
     brochure = relationship("Brochure", back_populates="leads")
@@ -108,7 +121,31 @@ class BrochureVariant(Base):
     
     brochure = relationship("Brochure", back_populates="variants")
 
+class ActivityLog(Base):
+    __tablename__ = "activity_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, ForeignKey("profiles.id"))
+    org_id = Column(String, ForeignKey("organizations.id"), nullable=True)
+    action = Column(String) # e.g., 'GENERATED', 'REFINED', 'EXPORTED', 'CALIBRATED'
+    details = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    user = relationship("Profile", back_populates="activities")
+    organization = relationship("Organization")
+
+class BrochureEngagement(Base):
+    __tablename__ = "brochure_engagements"
+    id = Column(Integer, primary_key=True, index=True)
+    brochure_id = Column(Integer, ForeignKey("brochures.id"), index=True)
+    section_id = Column(String, nullable=False) # e.g., 'headline', 'features', 'summary'
+    hover_count = Column(Integer, default=0)
+    total_hover_time = Column(Integer, default=0) # In milliseconds
+    last_interaction = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    brochure = relationship("Brochure", back_populates="engagements")
+
 # Append relationships after classes are defined
 Brochure.comments = relationship("BrochureComment", back_populates="brochure", cascade="all, delete-orphan")
 Brochure.leads = relationship("LeadCapture", back_populates="brochure", cascade="all, delete-orphan")
 Brochure.variants = relationship("BrochureVariant", back_populates="brochure", cascade="all, delete-orphan")
+Brochure.engagements = relationship("BrochureEngagement", back_populates="brochure", cascade="all, delete-orphan")

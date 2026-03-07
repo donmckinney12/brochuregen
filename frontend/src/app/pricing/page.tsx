@@ -109,8 +109,8 @@ export default function Pricing() {
                             features: [
                                 '60 Neural Syncs',
                                 'Studio Insights (Analytics)',
-                                'Leads Pro (CSV Export)',
                                 'A/B Testing Protocol',
+                                'Live Collaboration (2 Nodes)',
                                 'Precision Refiner'
                             ],
                             color: 'fuchsia',
@@ -122,10 +122,10 @@ export default function Pricing() {
                             price: prices.enterprise,
                             features: [
                                 '250 Neural Syncs',
-                                'Enterprise Matrix (Teams)',
+                                'Autonomous Retargeting',
+                                'Live Collaboration (Unlimited)',
                                 'Neural Follow-up Sync',
-                                'Brand Vault Synchronization',
-                                'Priority Synthesis'
+                                'Brand Vault Synchronization'
                             ],
                             color: 'amber',
                             border: 'border-white/10'

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import NeuralLoading from './NeuralLoading';
@@ -12,14 +12,17 @@ import {
     Download,
     Wand2,
     Globe,
-    Type,
     FileText,
     Sparkles,
     ChevronRight,
     Search,
     Loader2,
     Code,
-    Rocket
+    Rocket,
+    Workflow,
+    Mail,
+    Cloud,
+    ExternalLink
 } from 'lucide-react';
 import EmbedModal from './EmbedModal';
 import SocialPulseKit from './SocialPulseKit';
@@ -37,8 +40,73 @@ export default function GenerationStudio() {
     const [isRefiningAI, setIsRefiningAI] = useState(false);
     const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
     const [isLaunching, setIsLaunching] = useState(false);
+    const [isGeneratingVariant, setIsGeneratingVariant] = useState(false);
+    const [emailExportLoading, setEmailExportLoading] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [deployedUrl, setDeployedUrl] = useState<string | null>(null);
+    const [systemLogs, setSystemLogs] = useState<{ id: number, msg: string, type: 'info' | 'warn' | 'success' }[]>([
+        { id: Date.now(), msg: 'Neural core initialized', type: 'info' }
+    ]);
+    const [designResonance, setDesignResonance] = useState(88);
+    const [isTranslating, setIsTranslating] = useState(false);
+    const [showHeatmap, setShowHeatmap] = useState(false);
+    const [socialCaptions, setSocialCaptions] = useState<{ platform: string, text: string }[] | null>(null);
+    const [isSynthesizingSocial, setIsSynthesizingSocial] = useState(false);
+    const [peers, setPeers] = useState<Record<string, { x: number, y: number, name: string }>>({});
+    const socketRef = useRef<WebSocket | null>(null);
 
     const { isAuthenticated, user, deductCredit, currentPlan, getToken, refreshProfile } = useAuth();
+
+    useEffect(() => {
+        if (!user?.org_id) return;
+
+        const connectWS = () => {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const host = process.env.NEXT_PUBLIC_API_URL?.replace(/^http?:\/\//, '') || 'localhost:8000';
+            const ws = new WebSocket(`${protocol}//${host}/api/v1/collaboration/ws/${user.org_id}`);
+
+            ws.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+                if (msg.type === 'cursor') {
+                    setPeers(prev => ({ ...prev, [msg.userId]: { x: msg.x, y: msg.y, name: msg.userName } }));
+                } else if (msg.type === 'content_update') {
+                    setData(msg.data);
+                }
+            };
+
+            ws.onclose = () => {
+                setTimeout(connectWS, 3000); // Reconnect after 3s
+            };
+
+            socketRef.current = ws;
+        };
+
+        connectWS();
+        return () => socketRef.current?.close();
+    }, [user?.org_id]);
+
+    const broadcastChange = (newData: any) => {
+        if (socketRef.current?.readyState === WebSocket.OPEN) {
+            socketRef.current.send(JSON.stringify({
+                type: 'content_update',
+                userId: user?.id,
+                userName: user?.full_name || 'Team Member',
+                data: newData
+            }));
+        }
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (socketRef.current?.readyState === WebSocket.OPEN) {
+            socketRef.current.send(JSON.stringify({
+                type: 'cursor',
+                userId: user?.id,
+                userName: user?.full_name || 'Team Member',
+                x: e.clientX,
+                y: e.clientY
+            }));
+        }
+    };
 
     const handleScrape = async () => {
         if (!url) return;
@@ -66,9 +134,12 @@ export default function GenerationStudio() {
             if (!res.ok) throw new Error(result.detail || 'Failed to scrape');
 
             setData(result);
+            broadcastChange(result);
+            setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: 'Synthesis complete', type: 'success' }]);
         } catch (err: any) {
             console.error(err);
             setError(err.message || 'Something went wrong');
+            setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: 'Neural sync failure', type: 'warn' }]);
         } finally {
             setLoading(false);
         }
@@ -89,6 +160,7 @@ export default function GenerationStudio() {
         }
 
         setData(newData);
+        broadcastChange(newData);
         setEditingField(null);
     };
 
@@ -148,8 +220,8 @@ export default function GenerationStudio() {
             const result = await res.json();
             if (!res.ok) throw new Error(result.detail || 'Launch failed');
 
-            // 2. Update local state with the assigned share_uuid
-            setData({ ...data, share_uuid: result.share_uuid });
+            // 2. Update local state with the assigned share_uuid and id
+            setData({ ...data, share_uuid: result.share_uuid, id: result.id });
 
             // 3. Optional: Refresh profile if credits were involved (done in backend)
             await refreshProfile();
@@ -161,8 +233,147 @@ export default function GenerationStudio() {
         }
     };
 
+    const handleGenerateVariant = async () => {
+        if (!data?.id || isGeneratingVariant) return;
+        setIsGeneratingVariant(true);
+        try {
+            const token = await getToken();
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const res = await fetch(`${apiUrl}/api/v1/brochures/${data.id}/generate-variant`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.detail || 'Failed to generate variant');
+
+            alert('Neural Challenger Variant B has been synthesized and synchronized for A/B testing.');
+            await refreshProfile();
+        } catch (err: any) {
+            alert(err.message);
+        } finally {
+            setIsGeneratingVariant(false);
+        }
+    };
+
+    const handleExportEmail = async () => {
+        if (!data?.id || emailExportLoading) return;
+        setEmailExportLoading(true);
+        try {
+            const token = await getToken();
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const res = await fetch(`${apiUrl}/api/v1/export/brochure/${data.id}/html`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!res.ok) throw new Error('Export failed');
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `brochure-email-${data.share_uuid || data.id}.html`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (err: any) {
+            alert(err.message);
+        } finally {
+            setEmailExportLoading(false);
+        }
+    };
+
+    const handleNeuralSync = async () => {
+        if (!data?.id) return;
+        setIsSyncing(true);
+        try {
+            const token = await getToken();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/export/brochure/${data.id}/deploy`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const result = await res.json();
+            if (res.ok) {
+                setDeployedUrl(result.url);
+                setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: 'Edge deployment live', type: 'success' }]);
+                alert(`Protocol Synchronized! Live at: ${result.url}`);
+            } else {
+                throw new Error(result.detail || 'Neural Sync Failed');
+            }
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message);
+            setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: 'Cloud link severed', type: 'warn' }]);
+        } finally {
+            setIsSyncing(false);
+        }
+    };
+
+    const handleGlobalSync = async (lang: string) => {
+        setIsTranslating(true);
+        setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: `Orchestrating ${lang} sync...`, type: 'info' }]);
+
+        // Mocking the neural translation orchestration
+        setTimeout(() => {
+            const translatedContent = { ...data.ai_content };
+            if (lang === 'Japanese') {
+                translatedContent.headline = "次世代のイノベーション";
+                translatedContent.subheadline = "未来を今、体験してください。";
+            } else if (lang === 'German') {
+                translatedContent.headline = "Innovation der nächsten Generation";
+                translatedContent.subheadline = "Erleben Sie die Zukunft noch heute.";
+            } else {
+                translatedContent.headline = "Innovación de Próxima Generación";
+                translatedContent.subheadline = "Experimente el futuro hoy.";
+            }
+
+            setData({ ...data, ai_content: translatedContent });
+            setDesignResonance(prev => Math.min(100, prev + 2));
+            setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: `${lang} protocol unified`, type: 'success' }]);
+            setIsTranslating(false);
+        }, 1500);
+    };
+
+    const handleSocialSynthesis = async () => {
+        setIsSynthesizingSocial(true);
+        setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: 'Social orchestration active...', type: 'info' }]);
+
+        // Mocking the social synthesis
+        setTimeout(() => {
+            setSocialCaptions([
+                { platform: 'LinkedIn', text: `🚀 Exciting news! We've just launched our new protocol: ${data.title}. Check it out here: [LINK]` },
+                { platform: 'Instagram', text: `The future of ${data.ai_content.headline} is here. 🌌 #Innovation #BrochureGen` },
+                { platform: 'X', text: `Deploying ${data.title}... Neural sync complete. 🛰️ #TechNoir` }
+            ]);
+            setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: 'Social matrix ready', type: 'success' }]);
+            setIsSynthesizingSocial(false);
+        }, 2000);
+    };
+
     return (
-        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-24">
+        <div
+            onMouseMove={handleMouseMove}
+            className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-24 relative"
+        >
+            {/* Remote Cursors */}
+            <AnimatePresence>
+                {Object.entries(peers).map(([id, peer]) => (
+                    <motion.div
+                        key={id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1, x: peer.x, y: peer.y }}
+                        exit={{ opacity: 0 }}
+                        className="fixed pointer-events-none z-[100] flex flex-col items-center"
+                        style={{ left: 0, top: 0 }}
+                    >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[var(--accent-primary)] drop-shadow-lg">
+                            <path d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z" fill="currentColor" stroke="white" />
+                        </svg>
+                        <div className="bg-[var(--accent-primary)] text-white text-[8px] font-black px-2 py-0.5 rounded-full whitespace-nowrap uppercase tracking-widest mt-1 shadow-lg">
+                            {peer.name}
+                        </div>
+                    </motion.div>
+                ))}
+            </AnimatePresence>
             {/* Studio Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
@@ -219,10 +430,20 @@ export default function GenerationStudio() {
                                     <div className="relative">
                                         <select
                                             value={layoutTheme}
-                                            onChange={(e) => setLayoutTheme(e.target.value)}
+                                            onChange={(e) => {
+                                                const newTheme = e.target.value;
+                                                setLayoutTheme(newTheme);
+                                                if (data) {
+                                                    const newData = { ...data, layout_theme: newTheme };
+                                                    setData(newData);
+                                                    broadcastChange(newData);
+                                                }
+                                            }}
                                             className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl py-3 px-4 text-[10px] text-[var(--foreground)] font-black uppercase tracking-widest appearance-none outline-none focus:ring-1 focus:ring-[var(--accent-primary)] shadow-sm"
                                         >
                                             <option value="modern">Modern // Clean</option>
+                                            <option value="corporate">Corporate // High-Precision</option>
+                                            <option value="minimalist">Minimalist // Zen</option>
                                             <option value="classic">Classic // High-Tier</option>
                                             <option value="playful">Playful // Vibrant</option>
                                         </select>
@@ -302,6 +523,50 @@ export default function GenerationStudio() {
                                         <Code size={12} />
                                         <span>Embed</span>
                                     </button>
+                                    <button
+                                        onClick={handleGenerateVariant}
+                                        disabled={isGeneratingVariant}
+                                        className="px-6 py-2.5 bg-[var(--accent-tertiary)] text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
+                                    >
+                                        {isGeneratingVariant ? <Loader2 size={12} className="animate-spin" /> : <Workflow size={12} />}
+                                        <span>AI Challenger</span>
+                                    </button>
+                                    <button
+                                        onClick={handleExportEmail}
+                                        disabled={emailExportLoading}
+                                        className="px-6 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:bg-[var(--accent-primary)] hover:text-white transition-all disabled:opacity-50"
+                                    >
+                                        {emailExportLoading ? <Loader2 size={12} className="animate-spin" /> : <Mail size={12} />}
+                                        <span>Email Matrix</span>
+                                    </button>
+                                    <button
+                                        onClick={handleNeuralSync}
+                                        disabled={isSyncing}
+                                        className="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-indigo-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:scale-105 transition-all disabled:opacity-50"
+                                    >
+                                        {isSyncing ? <Loader2 size={12} className="animate-spin" /> : <Cloud size={12} />}
+                                        <span>Neural Sync</span>
+                                    </button>
+                                    <div className="flex items-center gap-1 bg-white/5 border border-white/5 p-1 rounded-xl">
+                                        {['JP', 'DE', 'ES'].map(l => (
+                                            <button
+                                                key={l}
+                                                onClick={() => handleGlobalSync(l === 'JP' ? 'Japanese' : l === 'DE' ? 'German' : 'Spanish')}
+                                                disabled={isTranslating}
+                                                className="w-8 h-8 rounded-lg hover:bg-white/10 text-[8px] font-black transition-all active:scale-90"
+                                            >
+                                                {l}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {deployedUrl && (
+                                        <button
+                                            onClick={() => window.open(deployedUrl, '_blank')}
+                                            className="px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-all shadow-inner"
+                                        >
+                                            <ExternalLink size={12} />
+                                        </button>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -314,7 +579,88 @@ export default function GenerationStudio() {
                                 <ThreeDBrochure
                                     data={{ ...data, layout_theme: layoutTheme }}
                                     onOpenRefiner={handleOpenRefiner}
+                                    onUpdate={handleApplyRefinedText}
+                                    showHeatmap={showHeatmap}
                                 />
+
+                                {/* Heatmap Toggle */}
+                                <div className="absolute bottom-10 right-10 flex flex-col gap-2">
+                                    <button
+                                        onClick={() => setShowHeatmap(!showHeatmap)}
+                                        className={`px-4 py-2 border rounded-full text-[8px] font-black uppercase tracking-widest transition-all ${showHeatmap ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : 'bg-white/5 border-white/10 text-white/40'}`}
+                                    >
+                                        Engagement Heatmap: {showHeatmap ? 'ON' : 'OFF'}
+                                    </button>
+                                    <button
+                                        onClick={handleSocialSynthesis}
+                                        disabled={isSynthesizingSocial}
+                                        className="px-4 py-2 bg-indigo-500/20 border border-indigo-500/50 text-indigo-400 rounded-full text-[8px] font-black uppercase tracking-widest hover:bg-indigo-500/30 transition-all flex items-center gap-2"
+                                    >
+                                        <Share2 size={10} />
+                                        Social Synthesis
+                                    </button>
+                                </div>
+
+                                {/* Autonomous Diagnostic HUD */}
+                                <div className="absolute top-10 right-10 p-6 bg-black/40 backdrop-blur-md border border-white/5 rounded-2xl w-64 space-y-4 font-mono pointer-events-none z-10">
+                                    <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-[0.2em]">
+                                        <span className="text-white/40">Design Resonance</span>
+                                        <span className="text-cyan-400">{designResonance}%</span>
+                                    </div>
+                                    <div className="h-0.5 bg-white/5 w-full rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: '80%' }}
+                                            animate={{ width: `${designResonance}%` }}
+                                            className="h-full bg-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.5)]"
+                                        />
+                                    </div>
+                                    <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-[0.2em]">
+                                        <span className="text-white/40">Neural Health</span>
+                                        <span className="text-emerald-400">100% Operational</span>
+                                    </div>
+                                    {socialCaptions && (
+                                        <div className="pt-4 border-t border-white/5 space-y-3">
+                                            <span className="text-[8px] text-white/20 font-black uppercase">Social Synthesis</span>
+                                            {socialCaptions.map((cap, i) => (
+                                                <div key={i} className="space-y-1">
+                                                    <span className="text-[7px] text-indigo-400 font-bold uppercase">{cap.platform}</span>
+                                                    <p className="text-[8px] text-white/60 leading-tight line-clamp-2">{cap.text}</p>
+                                                </div>
+                                            ))}
+                                            <button
+                                                onClick={() => setSocialCaptions(null)}
+                                                className="w-full py-2 bg-white/5 hover:bg-white/10 text-[7px] text-white/40 font-black uppercase tracking-widest rounded-lg transition-all"
+                                            >
+                                                Clear Matrix
+                                            </button>
+                                        </div>
+                                    )}
+                                    <div className="h-0.5 bg-white/5 w-full rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: '100%' }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                            className="h-full bg-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <AnimatePresence>
+                                            {systemLogs.map(log => (
+                                                <motion.div
+                                                    key={log.id}
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    exit={{ opacity: 0, x: -20 }}
+                                                    className="flex gap-2 items-start"
+                                                >
+                                                    <span className={`text-[8px] mt-1 ${log.type === 'success' ? 'text-emerald-400' : log.type === 'warn' ? 'text-rose-400' : 'text-blue-400'}`}>▸</span>
+                                                    <p className="text-[9px] leading-tight text-white/60 tracking-tight uppercase">{log.msg}</p>
+                                                </motion.div>
+                                            ))}
+                                        </AnimatePresence>
+                                    </div>
+                                </div>
+
                                 <div className="absolute bottom-10 left-10 p-4 bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--glass-border)] rounded-2xl flex items-center gap-4 shadow-xl">
                                     <div className="w-10 h-10 rounded-lg bg-[var(--foreground)]/5 border border-[var(--glass-border)] flex items-center justify-center">
                                         <Sparkles size={20} className="text-[var(--accent-primary)]" />
@@ -329,7 +675,6 @@ export default function GenerationStudio() {
 
                         {/* Creative Editor */}
                         <div className="space-y-6">
-                            {/* Editor logic from original Dashboard goes here - but simplified for this refactor */}
                             <div className="premium-card p-8 border-[var(--glass-border)] space-y-10 bg-[var(--glass-bg)] transition-colors duration-500">
                                 {/* Metadata Section */}
                                 <div className="grid grid-cols-2 gap-6">
@@ -349,7 +694,6 @@ export default function GenerationStudio() {
                                         Content Matrix
                                     </h3>
 
-                                    {/* Simplified field list for the workspace preview */}
                                     <div className="space-y-6">
                                         {[
                                             { id: 'headline', label: 'Primary Headline' },
@@ -376,7 +720,6 @@ export default function GenerationStudio() {
                                             </div>
                                         ))}
 
-                                        {/* Key Features Array */}
                                         <div className="space-y-4">
                                             <label className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.2em] ml-2">Neural Features</label>
                                             <div className="grid grid-cols-1 gap-3">
@@ -423,12 +766,13 @@ export default function GenerationStudio() {
                     />
 
                     {(data.social_posts || data.ai_content?.social_posts) && (
-                        <SocialPulseKit posts={data.social_posts || data.ai_content?.social_posts} />
+                        <SocialPulseKit
+                            posts={data.social_posts || data.ai_content?.social_posts}
+                            brochureId={data.id}
+                        />
                     )}
                 </>
             )}
         </div>
     );
 }
-
-

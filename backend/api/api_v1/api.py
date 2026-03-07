@@ -1,5 +1,4 @@
-from fastapi import APIRouter
-from .endpoints import scrape, pdf, payment, profiles, image, brochures, enterprise, newsletter, leads
+from .endpoints import scrape, pdf, payment, profiles, image, brochures, enterprise, newsletter, leads, export, social, analytics, command, collaboration, retargeting, intent
 
 api_router = APIRouter()
 api_router.include_router(scrape.router, prefix="/scrape", tags=["scrape"])
@@ -11,3 +10,10 @@ api_router.include_router(brochures.router, prefix="/brochures", tags=["brochure
 api_router.include_router(enterprise.router, prefix="/enterprise", tags=["enterprise"])
 api_router.include_router(newsletter.router, prefix="/newsletter", tags=["newsletter"])
 api_router.include_router(leads.router, prefix="/leads", tags=["leads"])
+api_router.include_router(export.router, prefix="/export", tags=["export"])
+api_router.include_router(social.router, prefix="/social", tags=["social"])
+api_router.include_router(analytics.router, prefix="/analytics", tags=["analytics"])
+api_router.include_router(command.router, prefix="/command", tags=["command"])
+api_router.include_router(collaboration.router, tags=["collaboration"])
+api_router.include_router(retargeting.router, prefix="/retargeting", tags=["retargeting"])
+api_router.include_router(intent.router, prefix="/intent", tags=["intent"])

@@ -2,6 +2,9 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
 
+class BrandCalibrateRequest(BaseModel):
+    url: str
+
 class ProfileBase(BaseModel):
     email: Optional[EmailStr] = None
     credits: Optional[int] = 10
@@ -16,6 +19,7 @@ class ProfileBase(BaseModel):
     brand_font: Optional[str] = "Outfit"
     brand_voice_tone: Optional[str] = "Professional"
     brand_voice_calibration: Optional[str] = None
+    org_id: Optional[str] = None
 
 class ProfileCreate(ProfileBase):
     id: str # UUID from Auth provider
@@ -28,6 +32,7 @@ class ProfileUpdate(BaseModel):
     brand_font: Optional[str] = None
     brand_voice_tone: Optional[str] = None
     brand_voice_calibration: Optional[str] = None
+    org_id: Optional[str] = None
 
 class Profile(ProfileBase):
     id: str

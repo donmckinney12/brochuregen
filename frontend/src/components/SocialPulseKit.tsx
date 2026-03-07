@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Share2, Copy, Check, Twitter, Linkedin, Instagram, Sparkles } from 'lucide-react';
+import { Share2, Copy, Check, Twitter, Linkedin, Instagram, Sparkles, Send, Loader2 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 interface SocialPost {
     platform?: string;
@@ -12,10 +13,14 @@ interface SocialPost {
 
 interface SocialPulseKitProps {
     posts: SocialPost[] | string;
+    brochureId?: number;
 }
 
-export default function SocialPulseKit({ posts }: SocialPulseKitProps) {
+export default function SocialPulseKit({ posts, brochureId }: SocialPulseKitProps) {
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+    const [dispatchingIndex, setDispatchingIndex] = useState<number | null>(null);
+    const [dispatchedIndices, setDispatchedIndices] = useState<number[]>([]);
+    const { getToken } = useAuth();
 
     // Normalize posts data
     let postList: SocialPost[] = [];
@@ -33,6 +38,35 @@ export default function SocialPulseKit({ posts }: SocialPulseKitProps) {
         navigator.clipboard.writeText(text);
         setCopiedIndex(index);
         setTimeout(() => setCopiedIndex(null), 2000);
+    };
+
+    const handleDispatch = async (index: number, platform: string) => {
+        if (!brochureId) return;
+        setDispatchingIndex(index);
+        try {
+            const token = await getToken();
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const res = await fetch(`${apiUrl}/api/v1/social/dispatch`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    brochure_id: brochureId,
+                    platform,
+                    post_index: index
+                })
+            });
+
+            if (!res.ok) throw new Error('Dispatch failed');
+
+            setDispatchedIndices(prev => [...prev, index]);
+        } catch (err: any) {
+            alert(err.message);
+        } finally {
+            setDispatchingIndex(null);
+        }
     };
 
     const getIcon = (platform?: string) => {
@@ -79,13 +113,23 @@ export default function SocialPulseKit({ posts }: SocialPulseKitProps) {
                                     </div>
                                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/40">{platform}</span>
                                 </div>
-                                <button
-                                    onClick={() => handleCopy(postContent, i)}
-                                    className={`p-2.5 rounded-xl border transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${copiedIndex === i ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-[var(--foreground)]/5 hover:bg-[var(--foreground)] text-[var(--foreground)]/40 hover:text-[var(--foreground)] border-[var(--glass-border)]'}`}
-                                >
-                                    {copiedIndex === i ? <Check size={12} /> : <Copy size={12} />}
-                                    <span>{copiedIndex === i ? 'Copied' : 'Copy'}</span>
-                                </button>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => handleCopy(postContent, i)}
+                                        className={`p-2.5 rounded-xl border transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${copiedIndex === i ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-[var(--foreground)]/5 hover:bg-[var(--foreground)] text-[var(--foreground)]/40 hover:text-[var(--foreground)] border-[var(--glass-border)]'}`}
+                                    >
+                                        {copiedIndex === i ? <Check size={12} /> : <Copy size={12} />}
+                                        <span>{copiedIndex === i ? 'Copied' : 'Copy'}</span>
+                                    </button>
+                                    <button
+                                        onClick={() => handleDispatch(i, platform)}
+                                        disabled={dispatchingIndex === i || dispatchedIndices.includes(i)}
+                                        className={`p-2.5 rounded-xl border transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${dispatchedIndices.includes(i) ? 'bg-blue-500 text-white border-blue-500' : 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)] hover:opacity-90 disabled:opacity-50'}`}
+                                    >
+                                        {dispatchingIndex === i ? <Loader2 size={12} className="animate-spin" /> : dispatchedIndices.includes(i) ? <Check size={12} /> : <Send size={12} />}
+                                        <span>{dispatchedIndices.includes(i) ? 'Dispatched' : 'Dispatch'}</span>
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="relative z-10">

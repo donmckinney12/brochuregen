@@ -1,18 +1,27 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Sparkles, Target, Zap } from 'lucide-react';
 import LeadForm from './LeadForm';
 
 export default function ThreeDBrochure({
     data,
     onOpenRefiner,
-    activeVault
+    onSectionHover,
+    onUpdate,
+    activeVault,
+    showHeatmap = false
 }: {
     data: any,
     onOpenRefiner?: (text: string, type: string, index?: number) => void,
-    activeVault?: { primaryColor: string; secondaryColor: string; font: string; logoUrl?: string } | null
+    onSectionHover?: (sectionId: string, isEntering: boolean) => void,
+    onUpdate?: (text: string, type: string, index?: number) => void,
+    activeVault?: { primaryColor: string; secondaryColor: string; font: string; logoUrl?: string } | null,
+    showHeatmap?: boolean
 }) {
     const [isHovered, setIsHovered] = useState(false);
+    const [editingNode, setEditingNode] = useState<{ id: string, text: string, index?: number } | null>(null);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
     if (!data?.ai_content) return null;
 
@@ -32,32 +41,57 @@ export default function ThreeDBrochure({
         return `linear-gradient(135deg, ${currentPrimary}, ${currentSecondary})`;
     };
 
+    const getMaterialStyle = () => {
+        if (layout === 'holographic') return { backdropBlur: '40px', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 0 30px rgba(6,182,212,0.2)' };
+        if (layout === 'classic') return { backdropBlur: '10px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 50px rgba(0,0,0,0.3)' };
+        if (layout === 'playful') return { backdropBlur: '20px', border: '2px solid rgba(255,255,255,0.2)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' };
+        return { backdropBlur: '30px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 30px rgba(0,0,0,0.1)' };
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!isHovered) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        setMousePos({ x, y });
+    };
+
     return (
         <div
             className="w-full h-[600px] flex items-center justify-center perspective-[2000px] cursor-pointer group"
             onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseLeave={() => {
+                setIsHovered(false);
+                setMousePos({ x: 0, y: 0 });
+            }}
+            onMouseMove={handleMouseMove}
         >
             <motion.div
                 className="relative w-[300px] h-[450px] preserve-3d will-change-transform"
                 style={{ willChange: 'transform' }}
                 animate={{
-                    rotateY: isHovered ? -15 : -35,
-                    rotateX: isHovered ? 5 : 10,
-                    scale: isHovered ? 1.05 : 1
+                    rotateY: isHovered ? (mousePos.x * 40 - 15) : -35,
+                    rotateX: isHovered ? (mousePos.y * -40 + 5) : 10,
+                    scale: isHovered ? 1.05 : 1,
+                    y: [0, -10, 0] // Idle breathing
                 }}
-                transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+                transition={{
+                    rotateY: { type: 'spring', stiffness: 100, damping: 30 },
+                    rotateX: { type: 'spring', stiffness: 100, damping: 30 },
+                    y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                }}
             >
                 {/* Right Panel (Front Cover) */}
                 <motion.div
-                    className={`absolute inset-0 origin-left border shadow-lg overflow-hidden flex flex-col justify-center items-center p-8 z-30 transition-colors duration-500 ${layout === 'holographic' ? 'hologram-theme' : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'}`}
+                    className={`absolute inset-0 origin-left border shadow-lg overflow-hidden flex flex-col justify-center items-center p-8 z-30 transition-all duration-500 ${layout === 'holographic' ? 'hologram-theme' : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'}`}
                     style={{
                         willChange: 'transform',
                         background: getCoverBackground(),
                         fontFamily: currentFont,
                         alignItems: layout === 'classic' ? 'flex-start' : 'center',
                         textAlign: layout === 'classic' ? 'left' : 'center',
-                        color: 'white' // Front cover usually stays colored/white text
+                        color: 'white',
+                        ...getMaterialStyle()
                     }}
                     animate={{ rotateY: isHovered ? 180 : 0 }}
                     transition={{ type: 'spring', stiffness: 40, damping: 20 }}
@@ -84,16 +118,67 @@ export default function ThreeDBrochure({
                         </div>
 
                         <h1
-                            className="text-3xl font-extrabold mb-4 leading-tight hover:bg-white/10 rounded p-2 transition-colors"
-                            onClick={(e) => { e.stopPropagation(); onOpenRefiner?.(headline, 'headline'); }}
+                            className={`text-3xl font-extrabold mb-4 leading-tight rounded p-2 transition-all group/node relative ${editingNode?.id === 'headline' ? 'ring-2 ring-white/50 bg-white/10' : 'hover:bg-white/10'}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingNode({ id: 'headline', text: headline });
+                            }}
+                            onMouseEnter={() => onSectionHover?.('headline', true)}
+                            onMouseLeave={() => onSectionHover?.('headline', false)}
                         >
-                            {headline}
+                            {editingNode?.id === 'headline' ? (
+                                <input
+                                    autoFocus
+                                    className="bg-transparent border-none outline-none text-center w-full"
+                                    value={editingNode.text}
+                                    onChange={(e) => setEditingNode({ ...editingNode, text: e.target.value })}
+                                    onBlur={() => {
+                                        onUpdate?.(editingNode.text, 'headline');
+                                        setEditingNode(null);
+                                    }}
+                                    onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+                                />
+                            ) : (
+                                <>
+                                    {headline}
+                                    <div className="absolute -right-2 -top-2 opacity-0 group-hover/node:opacity-100 transition-opacity">
+                                        <Sparkles size={10} className="text-white" />
+                                    </div>
+                                    {showHeatmap && (
+                                        <div className="absolute inset-0 bg-orange-500/20 blur-xl animate-pulse rounded-full" />
+                                    )}
+                                </>
+                            )}
                         </h1>
                         <p
-                            className="text-sm opacity-90 hover:bg-white/10 rounded p-2 transition-colors"
-                            onClick={(e) => { e.stopPropagation(); onOpenRefiner?.(subheadline, 'subheadline'); }}
+                            className={`text-sm opacity-90 rounded p-2 transition-all relative group/node ${editingNode?.id === 'subheadline' ? 'ring-2 ring-white/50 bg-white/10' : 'hover:bg-white/10'}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingNode({ id: 'subheadline', text: subheadline });
+                            }}
+                            onMouseEnter={() => onSectionHover?.('subheadline', true)}
+                            onMouseLeave={() => onSectionHover?.('subheadline', false)}
                         >
-                            {subheadline}
+                            {editingNode?.id === 'subheadline' ? (
+                                <input
+                                    autoFocus
+                                    className="bg-transparent border-none outline-none text-center w-full"
+                                    value={editingNode.text}
+                                    onChange={(e) => setEditingNode({ ...editingNode, text: e.target.value })}
+                                    onBlur={() => {
+                                        onUpdate?.(editingNode.text, 'subheadline');
+                                        setEditingNode(null);
+                                    }}
+                                    onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+                                />
+                            ) : (
+                                <>
+                                    {subheadline}
+                                    <div className="absolute -right-2 -top-2 opacity-0 group-hover/node:opacity-100 transition-opacity">
+                                        <Target size={10} className="text-white" />
+                                    </div>
+                                </>
+                            )}
                         </p>
 
                         {bespoke_image && (
@@ -111,14 +196,40 @@ export default function ThreeDBrochure({
                 </motion.div>
 
                 {/* Middle Panel (Back Cover) */}
-                <div className="absolute inset-0 bg-[var(--card-bg)] backdrop-blur-2xl border border-[var(--glass-border)] shadow-xl overflow-hidden flex flex-col justify-between p-8 z-20 text-center text-[var(--foreground)] transition-colors duration-500">
+                <div
+                    className={`absolute inset-0 bg-[var(--card-bg)] backdrop-blur-2xl border border-[var(--glass-border)] shadow-xl overflow-hidden flex flex-col justify-between p-8 z-20 text-center text-[var(--foreground)] transition-all duration-500`}
+                    style={{ ...getMaterialStyle() }}
+                >
                     <div style={{ fontFamily: currentFont }}>
                         <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">About Us</h3>
                         <p
-                            className="text-sm leading-relaxed text-slate-600 hover:bg-slate-100 rounded p-2 transition-colors cursor-pointer"
-                            onClick={(e) => { e.stopPropagation(); onOpenRefiner?.(about_us, 'about_us'); }}
+                            className={`text-sm leading-relaxed text-slate-600 rounded p-2 transition-all cursor-pointer relative group/node ${editingNode?.id === 'about_us' ? 'ring-2 ring-indigo-500/30 bg-indigo-500/5' : 'hover:bg-slate-100'}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingNode({ id: 'about_us', text: about_us });
+                            }}
+                            onMouseEnter={() => onSectionHover?.('about_us', true)}
+                            onMouseLeave={() => onSectionHover?.('about_us', false)}
                         >
-                            {about_us}
+                            {editingNode?.id === 'about_us' ? (
+                                <textarea
+                                    autoFocus
+                                    className="bg-transparent border-none outline-none w-full resize-none h-24"
+                                    value={editingNode.text}
+                                    onChange={(e) => setEditingNode({ ...editingNode, text: e.target.value })}
+                                    onBlur={() => {
+                                        onUpdate?.(editingNode.text, 'about_us');
+                                        setEditingNode(null);
+                                    }}
+                                />
+                            ) : (
+                                <>
+                                    {about_us}
+                                    <div className="absolute -right-2 -top-2 opacity-0 group-hover/node:opacity-100 transition-opacity">
+                                        <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                                    </div>
+                                </>
+                            )}
                         </p>
                     </div>
 
@@ -134,8 +245,8 @@ export default function ThreeDBrochure({
 
                 {/* Left Panel (Inside Flap) */}
                 <motion.div
-                    className={`absolute inset-0 origin-right border shadow-xl overflow-hidden p-8 z-10 transition-colors duration-500 ${layout === 'holographic' ? 'hologram-theme' : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'}`}
-                    style={{ transform: 'translateX(-100%)' }}
+                    className={`absolute inset-0 origin-right border shadow-xl overflow-hidden p-8 z-10 transition-all duration-500 ${layout === 'holographic' ? 'hologram-theme' : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'}`}
+                    style={{ transform: 'translateX(-100%)', ...getMaterialStyle() }}
                     animate={{ rotateY: isHovered ? -160 : 0 }}
                     transition={{ type: 'spring', stiffness: 30, damping: 20, delay: 0.1 }}
                 >
@@ -152,12 +263,39 @@ export default function ThreeDBrochure({
                             {features?.map((feature: string, i: number) => (
                                 <li
                                     key={i}
-                                    className={`text-sm p-4 ${layout === 'playful' ? 'rounded-3xl border-b-4 border-cyan-500/30' : layout === 'holographic' ? 'hologram-card' : 'rounded-xl border border-[var(--glass-border)]'} bg-[var(--foreground)]/5 text-[var(--foreground)]/80 hover:bg-[var(--foreground)]/10 transition-colors cursor-pointer flex gap-3`}
+                                    className={`text-sm p-4 ${layout === 'playful' ? 'rounded-3xl border-b-4 border-cyan-500/30' : layout === 'holographic' ? 'hologram-theme' : 'rounded-xl border border-[var(--glass-border)]'} bg-[var(--foreground)]/5 text-[var(--foreground)]/80 hover:bg-[var(--foreground)]/10 transition-all cursor-pointer flex gap-3 relative group/node`}
                                     style={layout === 'playful' ? { borderBottomColor: currentSecondary } : {}}
-                                    onClick={(e) => { e.stopPropagation(); onOpenRefiner?.(feature, 'features', i); }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setEditingNode({ id: `feature_${i}`, text: feature, index: i });
+                                    }}
+                                    onMouseEnter={() => onSectionHover?.(`feature_${i}`, true)}
+                                    onMouseLeave={() => onSectionHover?.(`feature_${i}`, false)}
                                 >
                                     <span className={`w-1.5 h-1.5 mt-1.5 shrink-0 ${layout === 'classic' ? 'rounded-none rotate-45' : 'rounded-full'}`} style={{ backgroundColor: currentSecondary }}></span>
-                                    {feature}
+                                    {editingNode?.id === `feature_${i}` ? (
+                                        <input
+                                            autoFocus
+                                            className="bg-transparent border-none outline-none w-full"
+                                            value={editingNode.text}
+                                            onChange={(e) => setEditingNode({ ...editingNode, text: e.target.value })}
+                                            onBlur={() => {
+                                                onUpdate?.(editingNode.text, 'features', editingNode.index);
+                                                setEditingNode(null);
+                                            }}
+                                            onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+                                        />
+                                    ) : (
+                                        <>
+                                            {feature}
+                                            <div className="absolute -right-2 -top-2 opacity-0 group-hover/node:opacity-100 transition-opacity">
+                                                <Zap size={10} className="text-[var(--accent-secondary)]" />
+                                            </div>
+                                            {showHeatmap && i === 0 && (
+                                                <div className="absolute inset-0 bg-red-500/10 blur-md animate-pulse rounded-xl" />
+                                            )}
+                                        </>
+                                    )}
                                 </li>
                             ))}
                         </ul>

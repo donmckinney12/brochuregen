@@ -22,7 +22,7 @@ async def scrape_url(request: ScrapeRequest, db: Session = Depends(get_db), curr
     # Check and deduct credits BEFORE scraping to save compute if they are out of credits
     # Assume 1 credit for regular brochure, 3 credits for full campaign
     credit_cost = 3 if request.is_campaign else 1
-    from services.db_orm import deduct_credits_orm, add_credits_orm
+    from services.db_orm import deduct_credits_orm, add_credits_orm, log_activity, get_profile
     
     credit_check = deduct_credits_orm(db, user_id, amount=credit_cost, credit_type='credits')
     if not credit_check["success"]:
@@ -32,6 +32,7 @@ async def scrape_url(request: ScrapeRequest, db: Session = Depends(get_db), curr
         from services.db_orm import get_profile
         db_profile = get_profile(db, user_id)
         brand_voice = db_profile.brand_voice_calibration if db_profile else None
+        org_id = db_profile.org_id if db_profile else None
 
         result = await scrape_website(request.url)
         if "error" in result:
@@ -46,6 +47,8 @@ async def scrape_url(request: ScrapeRequest, db: Session = Depends(get_db), curr
         )
         result["ai_content"] = ai_content
         result["is_campaign"] = request.is_campaign
+        
+        log_activity(db, user_id, "GENERATED", f"Brochure for {request.url}", org_id=org_id)
         
         return result
     except Exception as e:
@@ -62,7 +65,10 @@ async def refine_text(request: RefineRequest, db: Session = Depends(get_db), cur
     user_id = current_user["sub"]
     
     # Check and deduct refine credits
-    from services.db_orm import deduct_credits_orm
+    from services.db_orm import deduct_credits_orm, log_activity, get_profile
+    profile = get_profile(db, user_id)
+    org_id = profile.org_id if profile else None
+
     credit_check = deduct_credits_orm(db, user_id, amount=1, credit_type='refine_credits')
     if not credit_check["success"]:
         raise HTTPException(status_code=402, detail="Insufficient refine credits")
@@ -74,6 +80,7 @@ async def refine_text(request: RefineRequest, db: Session = Depends(get_db), cur
         add_credits_orm(db, user_id, amount=1, credit_type='refine_credits')
         raise HTTPException(status_code=500, detail=result["error"])
         
+    log_activity(db, user_id, "REFINED", f"Refined {request.action}", org_id=org_id)
     return result
 
 class VoiceExtractRequest(BaseModel):

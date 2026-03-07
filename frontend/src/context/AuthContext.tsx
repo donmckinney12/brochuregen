@@ -18,6 +18,8 @@ interface UserProfile {
     brand_font?: string;
     brand_voice_tone?: string;
     brand_voice_calibration?: string;
+    org_id?: string | null;
+    org_name?: string | null;
     created_at?: string;
 }
 
@@ -84,7 +86,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     full_name: clerkUser.fullName,
                     plan: 'free',
                     credits: 10,
-                    refine_credits: 5
+                    refine_credits: 5,
+                    org_id: (clerkUser as any).organizationId || null,
+                    org_name: (clerkUser as any).organizationName || "Unified Org"
                 })
             });
 

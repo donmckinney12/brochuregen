@@ -122,3 +122,23 @@ async def generate_lead_followup(lead_id: int, db: Session = Depends(get_db), cu
         raise HTTPException(status_code=500, detail=res["error"])
         
     return res
+
+@router.post("/{lead_id}/read")
+def mark_lead_read(lead_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user_id = current_user["sub"]
+    org_id = current_user.get("org_id")
+    from models.profile import Brochure, LeadCapture as LeadCaptureModel
+    
+    lead = db.query(LeadCaptureModel).join(Brochure).filter(LeadCaptureModel.id == lead_id)
+    if org_id:
+        lead = lead.filter(Brochure.org_id == org_id)
+    else:
+        lead = lead.filter(Brochure.user_id == user_id)
+        
+    lead_item = lead.first()
+    if not lead_item:
+        raise HTTPException(status_code=404, detail="Lead not found")
+        
+    lead_item.is_read = 1
+    db.commit()
+    return {"status": "success"}

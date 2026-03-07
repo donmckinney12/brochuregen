@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-import { Palette, Share2, Type, MessageSquare, Search, Zap, Check, Loader2, Sparkles, Activity } from 'lucide-react';
+import { Palette, MessageSquare, Type, Zap, Check, Loader2, Sparkles } from 'lucide-react';
 import VoiceTrainer from './VoiceTrainer';
 
 export default function BrandVaultPageContent() {
@@ -17,60 +17,47 @@ export default function BrandVaultPageContent() {
         brand_voice_calibration: ''
     });
 
+    const [vaultContext, setVaultContext] = useState<'personal' | 'organization'>('personal');
+    const [orgBrand, setOrgBrand] = useState<any>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
     const [scanUrl, setScanUrl] = useState('');
     const [message, setMessage] = useState({ type: '', text: '' });
 
-    useEffect(() => {
-        if (user) {
-            setFormData({
-                brand_logo_url: user.brand_logo_url || '',
-                brand_primary_color: user.brand_primary_color || '#4F46E5',
-                brand_secondary_color: user.brand_secondary_color || '#EC4899',
-                brand_font: user.brand_font || 'Outfit',
-                brand_voice_tone: user.brand_voice_tone || 'Professional',
-                brand_voice_calibration: user.brand_voice_calibration || ''
-            });
-        }
-    }, [user]);
-
-    const handleScanVoice = async () => {
-        if (!scanUrl) return;
-        setIsScanning(true);
-        setMessage({ type: '', text: '' });
-
+    const fetchOrgBrand = async () => {
+        if (!user?.org_id) return;
         try {
             const token = await getToken();
             const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiBase}/api/v1/scrape/extract-voice`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ url: scanUrl })
+            const response = await fetch(`${apiBase}/api/v1/profiles/organization/brand`, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
-
             if (response.ok) {
-                const result = await response.json();
-                if (result.voice_profile) {
-                    setFormData(prev => ({
-                        ...prev,
-                        brand_voice_calibration: result.voice_profile.calibration_snippet || prev.brand_voice_calibration
-                    }));
-                    setMessage({ type: 'success', text: 'Brand voice extracted successfully!' });
-                }
-            } else {
-                const err = await response.json();
-                setMessage({ type: 'error', text: err.detail || 'Voice extraction failed.' });
+                const data = await response.json();
+                setOrgBrand(data);
             }
         } catch (error) {
-            setMessage({ type: 'error', text: 'Scan failed. Check your network.' });
-        } finally {
-            setIsScanning(false);
+            console.error("Failed to fetch org brand", error);
         }
     };
+
+    useEffect(() => {
+        if (user?.org_id) fetchOrgBrand();
+    }, [user?.org_id]);
+
+    useEffect(() => {
+        const source = (vaultContext === 'organization' && orgBrand) ? orgBrand : user;
+        if (source) {
+            setFormData({
+                brand_logo_url: source.brand_logo_url || '',
+                brand_primary_color: source.brand_primary_color || '#4F46E5',
+                brand_secondary_color: source.brand_secondary_color || '#EC4899',
+                brand_font: source.brand_font || 'Outfit',
+                brand_voice_tone: source.brand_voice_tone || 'Professional',
+                brand_voice_calibration: source.brand_voice_calibration || ''
+            });
+        }
+    }, [user, orgBrand, vaultContext]);
 
     const handleSave = async () => {
         setIsSaving(true);
@@ -79,8 +66,14 @@ export default function BrandVaultPageContent() {
         try {
             const token = await getToken();
             const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiBase}/api/v1/profiles/me`, {
-                method: 'PATCH',
+            const endpoint = vaultContext === 'organization'
+                ? `${apiBase}/api/v1/profiles/organization/brand`
+                : `${apiBase}/api/v1/profiles/me`;
+
+            const method = vaultContext === 'organization' ? 'PUT' : 'PATCH';
+
+            const response = await fetch(endpoint, {
+                method,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -89,8 +82,12 @@ export default function BrandVaultPageContent() {
             });
 
             if (response.ok) {
-                setMessage({ type: 'success', text: 'Brand Vault updated successfully!' });
-                await refreshProfile();
+                setMessage({ type: 'success', text: `${vaultContext === 'organization' ? 'Company' : 'Personal'} Vault updated!` });
+                if (vaultContext === 'organization') {
+                    await fetchOrgBrand();
+                } else {
+                    await refreshProfile();
+                }
             } else {
                 setMessage({ type: 'error', text: 'Failed to update Brand Vault.' });
             }
@@ -117,6 +114,30 @@ export default function BrandVaultPageContent() {
                         Configure Core Identity Matrix & Synchronization Parameters
                     </p>
                 </div>
+
+                {user?.org_id && (
+                    <div className="flex bg-[var(--foreground)]/5 p-1 rounded-2xl border border-[var(--glass-border)]">
+                        <button
+                            onClick={() => setVaultContext('personal')}
+                            className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'personal'
+                                    ? 'bg-[var(--foreground)] text-[var(--background)] shadow-lg'
+                                    : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]'
+                                }`}
+                        >
+                            Personal
+                        </button>
+                        <button
+                            onClick={() => setVaultContext('organization')}
+                            className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'organization'
+                                    ? 'bg-[var(--accent-primary)] text-white shadow-lg'
+                                    : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]'
+                                }`}
+                        >
+                            Organization
+                        </button>
+                    </div>
+                )}
+
                 <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -265,7 +286,7 @@ export default function BrandVaultPageContent() {
                         <VoiceTrainer
                             initialCalibration={formData.brand_voice_calibration}
                             isScanning={isScanning}
-                            onScan={setScanUrl}
+                            onScan={(url) => setScanUrl(url)}
                             onSave={(val) => setFormData({ ...formData, brand_voice_calibration: val })}
                         />
                     </div>

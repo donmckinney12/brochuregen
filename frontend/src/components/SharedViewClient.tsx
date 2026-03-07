@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ThreeDBrochure from '@/components/ThreeDBrochure';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,6 +26,10 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showCommentForm, setShowCommentForm] = useState(false);
     const [showLeadForm, setShowLeadForm] = useState(false);
+    const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+    const [isARActive, setIsARActive] = useState(false);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const hoverStartTime = useRef<{ [key: string]: number }>({});
 
     const handleAddComment = async () => {
         if (!newComment.trim()) return;
@@ -62,6 +66,31 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
         setShowCommentForm(true);
     };
 
+    const handleSectionHover = (sectionId: string, isEntering: boolean) => {
+        if (isEntering) {
+            hoverStartTime.current = { ...hoverStartTime.current, [sectionId]: Date.now() };
+        } else {
+            const start = hoverStartTime.current[sectionId];
+            if (start) {
+                const duration = Date.now() - start;
+                // Only track if duration > 500ms to avoid noise
+                if (duration > 500) {
+                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+                    fetch(`${apiUrl}/api/v1/analytics/track`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            brochure_id: data.id,
+                            section_id: sectionId,
+                            duration_ms: duration
+                        })
+                    }).catch(console.error);
+                }
+                delete hoverStartTime.current[sectionId];
+            }
+        }
+    };
+
     return (
         <div className="min-h-screen font-sans bg-[#020617] text-white flex flex-col relative overflow-hidden">
             {/* Premium Presentation Background */}
@@ -83,6 +112,13 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
                     )}
                 </div>
                 <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => setIsARActive(true)}
+                        className="px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all hidden md:flex items-center gap-2"
+                    >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h2M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 17h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                        Spatial AR
+                    </button>
                     <button
                         onClick={() => setShowCommentForm(true)}
                         className="p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/60 hover:text-white transition-all group relative"
@@ -107,6 +143,29 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
                     >
                         Create Your Own
                     </Link>
+                    <button
+                        onClick={() => setIsAudioEnabled(!isAudioEnabled)}
+                        className={`w-10 h-10 flex items-center justify-center rounded-full border transition-all ${isAudioEnabled ? 'bg-cyan-500/20 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.3)]' : 'bg-white/5 border-white/10 opacity-40 hover:opacity-100'}`}
+                    >
+                        <div className="flex gap-0.5 items-end h-3">
+                            {[1, 2, 3, 4].map((i) => (
+                                <motion.div
+                                    key={i}
+                                    animate={{ height: isAudioEnabled ? [4, 12, 4] : 4 }}
+                                    transition={{ duration: 0.5 + i * 0.1, repeat: Infinity }}
+                                    className={`w-0.5 ${isAudioEnabled ? 'bg-cyan-400' : 'bg-white'}`}
+                                />
+                            ))}
+                        </div>
+                    </button>
+                    {isAudioEnabled && (
+                        <audio
+                            ref={audioRef}
+                            autoPlay
+                            loop
+                            src="https://assets.mixkit.co/music/preview/mixkit-tech-noir-city-ambient-490.mp3"
+                        />
+                    )}
                 </div>
             </header>
 
@@ -118,6 +177,7 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
                             data={data}
                             activeVault={activeVault}
                             onOpenRefiner={handleSectionClick}
+                            onSectionHover={handleSectionHover}
                         />
                     </div>
 
@@ -256,6 +316,39 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
                     Synthesized by <span className="text-white/20">BrochureGen Neural Engine</span>
                 </p>
             </footer>
+
+            {/* Spatial AR Overlay */}
+            <AnimatePresence>
+                {isARActive && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-xl flex flex-col items-center justify-center p-8 text-center"
+                    >
+                        <div className="absolute top-8 right-8">
+                            <button onClick={() => setIsARActive(false)} className="p-4 bg-white/5 rounded-full text-white/40 hover:text-white transition-all">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                        <div className="w-24 h-24 rounded-full border-4 border-cyan-500/20 border-t-cyan-500 animate-spin mb-8" />
+                        <h2 className="text-4xl font-black italic tracking-tighter uppercase mb-4">Initializing <span className="gradient-text">Spatial Link</span></h2>
+                        <p className="text-white/40 font-bold uppercase tracking-[0.3em] max-w-md text-xs leading-loose">
+                            Calibrating neural sensors... Place your device on a flat surface to anchor the protocol in physical space.
+                        </p>
+                        <div className="mt-12 grid grid-cols-2 gap-4 w-full max-w-xs">
+                            <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                                <span className="block text-[8px] text-white/20 font-black uppercase mb-1">Stability</span>
+                                <span className="text-emerald-400 font-mono text-xs font-bold">LOCKED</span>
+                            </div>
+                            <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                                <span className="block text-[8px] text-white/20 font-black uppercase mb-1">Immersion</span>
+                                <span className="text-cyan-400 font-mono text-xs font-bold">100%</span>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

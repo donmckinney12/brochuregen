@@ -11,22 +11,49 @@ import {
     Zap,
     Settings,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    MessageSquare,
+    Radio
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { OrganizationSwitcher } from '@clerk/nextjs';
 
 const navItems = [
+    { name: 'Command Center', href: '/command', icon: Radio },
     { name: 'Generation Studio', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Brand Vault', href: '/brand', icon: Palette },
     { name: 'Studio Insights', href: '/insights', icon: BarChart3 },
-    { name: 'Leads Vault', href: '/leads', icon: Users },
+    { name: 'Leads Vault', href: '/leads', icon: Users, badgeKey: 'unread_leads' },
+    { name: 'Feedback Hub', href: '/feedback', icon: MessageSquare, badgeKey: 'unread_comments' },
 ];
 
 export default function SuiteSidebar() {
     const pathname = usePathname();
-    const { user, currentPlan } = useAuth();
+    const { user, getToken } = useAuth();
     const [collapsed, setCollapsed] = React.useState(false);
+    const [pulse, setPulse] = React.useState({ unread_comments: 0, unread_leads: 0, total_pulse: 0 });
+
+    React.useEffect(() => {
+        const fetchPulse = async () => {
+            try {
+                const token = await getToken();
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/command/pulse`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const unreadLeads = data.filter((p: any) => p.type === 'LEAD' && !p.metadata.is_read).length;
+                    const unreadFeedback = data.filter((p: any) => p.type === 'FEEDBACK' && !p.metadata.is_read).length;
+                    setPulse({ unread_comments: unreadFeedback, unread_leads: unreadLeads, total_pulse: data.length });
+                }
+            } catch (err) {
+                console.error("Pulse sync failed", err);
+            }
+        };
+        fetchPulse();
+        const interval = setInterval(fetchPulse, 60000); // Sync every minute
+        return () => clearInterval(interval);
+    }, [getToken]);
 
     return (
         <motion.aside
@@ -93,6 +120,11 @@ export default function SuiteSidebar() {
                                 >
                                     {item.name}
                                 </motion.span>
+                            )}
+                            {item.badgeKey && (pulse as any)[item.badgeKey] > 0 && (
+                                <span className={`absolute ${collapsed ? 'top-2 right-2' : 'right-4'} flex h-4 min-w-[1rem] px-1 items-center justify-center rounded-full bg-[var(--accent-primary)] text-[8px] font-black text-white shadow-lg animate-pulse`}>
+                                    {(pulse as any)[item.badgeKey]}
+                                </span>
                             )}
                             {isActive && (
                                 <motion.div

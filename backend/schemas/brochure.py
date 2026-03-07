@@ -35,6 +35,7 @@ class BrochureCommentCreate(BrochureCommentBase):
 class BrochureComment(BrochureCommentBase):
     id: int
     brochure_id: int
+    is_read: int
     created_at: datetime
 
     class Config:
@@ -53,3 +54,8 @@ class BrochureVariant(BrochureVariantBase):
     class Config:
         orm_mode = True
         from_attributes = True
+
+class PulseResponse(BaseModel):
+    unread_comments: int
+    unread_leads: int
+    total_pulse: int

@@ -1,125 +1,143 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { useAuth } from '@/context/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminDashboard() {
     const { user } = useAuth();
-    const [stats] = useState([
-        { label: "Total Users", value: "1,284", change: "+12%", color: "blue" },
-        { label: "Monthly Revenue", value: "$4,520", change: "+8%", color: "green" },
-        { label: "AI Generations", value: "8,492", change: "+15%", color: "purple" },
-        { label: "Conversion Rate", value: "3.2%", change: "+0.5%", color: "orange" },
+    const [neuralHealth, setNeuralHealth] = useState(99.4);
+    const [stats, setStats] = useState([
+        { label: "Total Nodes", value: "1,284", change: "+12%", color: "cyan" },
+        { label: "Synthesis Rate", value: "4,520", change: "+8%", color: "emerald" },
+        { label: "AI Pulse", value: "8,492", change: "+15%", color: "indigo" },
+        { label: "Resonance", value: "3.2%", change: "+0.5%", color: "rose" },
     ]);
 
-    // Simple security check (mock)
-    if (user?.email !== 'don@mckinney.com') { // Assuming 'don@mckinney.com' is the admin
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setNeuralHealth(prev => +(prev + (Math.random() * 0.2 - 0.1)).toFixed(1));
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
+    if (user?.email !== 'don@mckinney.com') {
         return (
-            <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50 dark:bg-slate-950">
-                <div className="text-center p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 max-w-md">
-                    <div className="text-4xl mb-4">🚫</div>
-                    <h2 className="text-2xl font-bold mb-4">Access Denied</h2>
-                    <p className="text-slate-500 mb-8">You do not have administrative privileges to access this area.</p>
-                    <a href="/dashboard" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl">Back to Dashboard</a>
+            <div className="min-h-screen bg-black flex items-center justify-center p-6 font-mono">
+                <div className="border border-red-500/20 bg-red-500/5 p-12 rounded-[3rem] text-center max-w-md backdrop-blur-3xl">
+                    <div className="text-6xl mb-6 animate-pulse">🚫</div>
+                    <h2 className="text-2xl font-black italic tracking-tighter uppercase text-red-500 mb-4">Access Restricted</h2>
+                    <p className="text-red-500/40 text-[10px] uppercase tracking-[0.2em] mb-12">Unauthorized biometric signature detected. Protocol lockdown imminent.</p>
+                    <a href="/dashboard" className="inline-block px-8 py-3 bg-red-500 text-white font-black uppercase tracking-widest text-[10px] rounded-full">Return to Dashboard</a>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300">
+        <div className="min-h-screen bg-black text-white font-mono selection:bg-cyan-500/30 overflow-hidden relative">
             <Navbar />
 
-            <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-                <div className="flex items-center justify-between mb-12">
+            {/* Background Data Matrix */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.2),transparent_70%)]" />
+                <div className="grid grid-cols-24 h-full w-full">
+                    {Array.from({ length: 24 }).map((_, i) => (
+                        <div key={i} className="border-r border-white/5 h-full" />
+                    ))}
+                </div>
+            </div>
+
+            <main className="relative pt-32 pb-20 px-6 max-w-[1600px] mx-auto z-10">
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-8 mb-16 border-b border-white/10 pb-12">
                     <div>
-                        <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-                        <p className="text-slate-600 dark:text-slate-400">Manage your platform metrics and user accounts.</p>
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-2 h-2 rounded-full bg-cyan-500 animate-ping shadow-[0_0_10px_rgba(6,182,212,0.5)]" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400">Primary Command Node</span>
+                        </div>
+                        <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase">Admin <span className="gradient-text">Matrix</span></h1>
                     </div>
-                    <div className="flex gap-4">
-                        <button className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl font-medium shadow-sm">
-                            Export CSV
-                        </button>
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold shadow-lg">
-                            System Health
-                        </button>
+
+                    <div className="flex items-center gap-8 bg-white/5 border border-white/10 p-6 rounded-[2rem] backdrop-blur-xl">
+                        <div className="text-right">
+                            <span className="block text-[8px] text-white/20 font-black uppercase tracking-[0.2em] mb-1">Neural Health Status</span>
+                            <span className="text-3xl font-black text-cyan-400 italic tracking-tighter">{neuralHealth}%</span>
+                        </div>
+                        <div className="w-24 h-12 bg-white/5 rounded-xl overflow-hidden relative">
+                            <div className="absolute inset-0 flex items-center justify-center gap-1 px-2">
+                                {Array.from({ length: 12 }).map((_, i) => (
+                                    <div key={i} className="flex-1 bg-cyan-500/40 rounded-full animate-pulse" style={{ height: `${Math.random() * 80 + 20}%`, animationDelay: `${i * 0.1}s` }} />
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                {/* Real-time Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
                     {stats.map((stat, idx) => (
-                        <div key={idx} className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
-                            <div className={`absolute top-0 right-0 w-24 h-24 bg-${stat.color}-500/10 rounded-full -mr-8 -mt-8 group-hover:scale-150 transition-transform duration-500`}></div>
-                            <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4">{stat.label}</h3>
-                            <div className="flex items-baseline gap-3">
-                                <span className="text-4xl font-extrabold">{stat.value}</span>
-                                <span className="text-green-500 text-sm font-bold">{stat.change}</span>
+                        <motion.div
+                            key={idx}
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-white/5 p-10 rounded-[2.5rem] border border-white/10 relative overflow-hidden group backdrop-blur-md"
+                        >
+                            <div className={`absolute -top-10 -right-10 w-32 h-32 bg-${stat.color}-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700`} />
+                            <h3 className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em] mb-6">{stat.label}</h3>
+                            <div className="flex items-baseline gap-4">
+                                <span className="text-5xl font-black italic tracking-tighter">{stat.value}</span>
+                                <span className="text-cyan-400 text-[10px] font-black uppercase tracking-widest">{stat.change}</span>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
 
-                {/* User List Mockup */}
-                <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-                    <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                        <h3 className="font-bold text-xl">Recent Users</h3>
-                        <div className="relative">
-                            <input
-                                type="text"
-                                placeholder="Search users..."
-                                className="pl-10 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                            />
-                            <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                {/* Simulated Data Feed */}
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                    <div className="xl:col-span-2 bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden backdrop-blur-md">
+                        <div className="p-8 border-b border-white/10 flex justify-between items-center bg-white/[0.02]">
+                            <h3 className="font-black italic tracking-tighter uppercase text-xl">Active Neural Streams</h3>
+                            <div className="flex items-center gap-4 text-[8px] font-black uppercase tracking-widest text-white/20">
+                                <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> SYNCED</span>
+                                <span className="flex items-center gap-2 relative">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping absolute top-0.5 -left-3" />
+                                    LIVE MONITOR
+                                </span>
+                            </div>
+                        </div>
+                        <div className="p-8 space-y-6">
+                            {[1, 2, 3, 4, 5, 6].map((u) => (
+                                <div key={u} className="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/[0.08] transition-all group">
+                                    <div className="flex items-center gap-6">
+                                        <div className="w-12 h-12 bg-gradient-to-tr from-cyan-500 to-indigo-500 rounded-2xl flex items-center justify-center text-white font-black italic shadow-lg">ID{u}</div>
+                                        <div>
+                                            <p className="font-black uppercase tracking-[0.1em] text-xs">Node_{u * 4421}</p>
+                                            <p className="text-[8px] text-white/20 font-black uppercase tracking-[0.2em]">{u % 2 === 0 ? 'Synthesis Active' : 'Protocol Standby'}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-12">
+                                        <div className="text-right hidden sm:block">
+                                            <span className="block text-[8px] text-white/20 font-black uppercase mb-1">Pulse Resonance</span>
+                                            <span className="text-xs font-mono font-bold text-cyan-400">{85 + u}%</span>
+                                        </div>
+                                        <button className="px-6 py-2 bg-white text-black text-[8px] font-black uppercase tracking-widest rounded-full opacity-0 group-hover:opacity-100 transition-all hover:scale-105 active:scale-95">Override</button>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-slate-50 dark:bg-slate-800/50">
-                                    <th className="px-8 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">User</th>
-                                    <th className="px-8 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">Plan</th>
-                                    <th className="px-8 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">Status</th>
-                                    <th className="px-8 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">Credits</th>
-                                    <th className="px-8 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                {[1, 2, 3, 4, 5].map((u) => (
-                                    <tr key={u} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                                        <td className="px-8 py-5">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">U{u}</div>
-                                                <div>
-                                                    <p className="font-bold">User {u}</p>
-                                                    <p className="text-xs text-slate-500">user{u}@example.com</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-5">
-                                            <span className={`px-2 py-1 rounded-md text-xs font-bold uppercase ${u % 2 === 0 ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600'}`}>
-                                                {u % 2 === 0 ? 'Pro' : 'Free'}
-                                            </span>
-                                        </td>
-                                        <td className="px-8 py-5">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                                                <span className="text-sm">Active</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-5 text-sm font-medium">
-                                            {u * 100} / 1000
-                                        </td>
-                                        <td className="px-8 py-5">
-                                            <button className="text-blue-600 font-bold text-sm hover:underline">Edit</button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="p-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 text-center">
-                        <button className="text-slate-500 font-medium hover:text-blue-600 transition-colors">View all users</button>
+
+                    <div className="bg-white/5 rounded-[3rem] border border-white/10 p-8 space-y-8 backdrop-blur-md relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent pointer-events-none" />
+                        <h3 className="font-black italic tracking-tighter uppercase text-xl relative z-10">Diagnostic Feed</h3>
+                        <div className="space-y-4 font-mono text-[10px] relative z-10 h-[500px] overflow-y-auto pr-4 custom-scrollbar text-white/40">
+                            {[...Array(20)].map((_, i) => (
+                                <div key={i} className="border-l border-white/5 pl-4 py-1">
+                                    <span className="text-cyan-500/40">[{new Date().toLocaleTimeString()}]</span> SYS_MOD_{i * 102}: Synthesis stream {i % 3 === 0 ? 'LOCKED' : 'CALIBRATING'}
+                                    <br />
+                                    <span className="text-white/10 text-[8px]">{'=>'} 0x{Math.random().toString(16).slice(2, 10).toUpperCase()}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </main>

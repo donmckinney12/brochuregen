@@ -69,6 +69,11 @@ def sync_enterprise_context(db: Session, user_id: str, org_id: Optional[str], or
         db.add(db_org)
         db.commit()
         db.refresh(db_org)
+    else:
+        # Update name if it changed
+        if org_name and db_org.name != org_name:
+            db_org.name = org_name
+            db.commit()
     
     # 2. Link Profile
     db_profile = get_profile(db, user_id)
@@ -78,6 +83,22 @@ def sync_enterprise_context(db: Session, user_id: str, org_id: Optional[str], or
         db.refresh(db_profile)
         
     return org_id
+
+def get_organization_brand(db: Session, org_id: str):
+    return db.query(Organization).filter(Organization.id == org_id).first()
+
+def update_organization_brand(db: Session, org_id: str, brand_data: dict):
+    db_org = db.query(Organization).filter(Organization.id == org_id).first()
+    if not db_org:
+        return None
+    
+    for key, value in brand_data.items():
+        if hasattr(db_org, key):
+            setattr(db_org, key, value)
+            
+    db.commit()
+    db.refresh(db_org)
+    return db_org
 
 def get_user_brochures(db: Session, user_id: str, org_id: Optional[str] = None):
     """
@@ -116,3 +137,25 @@ def add_credits_orm(db: Session, user_id: str, amount: int = 100, credit_type: s
     db.refresh(db_profile)
     
     return {"success": True, "new_balance": getattr(db_profile, credit_type)}
+
+from models.profile import ActivityLog
+
+def log_activity(db: Session, user_id: str, action: str, details: Optional[str] = None, org_id: Optional[str] = None):
+    db_activity = ActivityLog(
+        user_id=user_id,
+        action=action,
+        details=details,
+        org_id=org_id
+    )
+    db.add(db_activity)
+    db.commit()
+    db.refresh(db_activity)
+    return db_activity
+
+def get_activities(db: Session, user_id: str, org_id: Optional[str] = None, limit: int = 10):
+    query = db.query(ActivityLog)
+    if org_id:
+        query = query.filter(ActivityLog.org_id == org_id)
+    else:
+        query = query.filter(ActivityLog.user_id == user_id)
+    return query.order_by(ActivityLog.created_at.desc()).limit(limit).all()

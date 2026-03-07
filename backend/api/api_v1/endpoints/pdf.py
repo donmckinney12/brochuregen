@@ -13,7 +13,7 @@ from core.auth import get_current_user
 @router.post("/generate-pdf")
 async def generate_pdf(request: dict, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     user_id = current_user["sub"]
-    from services.db_orm import get_profile, deduct_credits_orm
+    from services.db_orm import get_profile, deduct_credits_orm, log_activity
     
     # Fetch profile for brand settings
     profile = get_profile(db, user_id)
@@ -35,6 +35,7 @@ async def generate_pdf(request: dict, db: Session = Depends(get_db), current_use
     }
 
     pdf_bytes = await generate_brochure_pdf(pdf_data)
+    log_activity(db, user_id, "EXPORTED", f"PDF Brochure: {request.get('headline', 'Untitled')}", org_id=profile.org_id)
     return StreamingResponse(
         io.BytesIO(pdf_bytes), 
         media_type="application/pdf", 

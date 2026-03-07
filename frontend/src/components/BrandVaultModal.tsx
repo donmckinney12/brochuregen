@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+import { Loader2, Zap } from 'lucide-react';
 
 interface BrandVaultModalProps {
     isOpen: boolean;
@@ -286,9 +287,7 @@ export default function BrandVaultModal({ isOpen, onClose }: BrandVaultModalProp
                                 disabled={isSaving}
                                 className="w-full bg-white hover:bg-cyan-400 active:scale-[0.98] disabled:opacity-50 text-black font-black text-[12px] uppercase tracking-[0.3em] py-5 rounded-2xl shadow-[0_0_50px_rgba(255,255,255,0.1)] transition-all flex items-center justify-center gap-3 group"
                             >
-                                {isSaving ? (
-                                    <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-                                ) : (
+                                {isSaving ? <Loader2 size={20} className="animate-spin" /> : (
                                     <svg className="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
                                 )}
                                 {isSaving ? 'SYNCHRONIZING...' : 'UPDATE CORE IDENTITY'}

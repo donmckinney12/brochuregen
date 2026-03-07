@@ -81,10 +81,16 @@
         /* Right Panel (Front Cover) */
         .panel-right {
                 {
-                % if layout_theme=='classic' %
+                % if layout_theme=='classic' or layout_theme=='corporate' %
             }
 
-            background: linear-gradient(180deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            background: {
+                    {
+                    primary_color
+                }
+            }
+
+            ;
             text-align: left;
 
                 {
@@ -93,6 +99,15 @@
 
             background: radial-gradient(circle at top right, var(--primary-color), var(--secondary-color));
             text-align: center;
+
+                {
+                % elif layout_theme=='minimalist' %
+            }
+
+            background: white;
+            border-left: 1px solid #e2e8f0;
+            text-align: left;
+            color: #1e293b !important;
 
                 {
                 % else %
@@ -111,7 +126,7 @@
             justify-content: center;
 
                 {
-                % if layout_theme=='classic' %
+                % if layout_theme=='classic' or layout_theme=='corporate' or layout_theme=='minimalist' %
             }
 
             align-items: flex-start;
@@ -159,7 +174,7 @@
 
         .panel-right h1,
         .panel-right p {
-            color: white;
+            color: inherit;
         }
 
         ul {
@@ -181,17 +196,26 @@
             border-bottom: 4px solid var(--secondary-color);
 
                 {
-                % elif layout_theme=='classic' %
+                % elif layout_theme=='classic' or layout_theme=='corporate' %
             }
 
             border-radius: 0px;
             border: 1px solid #cbd5e1;
 
                 {
+                % elif layout_theme=='minimalist' %
+            }
+
+            border-radius: 0px;
+            background: transparent;
+            border-bottom: 1px solid #e2e8f0;
+            padding-left: 0;
+
+                {
                 % else %
             }
 
-            border-radius: 12px;
+            border-radius: 124px;
 
                 {
                 % endif %
@@ -207,7 +231,7 @@
             height: 80px;
 
                 {
-                % if layout_theme=='classic' %
+                % if layout_theme=='classic' or layout_theme=='corporate' or layout_theme=='minimalist' %
             }
 
             margin: 0 0 30px 0;
