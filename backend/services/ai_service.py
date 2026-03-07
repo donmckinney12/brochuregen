@@ -337,3 +337,24 @@ class AIService:
         except Exception as e:
             print(f"Error generating SEO metadata: {e}")
             return {"error": str(e)}
+
+    async def generate_completion(self, system_prompt: str, user_prompt: str) -> str:
+        """
+        Generic rapid completion for concierge suggestions and micro-tasks.
+        """
+        if not self.api_key:
+            return "Auth failure: API key missing"
+
+        try:
+            response = await self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.7
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            print(f"Completion failure: {e}")
+            return "Internal synthesis error. Retrying protocol..."

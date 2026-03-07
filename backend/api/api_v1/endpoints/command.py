@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Any
-from api import deps
+from core.database import get_db
+from core.auth import get_current_user
 from models.profile import LeadCapture, BrochureComment, Brochure, Profile
 from pydantic import BaseModel
 from datetime import datetime
@@ -24,8 +25,8 @@ class SuggestionRequest(BaseModel):
 
 @router.get("/pulse", response_model=List[PulseItem])
 def get_command_pulse(
-    db: Session = Depends(deps.get_db),
-    current_user: Profile = Depends(deps.get_current_active_user)
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Get a unified pulse of all leads and feedback for the organization.
@@ -77,8 +78,8 @@ def get_command_pulse(
 @router.post("/suggest")
 async def get_ai_suggestion(
     request: SuggestionRequest,
-    db: Session = Depends(deps.get_db),
-    current_user: Profile = Depends(deps.get_current_active_active_user) # Placeholder for auth check
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Generate an AI suggestion for responding to a lead or feedback.
