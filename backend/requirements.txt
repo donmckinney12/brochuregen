@@ -11,3 +11,4 @@ requests
 jinja2
 openai
 python-dotenv
+pydantic-settings
