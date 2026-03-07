@@ -3,5 +3,8 @@
   publish = ".next"
   command = "npm install && npm run build"
 
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_FRONTEND_API"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
