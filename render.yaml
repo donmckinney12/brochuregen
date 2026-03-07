@@ -1,8 +1,10 @@
 services:
   - type: web
-    name: brochuregen-backend-docker
+    name: brochuregen-backend
     env: docker
-    rootDirectory: backend
+    plan: free
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
     healthCheckPath: /api/v1/command/pulse
     envVars:
       - key: OPENAI_API_KEY
