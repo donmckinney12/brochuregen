@@ -9,9 +9,17 @@ import time
 app = FastAPI(title=settings.PROJECT_NAME)
 
 # Configure CORS
+origins = [
+    settings.CLIENT_URL,
+    "http://localhost:3000",
+    "https://brochuregen.netlify.app", # Add production if known/needed
+    "https://brochuregen.com",
+    "https://www.brochuregen.com",
+]
+
 app.add_middleware(
     CORSMiddleware,
-     allow_origins=["*"], 
+    allow_origins=[o for o in origins if o],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
