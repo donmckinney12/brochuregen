@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from db.session import get_db
+from core.database import get_db
+from core.auth import get_current_user
 from services.retargeting import retargeting_service
-from services.auth import get_current_user
 from typing import List
 
 router = APIRouter()

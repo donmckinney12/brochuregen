@@ -32,8 +32,11 @@ def get_command_pulse(
     Get a unified pulse of all leads and feedback for the organization.
     """
     # Base query for brochures in the org
+    org_id = current_user.get("org_id")
+    user_id = current_user.get("sub")
+    
     brochure_ids_query = db.query(Brochure.id).filter(
-        Brochure.org_id == current_user.org_id if current_user.org_id else Brochure.user_id == current_user.id
+        Brochure.org_id == org_id if org_id else Brochure.user_id == user_id
     )
     brochures = {b.id: b.title for b in db.query(Brochure).filter(Brochure.id.in_(brochure_ids_query)).all()}
     

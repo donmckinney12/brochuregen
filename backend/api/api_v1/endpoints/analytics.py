@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from api.deps import get_db
+from core.database import get_db
 from pydantic import BaseModel
 from services.analytics import analytics_service
 

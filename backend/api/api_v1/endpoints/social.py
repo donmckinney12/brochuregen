@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from api.deps import get_db
+from core.database import get_db
+from core.auth import get_current_user
 from services.social_sync import social_sync_service
-from services.db_orm import get_current_user_profile
 from models.profile import Profile
 from pydantic import BaseModel
 
@@ -17,7 +17,7 @@ class SocialDispatchRequest(BaseModel):
 async def dispatch_social_post(
     request: SocialDispatchRequest,
     db: Session = Depends(get_db),
-    current_user: Profile = Depends(get_current_user_profile)
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Synchronize a social post to the specified platform via API Pulse.
