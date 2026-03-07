@@ -1,3 +1,4 @@
+from fastapi import APIRouter
 from .endpoints import scrape, pdf, payment, profiles, image, brochures, enterprise, newsletter, leads, export, social, analytics, command, collaboration, retargeting, intent
 
 api_router = APIRouter()

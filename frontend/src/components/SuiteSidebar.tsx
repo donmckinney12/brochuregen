@@ -32,6 +32,11 @@ export default function SuiteSidebar() {
     const { user, getToken } = useAuth();
     const [collapsed, setCollapsed] = React.useState(false);
     const [pulse, setPulse] = React.useState({ unread_comments: 0, unread_leads: 0, total_pulse: 0 });
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
 
     React.useEffect(() => {
         const fetchPulse = async () => {
@@ -54,6 +59,10 @@ export default function SuiteSidebar() {
         const interval = setInterval(fetchPulse, 60000); // Sync every minute
         return () => clearInterval(interval);
     }, [getToken]);
+
+    if (!mounted) return (
+        <aside className="w-[80px] h-screen bg-[var(--glass-bg)] border-r border-[var(--glass-border)] animate-pulse" />
+    );
 
     return (
         <motion.aside
@@ -84,17 +93,21 @@ export default function SuiteSidebar() {
 
             {/* Org Switcher */}
             <div className="px-4 mb-8">
-                <div className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} bg-[var(--foreground)]/5 p-2 rounded-xl border border-[var(--glass-border)] overflow-hidden`}>
-                    <OrganizationSwitcher
-                        appearance={{
-                            elements: {
-                                organizationSwitcherTrigger: "text-[var(--foreground)] hover:bg-[var(--foreground)]/10 py-1 transition-all",
-                                organizationPreviewTextContainer: collapsed ? "hidden" : "block text-[var(--foreground)]",
-                                organizationPreviewMainIdentifier: "text-[var(--foreground)] font-medium",
-                                organizationPreviewSecondaryIdentifier: "text-[var(--foreground)]/40"
-                            }
-                        }}
-                    />
+                <div className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} bg-[var(--foreground)]/5 p-2 rounded-xl border border-[var(--glass-border)] overflow-hidden min-h-[48px]`}>
+                    {mounted ? (
+                        <OrganizationSwitcher
+                            appearance={{
+                                elements: {
+                                    organizationSwitcherTrigger: "text-[var(--foreground)] hover:bg-[var(--foreground)]/10 py-1 transition-all",
+                                    organizationPreviewTextContainer: collapsed ? "hidden" : "block text-[var(--foreground)]",
+                                    organizationPreviewMainIdentifier: "text-[var(--foreground)] font-medium",
+                                    organizationPreviewSecondaryIdentifier: "text-[var(--foreground)]/40"
+                                }
+                            }}
+                        />
+                    ) : (
+                        <div className="w-8 h-8 rounded-lg bg-[var(--foreground)]/10 animate-pulse" />
+                    )}
                 </div>
             </div>
 
