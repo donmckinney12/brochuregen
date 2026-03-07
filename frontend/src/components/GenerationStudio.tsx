@@ -414,14 +414,18 @@ export default function GenerationStudio() {
                 onApply={handleApplyRefinedText}
             />
 
-            <EmbedModal
-                isOpen={isEmbedModalOpen}
-                onClose={() => setIsEmbedModalOpen(false)}
-                shareUuid={data.share_uuid || ''}
-            />
+            {data && (
+                <>
+                    <EmbedModal
+                        isOpen={isEmbedModalOpen}
+                        onClose={() => setIsEmbedModalOpen(false)}
+                        shareUuid={data.share_uuid || ''}
+                    />
 
-            {(data.social_posts || data.ai_content?.social_posts) && (
-                <SocialPulseKit posts={data.social_posts || data.ai_content?.social_posts} />
+                    {(data.social_posts || data.ai_content?.social_posts) && (
+                        <SocialPulseKit posts={data.social_posts || data.ai_content?.social_posts} />
+                    )}
+                </>
             )}
         </div>
     );
