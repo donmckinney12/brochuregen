@@ -1,16 +1,36 @@
 from fastapi import APIRouter, HTTPException, Depends, Request, BackgroundTasks
-from services.db_orm import get_user_brochures, create_brochure, get_shared_brochure
+from sqlalchemy.orm import Session
+from typing import List
+import hashlib
+import json
+
+from services.db_orm import get_user_brochures, create_brochure, get_shared_brochure, deduct_credits_orm
 from schemas.brochure import Brochure, BrochureCreate, BrochureCommentBase, BrochureCommentCreate, BrochureComment, BrochureVariant
 from schemas.activity import ActivityLog as ActivityLogSchema
+from core.database import get_db
+from core.auth import get_current_user
+from models.profile import Brochure as BrochureModel, BrochureVariant as VariantModel, BrochureView
+from services.ai_service import AIService
 
-# ... inside router definition ...
+router = APIRouter()
+
+def log_brochure_view(db: Session, brochure_id: int, ip_address: str, user_agent: str, variant_id: int = None):
+    try:
+        ip_hash = hashlib.sha256(ip_address.encode()).hexdigest()
+        new_view = BrochureView(
+            brochure_id=brochure_id,
+            variant_id=variant_id,
+            viewer_ip_hash=ip_hash,
+            user_agent=user_agent
+        )
+        db.add(new_view)
+        db.commit()
+    except Exception as e:
+        print(f"Error logging view: {e}")
 
 @router.post("/{brochure_id}/generate-variant", response_model=BrochureVariant)
 async def create_variant(brochure_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     user_id = current_user["sub"]
-    from models.profile import Brochure as BrochureModel, BrochureVariant as VariantModel
-    from services.ai_service import AIService
-    import json
     
     # 1. Fetch Brochure
     db_brochure = db.query(BrochureModel).filter(BrochureModel.id == brochure_id, BrochureModel.user_id == user_id).first()
@@ -18,7 +38,6 @@ async def create_variant(brochure_id: int, db: Session = Depends(get_db), curren
         raise HTTPException(status_code=404, detail="Brochure not found")
         
     # 2. Check for credits
-    from services.db_orm import deduct_credits_orm
     credit_check = deduct_credits_orm(db, user_id, amount=1, credit_type='refine_credits')
     if not credit_check["success"]:
         raise HTTPException(status_code=402, detail="Insufficient refine credits for variant generation")
@@ -41,30 +60,6 @@ async def create_variant(brochure_id: int, db: Session = Depends(get_db), curren
     db.commit()
     db.refresh(db_variant)
     return db_variant
-from core.database import get_db
-from sqlalchemy.orm import Session
-from typing import List
-import hashlib
-
-from core.auth import get_current_user
-from models.profile import BrochureView
-
-router = APIRouter()
-
-def log_brochure_view(db: Session, brochure_id: int, ip_address: str, user_agent: str, variant_id: int = None):
-    try:
-        ip_hash = hashlib.sha256(ip_address.encode()).hexdigest()
-        new_view = BrochureView(
-            brochure_id=brochure_id,
-            variant_id=variant_id,
-            viewer_ip_hash=ip_hash,
-            user_agent=user_agent
-        )
-        db.add(new_view)
-        db.commit()
-    except Exception as e:
-        print(f"Error logging view: {e}")
-        db.rollback()
 
 @router.get("/shared/{share_uuid}")
 def get_shared(share_uuid: str, request: Request, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
@@ -287,7 +282,7 @@ def get_analytics(db: Session = Depends(get_db), current_user: dict = Depends(ge
     for r in view_results:
         date_str = str(r.date)
         if date_str not in analytics_map:
-             analytics_map[date_str] = {"date": date_str, "generations": 0, "views": 0, "visitors": 0}
+            analytics_map[date_str] = {"date": date_str, "generations": 0, "views": 0, "visitors": 0}
         analytics_map[date_str]["views"] = r.views
         analytics_map[date_str]["visitors"] = r.visitors
         
