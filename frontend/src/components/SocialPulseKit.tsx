@@ -80,7 +80,7 @@ export default function SocialPulseKit({ posts, brochureId }: SocialPulseKitProp
     if (!postList || postList.length === 0) return null;
 
     return (
-        <div className="space-y-8 mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+        <section className="py-12 sm:py-20">
             <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-lg">
                     <Sparkles size={20} className="animate-pulse" />
@@ -102,7 +102,7 @@ export default function SocialPulseKit({ posts, brochureId }: SocialPulseKitProp
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.1 }}
-                            className="group relative p-8 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-[2rem] hover:border-[var(--accent-primary)]/30 transition-all duration-500 overflow-hidden shadow-xl"
+                            className="group relative p-4 sm:p-8 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-[1.5rem] sm:rounded-[2rem] hover:border-[var(--accent-primary)]/30 transition-all duration-500 overflow-hidden shadow-xl"
                         >
                             <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-primary)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
@@ -113,10 +113,10 @@ export default function SocialPulseKit({ posts, brochureId }: SocialPulseKitProp
                                     </div>
                                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/40">{platform}</span>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-wrap items-center gap-2">
                                     <button
                                         onClick={() => handleCopy(postContent, i)}
-                                        className={`p-2.5 rounded-xl border transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${copiedIndex === i ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-[var(--foreground)]/5 hover:bg-[var(--foreground)] text-[var(--foreground)]/40 hover:text-[var(--foreground)] border-[var(--glass-border)]'}`}
+                                        className={`flex-1 sm:flex-none p-2 sm:p-2.5 rounded-xl border transition-all flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest ${copiedIndex === i ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-[var(--foreground)]/5 hover:bg-[var(--foreground)] text-[var(--foreground)]/40 hover:text-[var(--foreground)] border-[var(--glass-border)]'}`}
                                     >
                                         {copiedIndex === i ? <Check size={12} /> : <Copy size={12} />}
                                         <span>{copiedIndex === i ? 'Copied' : 'Copy'}</span>
@@ -124,7 +124,7 @@ export default function SocialPulseKit({ posts, brochureId }: SocialPulseKitProp
                                     <button
                                         onClick={() => handleDispatch(i, platform)}
                                         disabled={dispatchingIndex === i || dispatchedIndices.includes(i)}
-                                        className={`p-2.5 rounded-xl border transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${dispatchedIndices.includes(i) ? 'bg-blue-500 text-white border-blue-500' : 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)] hover:opacity-90 disabled:opacity-50'}`}
+                                        className={`flex-1 sm:flex-none p-2 sm:p-2.5 rounded-xl border transition-all flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest ${dispatchedIndices.includes(i) ? 'bg-blue-500 text-white border-blue-500' : 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)] hover:opacity-90 disabled:opacity-50'}`}
                                     >
                                         {dispatchingIndex === i ? <Loader2 size={12} className="animate-spin" /> : dispatchedIndices.includes(i) ? <Check size={12} /> : <Send size={12} />}
                                         <span>{dispatchedIndices.includes(i) ? 'Dispatched' : 'Dispatch'}</span>
@@ -143,6 +143,6 @@ export default function SocialPulseKit({ posts, brochureId }: SocialPulseKitProp
                     );
                 })}
             </div>
-        </div>
+        </section>
     );
 }

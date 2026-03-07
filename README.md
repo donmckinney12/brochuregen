@@ -14,6 +14,8 @@
 - [x] **v16.0** - Zenith State (Absolute God-Tier Finalization)
 - [x] **v17.0** - Master Protocol (The Final Ascension)
 - [x] **v18.0** - True Grand Finale (Total Platform Synthesis)
+- [x] **v21.0** - Resolution Protocol (Fly.io Enterprise Genesis)
+- [x] **v22.0** - Responsive Protocol (Multi-Device Design Mastery)
 
 ---
 
@@ -80,6 +82,28 @@ The definitive final synthesis of BrochureGen. Project lockdown complete.
 
 ---
 
+---
+
+## 🛰️ Resolution Protocol (v21.0)
+
+The **Resolution Protocol** finalizes the backend infrastructure for enterprise stability:
+
+-   **🚀 Fly.io Ascension**: Full migration to Fly.io for global edge distribution and low-latency synthesis.
+-   **🐋 Docker Containerization**: 100% containerized backend architecture for immutable deployments and elastic scaling.
+-   **🔐 Secret Vaulting**: Enhanced environmental security synchronized via Fly.io secret management.
+
+---
+
+## 📱 Responsive Protocol (v22.0)
+
+The **Responsive Protocol** ensures BrochureGen is a high-resonance experience on any device:
+
+-   **🏗️ Mobile Layout Refactor**: Complete overhaul of the `SuiteSidebar` and `SuiteHeader` to support intuitive touch-based navigation.
+-   **📲 Fluid Synthesis Engine**: The Generation Studio now features a wrapping action matrix and stacked HUDs for compact mobile workspaces.
+-   **💅 Spatial Padding**: Dynamic spacing tiers that preserve the "God-Tier" aesthetic from ultra-wide monitors down to standard mobile devices.
+
+---
+
 ## 🌗 Solarized Genesis & Tech Noir
 
 Experience the application in two premium, "God-Tier" aesthetics:
@@ -99,9 +123,10 @@ Experience the application in two premium, "God-Tier" aesthetics:
 
 ### Backend (`/backend`)
 -   **API**: FastAPI (Python 3.12+)
+-   **Infrastructure**: Docker + Fly.io (Enterprise Distributed)
 -   **Scraping**: Playwright (Neural Crawler)
 -   **AI**: OpenAI GPT-4o
--   **Database**: PostgreSQL
+-   **Database**: SQLite -> PostgreSQL Ready
 -   **Payments**: Stripe
 
 ---
@@ -113,6 +138,8 @@ Experience the application in two premium, "God-Tier" aesthetics:
 -   Python 3.12+
 
 ### 2. Backend Setup
+
+#### Local Development
 ```bash
 cd backend
 python -m venv .venv
@@ -120,6 +147,12 @@ source .venv/bin/activate # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 playwright install chromium
 python run.py
+```
+
+#### Containerized Deployment (Production)
+```bash
+docker build -t brochuregen-backend .
+docker run -p 8080:8080 brochuregen-backend
 ```
 
 ### 3. Frontend Setup

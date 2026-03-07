@@ -375,10 +375,10 @@ export default function GenerationStudio() {
                 ))}
             </AnimatePresence>
             {/* Studio Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4 sm:px-0">
                 <div>
-                    <h1 className="text-4xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Generation Studio</h1>
-                    <p className="text-[var(--foreground)]/40 font-bold tracking-[0.3em] uppercase mt-2 text-xs italic">
+                    <h1 className="text-3xl sm:text-4xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Generation Studio</h1>
+                    <p className="text-[var(--foreground)]/40 font-bold tracking-[0.3em] uppercase mt-2 text-[10px] sm:text-xs italic">
                         Initialize Neural Crawl & Creative Synthesis
                     </p>
                 </div>
@@ -391,18 +391,18 @@ export default function GenerationStudio() {
                         <div className="bg-[var(--glass-bg)] backdrop-blur-3xl rounded-[2.4rem] p-10 space-y-8 border border-[var(--glass-border)] relative overflow-hidden transition-colors duration-500">
                             <div className="absolute inset-0 scanline opacity-10 pointer-events-none"></div>
 
-                            <div className="space-y-2">
+                            <div className="space-y-4">
                                 <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.3em] ml-2">Source URL Identifier</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-                                        <Globe size={20} className="text-[var(--accent-primary)] group-focus-within:text-[var(--foreground)] transition-colors" />
+                                        <Globe size={18} className="text-[var(--accent-primary)] group-focus-within:text-[var(--foreground)] transition-colors" />
                                     </div>
                                     <input
                                         type="url"
                                         value={url}
                                         onChange={(e) => setUrl(e.target.value)}
                                         placeholder="https://your-digital-asset.com"
-                                        className="w-full bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-3xl py-6 pl-16 pr-8 text-lg text-[var(--foreground)] placeholder:text-[var(--foreground)]/10 focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/30 transition-all font-medium"
+                                        className="w-full bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-3xl py-4 sm:py-6 pl-14 sm:pl-16 pr-8 text-base sm:text-lg text-[var(--foreground)] placeholder:text-[var(--foreground)]/10 focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/30 transition-all font-medium"
                                     />
                                 </div>
                             </div>
@@ -454,9 +454,9 @@ export default function GenerationStudio() {
                             <button
                                 onClick={handleScrape}
                                 disabled={!url}
-                                className="w-full bg-[var(--foreground)] hover:bg-[var(--accent-primary)] active:scale-[0.98] disabled:opacity-30 text-[var(--background)] hover:text-white font-black text-lg py-6 rounded-3xl transition-all shadow-xl flex items-center justify-center space-x-4 group"
+                                className="w-full bg-[var(--foreground)] hover:bg-[var(--accent-primary)] active:scale-[0.98] disabled:opacity-30 text-[var(--background)] hover:text-white font-black text-base sm:text-lg py-4 sm:py-6 rounded-3xl transition-all shadow-xl flex items-center justify-center space-x-4 group"
                             >
-                                <Zap size={24} className="group-hover:rotate-12 transition-transform" />
+                                <Zap size={20} className="group-hover:rotate-12 transition-transform" />
                                 <span className="uppercase tracking-[0.2em] italic">Initialize Synthesis</span>
                             </button>
                         </div>
@@ -477,22 +477,22 @@ export default function GenerationStudio() {
             {/* Creative Canvas */}
             {data && (
                 <div className="space-y-12 animate-in fade-in zoom-in-95 duration-1000">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 px-4 sm:px-0">
                         <div className="flex items-center space-x-4">
                             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
                             <h3 className="text-xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Synthesis Complete</h3>
                         </div>
-                        <div className="flex items-center space-x-4">
+                        <div className="flex flex-wrap items-center gap-3">
                             <button
                                 onClick={() => setData(null)}
-                                className="px-6 py-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/60 hover:text-[var(--foreground)] border border-[var(--glass-border)] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/60 hover:text-[var(--foreground)] border border-[var(--glass-border)] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
                             >
                                 New Workspace
                             </button>
                             <button
                                 onClick={handleExportPDF}
                                 disabled={exportLoading}
-                                className="px-6 py-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/60 hover:text-[var(--foreground)] border border-[var(--glass-border)] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
+                                className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/60 hover:text-[var(--foreground)] border border-[var(--glass-border)] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                             >
                                 {exportLoading ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
                                 <span>PDF</span>
@@ -502,23 +502,23 @@ export default function GenerationStudio() {
                                 <button
                                     onClick={handleLaunchProtocol}
                                     disabled={isLaunching}
-                                    className="px-8 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl flex items-center gap-2 hover:bg-[var(--accent-primary)] hover:text-white transition-all disabled:opacity-50"
+                                    className="w-full sm:w-auto px-8 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-2 hover:bg-[var(--accent-primary)] hover:text-white transition-all disabled:opacity-50"
                                 >
                                     {isLaunching ? <Loader2 size={12} className="animate-spin" /> : <Rocket size={12} />}
                                     <span>Launch Protocol</span>
                                 </button>
                             ) : (
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={() => window.open(`/view/${data.share_uuid}`, '_blank')}
-                                        className="px-6 py-2.5 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:bg-emerald-600 transition-all"
+                                        className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 hover:bg-emerald-600 transition-all"
                                     >
                                         <Share2 size={12} />
                                         <span>Shared View</span>
                                     </button>
                                     <button
                                         onClick={() => setIsEmbedModalOpen(true)}
-                                        className="px-6 py-2.5 bg-[var(--accent-secondary)] text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:opacity-90 transition-all"
+                                        className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-[var(--accent-secondary)] text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all"
                                     >
                                         <Code size={12} />
                                         <span>Embed</span>
@@ -526,7 +526,7 @@ export default function GenerationStudio() {
                                     <button
                                         onClick={handleGenerateVariant}
                                         disabled={isGeneratingVariant}
-                                        className="px-6 py-2.5 bg-[var(--accent-tertiary)] text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
+                                        className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-[var(--accent-tertiary)] text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
                                     >
                                         {isGeneratingVariant ? <Loader2 size={12} className="animate-spin" /> : <Workflow size={12} />}
                                         <span>AI Challenger</span>
@@ -534,7 +534,7 @@ export default function GenerationStudio() {
                                     <button
                                         onClick={handleExportEmail}
                                         disabled={emailExportLoading}
-                                        className="px-6 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:bg-[var(--accent-primary)] hover:text-white transition-all disabled:opacity-50"
+                                        className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 hover:bg-[var(--accent-primary)] hover:text-white transition-all disabled:opacity-50"
                                     >
                                         {emailExportLoading ? <Loader2 size={12} className="animate-spin" /> : <Mail size={12} />}
                                         <span>Email Matrix</span>
@@ -542,12 +542,12 @@ export default function GenerationStudio() {
                                     <button
                                         onClick={handleNeuralSync}
                                         disabled={isSyncing}
-                                        className="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-indigo-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:scale-105 transition-all disabled:opacity-50"
+                                        className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-indigo-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-all disabled:opacity-50"
                                     >
                                         {isSyncing ? <Loader2 size={12} className="animate-spin" /> : <Cloud size={12} />}
                                         <span>Neural Sync</span>
                                     </button>
-                                    <div className="flex items-center gap-1 bg-white/5 border border-white/5 p-1 rounded-xl">
+                                    <div className="flex items-center gap-1 bg-white/5 border border-white/5 p-1 rounded-xl w-full sm:w-auto justify-center">
                                         {['JP', 'DE', 'ES'].map(l => (
                                             <button
                                                 key={l}
@@ -584,17 +584,17 @@ export default function GenerationStudio() {
                                 />
 
                                 {/* Heatmap Toggle */}
-                                <div className="absolute bottom-10 right-10 flex flex-col gap-2">
+                                <div className="absolute bottom-4 sm:bottom-10 right-4 sm:right-10 flex flex-col gap-2">
                                     <button
                                         onClick={() => setShowHeatmap(!showHeatmap)}
-                                        className={`px-4 py-2 border rounded-full text-[8px] font-black uppercase tracking-widest transition-all ${showHeatmap ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : 'bg-white/5 border-white/10 text-white/40'}`}
+                                        className={`px-3 sm:px-4 py-1.5 sm:py-2 border rounded-full text-[7px] sm:text-[8px] font-black uppercase tracking-widest transition-all ${showHeatmap ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : 'bg-white/5 border-white/10 text-white/40'}`}
                                     >
                                         Engagement Heatmap: {showHeatmap ? 'ON' : 'OFF'}
                                     </button>
                                     <button
                                         onClick={handleSocialSynthesis}
                                         disabled={isSynthesizingSocial}
-                                        className="px-4 py-2 bg-indigo-500/20 border border-indigo-500/50 text-indigo-400 rounded-full text-[8px] font-black uppercase tracking-widest hover:bg-indigo-500/30 transition-all flex items-center gap-2"
+                                        className="px-3 sm:px-4 py-1.5 sm:py-2 bg-indigo-500/20 border border-indigo-500/50 text-indigo-400 rounded-full text-[7px] sm:text-[8px] font-black uppercase tracking-widest hover:bg-indigo-500/30 transition-all flex items-center gap-2"
                                     >
                                         <Share2 size={10} />
                                         Social Synthesis
@@ -602,7 +602,7 @@ export default function GenerationStudio() {
                                 </div>
 
                                 {/* Autonomous Diagnostic HUD */}
-                                <div className="absolute top-10 right-10 p-6 bg-black/40 backdrop-blur-md border border-white/5 rounded-2xl w-64 space-y-4 font-mono pointer-events-none z-10">
+                                <div className="absolute top-4 sm:top-10 right-4 sm:right-10 p-4 sm:p-6 bg-black/40 backdrop-blur-md border border-white/5 rounded-2xl w-48 sm:w-64 space-y-4 font-mono pointer-events-none z-10 transition-all">
                                     <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-[0.2em]">
                                         <span className="text-white/40">Design Resonance</span>
                                         <span className="text-cyan-400">{designResonance}%</span>
@@ -675,7 +675,7 @@ export default function GenerationStudio() {
 
                         {/* Creative Editor */}
                         <div className="space-y-6">
-                            <div className="premium-card p-8 border-[var(--glass-border)] space-y-10 bg-[var(--glass-bg)] transition-colors duration-500">
+                            <div className="premium-card p-4 sm:p-8 border-[var(--glass-border)] space-y-10 bg-[var(--glass-bg)] transition-colors duration-500">
                                 {/* Metadata Section */}
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="p-4 bg-[var(--foreground)]/5 rounded-xl border border-[var(--glass-border)]">
@@ -701,7 +701,7 @@ export default function GenerationStudio() {
                                             { id: 'about_us', label: 'Mission Data' },
                                             { id: 'contact_info', label: 'Comm Link' }
                                         ].map((field) => (
-                                            <div key={field.id} className="group p-6 bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-2xl hover:border-[var(--accent-primary)]/30 transition-all relative overflow-hidden">
+                                            <div key={field.id} className="group p-4 sm:p-6 bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-2xl hover:border-[var(--accent-primary)]/30 transition-all relative overflow-hidden">
                                                 <div className="flex items-center justify-between mb-3 relative z-10">
                                                     <label className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.2em]">{field.label}</label>
                                                     <button

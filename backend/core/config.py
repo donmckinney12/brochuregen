@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     
     # Database
     DATABASE_URL: Optional[str] = os.getenv("DATABASE_URL", "").strip()
+    CLIENT_URL: str = os.getenv("CLIENT_URL", "http://localhost:3000").strip()
     
     # OpenAI
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY", "").strip()

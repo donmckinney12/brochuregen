@@ -51,15 +51,15 @@ export default function Navbar() {
 
     return (
         <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-[var(--glass-bg)] backdrop-blur-xl border-b border-[var(--glass-border)] py-3 shadow-lg' : 'bg-transparent py-6'}`}>
-            <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 items-center">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
                 {/* Logo Section */}
-                <div className="flex items-center justify-start">
-                    <Link href="/" className="flex items-center gap-3 group transition-transform hover:scale-[1.02]">
-                        <div className="relative w-10 h-10 flex items-center justify-center bg-[var(--foreground)] border border-[var(--accent-primary)]/30 rounded-xl overflow-hidden shadow-lg">
+                <div className="flex items-center">
+                    <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.02]">
+                        <div className="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-[var(--foreground)] border border-[var(--accent-primary)]/30 rounded-xl overflow-hidden shadow-lg">
                             <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent-primary)]/20 to-[var(--accent-secondary)]/20 group-hover:opacity-100 opacity-60 transition-opacity"></div>
-                            <span className="relative text-xl font-black text-[var(--background)] italic tracking-tighter">BG</span>
+                            <span className="relative text-lg sm:text-xl font-black text-[var(--background)] italic tracking-tighter">BG</span>
                         </div>
-                        <span className="text-xl font-black tracking-tighter text-[var(--foreground)] uppercase italic group-hover:text-[var(--accent-primary)] transition-colors">
+                        <span className="text-lg sm:text-xl font-black tracking-tighter text-[var(--foreground)] uppercase italic group-hover:text-[var(--accent-primary)] transition-colors">
                             Brochure<span className="text-[var(--foreground)]">Gen</span>
                         </span>
                     </Link>
@@ -82,22 +82,22 @@ export default function Navbar() {
                 </div>
 
                 {/* Right Side Actions */}
-                <div className="flex items-center justify-end gap-4">
-                    <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="flex items-center gap-2">
                         <SignedOut>
                             <SignInButton mode="modal">
-                                <button className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)]/80 hover:text-[var(--foreground)] px-4 py-2 transition-all">
+                                <button className="hidden xs:block text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)]/80 hover:text-[var(--foreground)] px-2 sm:px-4 py-2 transition-all">
                                     Login
                                 </button>
                             </SignInButton>
                             <SignUpButton mode="modal">
-                                <button className="text-[10px] font-bold uppercase tracking-widest bg-[var(--foreground)] text-[var(--background)] px-6 py-2.5 rounded-lg hover:bg-[var(--accent-primary)] hover:text-white transition-all shadow-lg active:scale-95">
-                                    Join
+                                <button className="text-[10px] font-bold uppercase tracking-widest bg-[var(--foreground)] text-[var(--background)] px-4 sm:px-6 py-2.5 rounded-lg hover:bg-[var(--accent-primary)] hover:text-white transition-all shadow-lg active:scale-95 whitespace-nowrap">
+                                    Join Protocol
                                 </button>
                             </SignUpButton>
                         </SignedOut>
                         <SignedIn>
-                            <div className="hidden sm:flex flex-col items-end border-r border-[var(--glass-border)] pr-4 mr-2">
+                            <div className="hidden xs:flex flex-col items-end border-r border-[var(--glass-border)] pr-4 mr-2">
                                 <span className="text-[10px] font-bold text-[var(--foreground)]/40 uppercase leading-none mb-1">Matrix</span>
                                 <span className="text-sm font-extrabold text-[var(--accent-primary)] leading-none">{user?.credits}</span>
                             </div>
@@ -107,7 +107,7 @@ export default function Navbar() {
 
                     <button
                         onClick={toggleTheme}
-                        className="p-2 rounded-full hover:bg-[var(--foreground)]/10 transition-colors text-[var(--foreground)]/60"
+                        className="hidden xs:flex p-2 rounded-full hover:bg-[var(--foreground)]/10 transition-colors text-[var(--foreground)]/60"
                         aria-label="Toggle Theme"
                     >
                         {darkMode ? (

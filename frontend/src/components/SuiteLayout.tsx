@@ -9,6 +9,8 @@ interface SuiteLayoutProps {
 }
 
 export default function SuiteLayout({ children }: SuiteLayoutProps) {
+    const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
     return (
         <div className="flex min-h-screen bg-[var(--background)] text-[var(--foreground)] relative transition-colors duration-500">
             {/* Global Background (Inherited from root but reinforced) */}
@@ -19,12 +21,25 @@ export default function SuiteLayout({ children }: SuiteLayoutProps) {
                 <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[var(--accent-secondary)]/5 dark:bg-purple-600/10 blur-[100px] rounded-full animate-pulse delay-700"></div>
             </div>
 
-            <SuiteSidebar />
+            {/* Mobile Overlay */}
+            <AnimatePresence>
+                {isSidebarOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsSidebarOpen(false)}
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[45] lg:hidden"
+                    />
+                )}
+            </AnimatePresence>
+
+            <SuiteSidebar mobileOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             <div className="flex-1 flex flex-col min-w-0">
-                <SuiteHeader />
+                <SuiteHeader onOpenSidebar={() => setIsSidebarOpen(true)} />
 
-                <main className="flex-1 p-8 overflow-y-auto">
+                <main className="flex-1 p-4 sm:p-8 overflow-y-auto">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key="content"

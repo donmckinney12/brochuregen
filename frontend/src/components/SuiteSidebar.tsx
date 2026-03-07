@@ -27,7 +27,12 @@ const navItems = [
     { name: 'Feedback Hub', href: '/feedback', icon: MessageSquare, badgeKey: 'unread_comments' },
 ];
 
-export default function SuiteSidebar() {
+interface SuiteSidebarProps {
+    mobileOpen?: boolean;
+    onClose?: () => void;
+}
+
+export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps) {
     const pathname = usePathname();
     const { user, getToken } = useAuth();
     const [collapsed, setCollapsed] = React.useState(false);
@@ -67,8 +72,11 @@ export default function SuiteSidebar() {
     return (
         <motion.aside
             initial={false}
-            animate={{ width: collapsed ? 80 : 280 }}
-            className="h-screen sticky top-0 bg-[var(--glass-bg)] backdrop-blur-xl border-r border-[var(--glass-border)] flex flex-col z-50 overflow-hidden transition-colors duration-500"
+            animate={{
+                width: collapsed ? 80 : 280,
+                x: mobileOpen ? 0 : (typeof window !== 'undefined' && window.innerWidth < 1024 ? -280 : 0)
+            }}
+            className={`h-screen fixed lg:sticky top-0 left-0 bg-[var(--glass-bg)] backdrop-blur-xl border-r border-[var(--glass-border)] flex flex-col z-50 overflow-hidden transition-colors duration-500 ${mobileOpen ? 'shadow-2xl' : ''} ${!mobileOpen ? 'max-lg:-translate-x-full' : ''}`}
         >
             {/* Logo Area */}
             <div className="p-6 flex items-center justify-between">
@@ -85,9 +93,15 @@ export default function SuiteSidebar() {
                 )}
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="p-2 hover:bg-[var(--foreground)]/5 rounded-lg transition-colors text-[var(--foreground)]/60"
+                    className="hidden lg:block p-2 hover:bg-[var(--foreground)]/5 rounded-lg transition-colors text-[var(--foreground)]/60"
                 >
                     {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+                </button>
+                <button
+                    onClick={onClose}
+                    className="lg:hidden p-2 hover:bg-[var(--foreground)]/5 rounded-lg transition-colors text-[var(--foreground)]/60"
+                >
+                    <ChevronLeft size={20} />
                 </button>
             </div>
 
