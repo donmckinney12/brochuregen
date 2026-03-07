@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
-from api.deps import get_db
+from core.database import get_db
+from core.auth import get_current_user
 from services.email_exporter import email_exporter
-from services.db_orm import get_current_user_profile
 from models.profile import Profile, Brochure
 from services.deployment import deployment_service
 
@@ -12,7 +12,7 @@ router = APIRouter()
 async def export_brochure_html(
     brochure_id: int,
     db: Session = Depends(get_db),
-    current_user: Profile = Depends(get_current_user_profile)
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Generate and return a "God-Tier" responsive HTML email version of the brochure.
@@ -29,12 +29,12 @@ async def export_brochure_html(
 async def deploy_brochure(
     brochure_id: int,
     db: Session = Depends(get_db),
-    current_user: Profile = Depends(get_current_user_profile)
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Sync and deploy the brochure to the edge (Cloud Neural Sync).
     """
-    brochure = db.query(Brochure).filter(Brochure.id == brochure_id, Brochure.user_id == current_user.id).first()
+    brochure = db.query(Brochure).filter(Brochure.id == brochure_id, Brochure.user_id == current_user["sub"]).first()
     if not brochure:
         raise HTTPException(status_code=404, detail="Brochure not found")
     
