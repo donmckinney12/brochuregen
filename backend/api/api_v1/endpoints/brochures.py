@@ -236,12 +236,58 @@ def get_analytics(db: Session = Depends(get_db), current_user: dict = Depends(ge
         "variant_performance": variant_perf
     }
 
+async def generate_automated_seo(brochure_id: int, db: Session):
+    """
+    Background task to generate SEO metadata autonomously.
+    """
+    from models.profile import Brochure as BrochureModel
+    from services.ai_service import AIService
+    import json
+    
+    # Use a new session for background task to avoid issues
+    # But since we are passing 'db', we should be careful. 
+    # Actually, it's safer to use the provided 'db' if it's managed correctly, 
+    # but FastAPI background tasks usually benefit from a clean session.
+    # For now, we'll use the passed Session but wrap in try/finally if needed.
+    
+    db_brochure = db.query(BrochureModel).filter(BrochureModel.id == brochure_id).first()
+    if not db_brochure: return
+    
+    try:
+        content_dict = json.loads(db_brochure.content)
+        ai_svc = AIService()
+        res = await ai_svc.generate_seo_metadata(db_brochure.title, content_dict)
+        
+        if "status" in res and res["status"] == "success":
+            db_brochure.seo_metadata = json.dumps(res["metadata"])
+            db.commit()
+    except Exception as e:
+        print(f"Background SEO generation failed: {e}")
+        db.rollback()
+
 @router.post("/", response_model=Brochure)
-def add_brochure(brochure: BrochureCreate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+async def add_brochure(brochure: BrochureCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     if current_user["sub"] != brochure.user_id:
         raise HTTPException(status_code=403, detail="Forbidden")
+    
+    import uuid
+    data = brochure.dict()
+    data["share_uuid"] = str(uuid.uuid4())
+    
     org_id = current_user.get("org_id")
-    return create_brochure(db, brochure, org_id)
+    if org_id:
+        data["org_id"] = org_id
+        
+    from models.profile import Brochure as BrochureModel
+    db_item = BrochureModel(**data)
+    db.add(db_item)
+    db.commit()
+    db.refresh(db_item)
+    
+    # Trigger SEO generation in background
+    background_tasks.add_task(generate_automated_seo, db_item.id, db)
+    
+    return db_item
 from pydantic import BaseModel
 
 class TranslateRequest(BaseModel):

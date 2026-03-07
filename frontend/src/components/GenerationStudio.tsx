@@ -16,8 +16,13 @@ import {
     FileText,
     Sparkles,
     ChevronRight,
-    Search
+    Search,
+    Loader2,
+    Code,
+    Rocket
 } from 'lucide-react';
+import EmbedModal from './EmbedModal';
+import SocialPulseKit from './SocialPulseKit';
 
 export default function GenerationStudio() {
     const [url, setUrl] = useState('');
@@ -30,6 +35,8 @@ export default function GenerationStudio() {
     const [layoutTheme, setLayoutTheme] = useState('modern');
     const [editingField, setEditingField] = useState<{ name: string; value: string; index?: number } | null>(null);
     const [isRefiningAI, setIsRefiningAI] = useState(false);
+    const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+    const [isLaunching, setIsLaunching] = useState(false);
 
     const { isAuthenticated, user, deductCredit, currentPlan, getToken, refreshProfile } = useAuth();
 
@@ -97,7 +104,8 @@ export default function GenerationStudio() {
                     ...data.ai_content,
                     bespoke_image: data.bespoke_image,
                     user_id: user?.id,
-                    share_url: data.share_uuid ? `${window.location.origin}/view/${data.share_uuid}` : null
+                    share_url: data.share_uuid ? `${window.location.origin}/view/${data.share_uuid}` : null,
+                    layout_theme: layoutTheme
                 }),
             });
             if (!res.ok) throw new Error('Failed to generate PDF');
@@ -105,12 +113,51 @@ export default function GenerationStudio() {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'brochure.pdf';
+            a.download = `brochure-${data.share_uuid || 'draft'}.pdf`;
             a.click();
         } catch (err) {
             alert('Failed to generate PDF');
         } finally {
             setExportLoading(false);
+        }
+    };
+
+    const handleLaunchProtocol = async () => {
+        if (!data || isLaunching) return;
+        setIsLaunching(true);
+        try {
+            const token = await getToken();
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+            // 1. Sync to Cloud Vault
+            const res = await fetch(`${apiUrl}/api/v1/brochures/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    title: data.ai_content.headline,
+                    url: url,
+                    content: JSON.stringify(data.ai_content),
+                    layout_theme: layoutTheme,
+                    user_id: user?.id
+                }),
+            });
+
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.detail || 'Launch failed');
+
+            // 2. Update local state with the assigned share_uuid
+            setData({ ...data, share_uuid: result.share_uuid });
+
+            // 3. Optional: Refresh profile if credits were involved (done in backend)
+            await refreshProfile();
+
+        } catch (err: any) {
+            alert(err.message);
+        } finally {
+            setIsLaunching(false);
         }
     };
 
@@ -224,11 +271,39 @@ export default function GenerationStudio() {
                             <button
                                 onClick={handleExportPDF}
                                 disabled={exportLoading}
-                                className="px-6 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl flex items-center gap-2 hover:bg-[var(--accent-primary)] hover:text-white transition-all disabled:opacity-50"
+                                className="px-6 py-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/60 hover:text-[var(--foreground)] border border-[var(--glass-border)] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
                             >
                                 {exportLoading ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
-                                <span>Export PDF</span>
+                                <span>PDF</span>
                             </button>
+
+                            {!data.share_uuid ? (
+                                <button
+                                    onClick={handleLaunchProtocol}
+                                    disabled={isLaunching}
+                                    className="px-8 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl flex items-center gap-2 hover:bg-[var(--accent-primary)] hover:text-white transition-all disabled:opacity-50"
+                                >
+                                    {isLaunching ? <Loader2 size={12} className="animate-spin" /> : <Rocket size={12} />}
+                                    <span>Launch Protocol</span>
+                                </button>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => window.open(`/view/${data.share_uuid}`, '_blank')}
+                                        className="px-6 py-2.5 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:bg-emerald-600 transition-all"
+                                    >
+                                        <Share2 size={12} />
+                                        <span>Shared View</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setIsEmbedModalOpen(true)}
+                                        className="px-6 py-2.5 bg-[var(--accent-secondary)] text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 hover:opacity-90 transition-all"
+                                    >
+                                        <Code size={12} />
+                                        <span>Embed</span>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -338,12 +413,18 @@ export default function GenerationStudio() {
                 onClose={() => setEditingField(null)}
                 onApply={handleApplyRefinedText}
             />
+
+            <EmbedModal
+                isOpen={isEmbedModalOpen}
+                onClose={() => setIsEmbedModalOpen(false)}
+                shareUuid={data.share_uuid || ''}
+            />
+
+            {(data.social_posts || data.ai_content?.social_posts) && (
+                <SocialPulseKit posts={data.social_posts || data.ai_content?.social_posts} />
+            )}
         </div>
     );
 }
 
-const Loader2 = ({ size, className }: { size: number, className?: string }) => (
-    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-    </svg>
-);
+
