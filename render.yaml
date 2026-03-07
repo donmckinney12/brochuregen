@@ -2,10 +2,7 @@ services:
   - type: web
     name: brochuregen-backend-docker
     env: docker
-    repo: https://github.com/donmckinney12/brochuregen
     rootDirectory: backend
-    plan: free
-    region: oregon
     healthCheckPath: /api/v1/command/pulse
     envVars:
       - key: OPENAI_API_KEY
@@ -22,5 +19,3 @@ services:
         value: sqlite:///./sql_app.db
       - key: CLIENT_URL
         sync: false
-      - key: PORT
-        value: 10000
