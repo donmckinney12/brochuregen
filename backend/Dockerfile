@@ -1,4 +1,3 @@
-
 # Use the official Playwright image which includes Python and browser binaries
 FROM mcr.microsoft.com/playwright/python:v1.49.0-jammy
 
@@ -11,12 +10,14 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install Playwright browser and system dependencies
+RUN playwright install --with-deps chromium
+
 # Copy the rest of the application code
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 8002
+# Expose the port the app runs on (Render default)
+EXPOSE 10000
 
 # Command to run the application
-# We use 0.0.0.0 to allow external access from outside the container
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
