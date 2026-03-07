@@ -8,6 +8,5 @@ python -m pip install --upgrade pip
 echo "--- Installing Python Requirements ---"
 pip install -r requirements.txt
 
-echo "--- Installing Playwright Chromium Dependencies (Required for PDF Generation) ---"
+echo "--- Installing Playwright Chromium ---"
 playwright install chromium
-playwright install-deps chromium
