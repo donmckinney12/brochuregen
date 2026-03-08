@@ -22,6 +22,10 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
     const [scanUrl, setScanUrl] = useState('');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+    React.useEffect(() => {
+        setText(initialCalibration);
+    }, [initialCalibration]);
+
     const handleAnalyze = () => {
         setIsAnalyzing(true);
         // Simulate neural analysis

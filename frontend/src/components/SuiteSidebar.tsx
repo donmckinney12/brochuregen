@@ -13,7 +13,8 @@ import {
     ChevronLeft,
     ChevronRight,
     MessageSquare,
-    Radio
+    Radio,
+    Grid3X3
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { OrganizationSwitcher } from '@clerk/nextjs';
@@ -22,6 +23,7 @@ const navItems = [
     { name: 'Command Center', href: '/command', icon: Radio },
     { name: 'Generation Studio', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Brand Vault', href: '/brand', icon: Palette },
+    { name: 'Templates', href: '/templates', icon: Grid3X3 },
     { name: 'Studio Insights', href: '/insights', icon: BarChart3 },
     { name: 'Leads Vault', href: '/leads', icon: Users, badgeKey: 'unread_leads' },
     { name: 'Feedback Hub', href: '/feedback', icon: MessageSquare, badgeKey: 'unread_comments' },

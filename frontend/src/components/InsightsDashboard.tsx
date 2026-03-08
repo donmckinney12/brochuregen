@@ -13,6 +13,9 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
     const [variantData, setVariantData] = useState<{ variant_id: number; views: number }[]>([]);
     const [activities, setActivities] = useState<{ id: number; action: string; details: string; created_at: string }[]>([]);
     const [engagementData, setEngagementData] = useState<{ section_id: string; hover_count: number; total_hover_time: number }[]>([]);
+    const [feedback, setFeedback] = useState<{ id: number; text: string; section_id: string; created_at: string; brochure?: any }[]>([]);
+    const [funnel, setFunnel] = useState<{ views: number; leads: number; feedback: number; view_to_lead_rate: number; lead_to_feedback_rate: number } | null>(null);
+    const [topPerformers, setTopPerformers] = useState<{ id: number; title: string; share_uuid: string; views: number; leads: number }[]>([]);
 
     useEffect(() => {
         const fetchAnalytics = async () => {
@@ -73,7 +76,37 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
             } catch (err) { console.error("Engagement failure", err); }
         };
 
-        fetchAnalytics(); fetchActivities(); fetchEngagement();
+        const fetchFeedback = async () => {
+            try {
+                const token = await getToken();
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/brochures/feedback/all`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) setFeedback(await res.json());
+            } catch (err) { console.error("Feedback failure", err); }
+        };
+
+        const fetchFunnel = async () => {
+            try {
+                const token = await getToken();
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/analytics/funnel/data`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) setFunnel(await res.json());
+            } catch (err) { console.error("Funnel failure", err); }
+        };
+
+        const fetchTopPerformers = async () => {
+            try {
+                const token = await getToken();
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/analytics/top-performers/data`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) setTopPerformers(await res.json());
+            } catch (err) { console.error("Top performers failure", err); }
+        };
+
+        fetchAnalytics(); fetchActivities(); fetchEngagement(); fetchFeedback(); fetchFunnel(); fetchTopPerformers();
     }, [getToken]);
 
     const totalBrochures = data.reduce((sum, item) => sum + (item.generations || 0), 0);
@@ -204,6 +237,94 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
                     ))}
                 </div>
             </div>
+
+            {/* Neural Echoes (Feedback) */}
+            <div className="premium-card p-8 border border-white/5 bg-cyan-500/5 rounded-[2rem]">
+                <h3 className="text-xl font-black italic uppercase tracking-tighter mb-8">Client Pulse Feedback</h3>
+                <div className="space-y-4">
+                    {feedback.length === 0 ? (
+                        <div className="h-32 flex items-center justify-center opacity-40 text-xs font-bold uppercase tracking-widest">No feedback detected yet.</div>
+                    ) : (
+                        feedback.map((fb) => (
+                            <div key={fb.id} className="p-5 bg-white/5 rounded-2xl border border-white/10 hover:border-cyan-500/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <h4 className="text-sm font-bold italic leading-relaxed text-white/90">"{fb.text}"</h4>
+                                    <div className="flex items-center gap-3 mt-2">
+                                        <span className="text-[9px] font-black text-cyan-400 uppercase tracking-widest border border-cyan-400/20 px-2 py-0.5 rounded-full bg-cyan-400/10">
+                                            {fb.section_id.replace('_', ' ')}
+                                        </span>
+                                        <span className="text-[10px] font-bold uppercase text-white/40 tracking-widest">
+                                            {new Date(fb.created_at).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
+
+            {/* Conversion Funnel */}
+            {funnel && (
+                <div className="premium-card p-6 sm:p-8 border border-white/10 bg-white/5">
+                    <h3 className="text-lg font-black italic uppercase tracking-tighter flex items-center gap-3 mb-8">
+                        <Target size={20} className="text-cyan-400" />
+                        Conversion Funnel
+                    </h3>
+                    <div className="grid grid-cols-3 gap-4 sm:gap-6">
+                        {[
+                            { label: 'Views', value: funnel.views, color: 'from-blue-500 to-cyan-500' },
+                            { label: 'Leads', value: funnel.leads, color: 'from-purple-500 to-pink-500', rate: funnel.view_to_lead_rate },
+                            { label: 'Feedback', value: funnel.feedback, color: 'from-amber-500 to-orange-500', rate: funnel.lead_to_feedback_rate },
+                        ].map((step, i) => (
+                            <div key={step.label} className="text-center">
+                                <div className={`w-full h-24 sm:h-32 bg-gradient-to-t ${step.color} rounded-2xl flex items-end justify-center pb-3 relative overflow-hidden`}
+                                    style={{ opacity: Math.max(0.3, 1 - i * 0.25) }}>
+                                    <span className="text-2xl sm:text-3xl font-black text-white drop-shadow-lg">{step.value}</span>
+                                </div>
+                                <p className="text-[10px] font-black uppercase tracking-widest mt-3 opacity-60">{step.label}</p>
+                                {step.rate !== undefined && (
+                                    <p className="text-[9px] font-bold text-emerald-400 mt-1">{step.rate}% conversion</p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Top Performers */}
+            {topPerformers.length > 0 && (
+                <div className="premium-card p-6 sm:p-8 border border-white/10 bg-white/5">
+                    <h3 className="text-lg font-black italic uppercase tracking-tighter flex items-center gap-3 mb-8">
+                        <Sparkles size={20} className="text-amber-400" />
+                        Top Performers
+                    </h3>
+                    <div className="space-y-3">
+                        {topPerformers.map((b, i) => (
+                            <div key={b.id} className="flex items-center gap-4 p-4 bg-white/5 border border-white/5 rounded-2xl hover:border-white/10 transition-all">
+                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm ${i === 0 ? 'bg-amber-500/20 text-amber-400' : i === 1 ? 'bg-slate-400/20 text-slate-300' : 'bg-orange-700/20 text-orange-400'
+                                    }`}>
+                                    {i + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-bold truncate">{b.title}</p>
+                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-30">{b.share_uuid || 'Draft'}</p>
+                                </div>
+                                <div className="flex gap-6 shrink-0">
+                                    <div className="text-center">
+                                        <p className="text-lg font-black">{b.views}</p>
+                                        <p className="text-[8px] font-black uppercase tracking-widest opacity-30">Views</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-lg font-black text-cyan-400">{b.leads}</p>
+                                        <p className="text-[8px] font-black uppercase tracking-widest opacity-30">Leads</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* CTA */}
             <div className="premium-card p-12 border border-white/10 bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 rounded-[3rem] flex flex-col items-center text-center">

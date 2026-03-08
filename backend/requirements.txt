@@ -1,5 +1,6 @@
 fastapi
 uvicorn
+slowapi
 
 playwright==1.49.0
 sqlalchemy
@@ -14,3 +15,4 @@ python-dotenv
 pydantic-settings
 python-jose[cryptography]
 email-validator
+pytest

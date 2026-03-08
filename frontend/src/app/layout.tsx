@@ -4,6 +4,7 @@ import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import Footer from "@/components/Footer";
 import { AuthProvider } from '@/context/AuthContext';
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -67,6 +68,24 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'BrochureGen',
+              url: 'https://brochuregen.com',
+              description: 'AI-powered brochure generator that turns any URL into a professional PDF.',
+              logo: 'https://brochuregen.com/favicon.ico',
+              sameAs: ['https://twitter.com/brochuregen'],
+            }),
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -101,6 +120,7 @@ export default function RootLayout({
           </ThemeProvider>
         </ClerkProvider>
         <ChatWidget />
+        <ServiceWorkerRegistration />
       </body>
     </html>
   );

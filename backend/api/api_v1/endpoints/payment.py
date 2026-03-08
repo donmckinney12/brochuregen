@@ -21,21 +21,26 @@ class CheckoutRequest(BaseModel):
 @router.post("/create-checkout-session")
 async def create_checkout(request: CheckoutRequest, current_user: dict = Depends(get_current_user)):
     try:
-        print(f"💰 create_checkout hit for user: {request.user_id}")
+        print(f"create_checkout hit for user: {request.user_id}")
         return create_checkout_session(request.user_id, request.email, request.plan, request.billing_cycle)
     except Exception as e:
-        print(f"🔥 UNHANDLED ERROR in create_checkout: {e}")
+        print(f"UNHANDLED ERROR in create_checkout: {e}")
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 @router.post("/create-portal-session")
-async def create_portal(user_id: str, current_user: dict = Depends(get_current_user)):
+async def create_portal(user_id: str, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     try:
-        print(f"💳 create_portal hit for user: {user_id}")
-        return create_portal_session(user_id)
+        from services.db_orm import get_profile
+        profile = get_profile(db, user_id)
+        if not profile or not profile.stripe_customer_id:
+            raise HTTPException(status_code=400, detail="No active subscription found. Upgrade your plan first.")
+            
+        print(f"create_portal hit for user: {user_id} with customer: {profile.stripe_customer_id}")
+        return create_portal_session(profile.stripe_customer_id)
     except Exception as e:
-        print(f"🔥 UNHANDLED ERROR in create_portal: {e}")
+        print(f"UNHANDLED ERROR in create_portal: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/webhook")
@@ -69,7 +74,7 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
                  "professional": 60,
                  "pro": 60,
                  "enterprise": 250,
-                 "ultimate": 1000
+                 "ultimate": 9999
              }
              amount = plan_credits.get(plan.lower(), 15) # default to starter v8
              

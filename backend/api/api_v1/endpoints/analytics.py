@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from core.database import get_db
+from core.auth import get_current_user
 from pydantic import BaseModel
 from services.analytics import analytics_service
+from services.analytics_service import get_conversion_funnel, get_top_performers
 
 router = APIRouter()
 
@@ -54,3 +56,22 @@ async def get_analytics(
             "last_interaction": e.last_interaction
         } for e in engagements
     ]
+
+
+@router.get("/funnel/data")
+async def get_funnel(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """Conversion funnel: views -> leads -> feedback."""
+    return get_conversion_funnel(db, current_user["sub"])
+
+
+@router.get("/top-performers/data")
+async def get_top(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """Top-performing brochures ranked by views."""
+    return get_top_performers(db, current_user["sub"])
+

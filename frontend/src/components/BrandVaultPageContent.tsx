@@ -98,6 +98,53 @@ export default function BrandVaultPageContent() {
         }
     };
 
+    const handleNeuralScan = async (url: string) => {
+        setIsScanning(true);
+        setMessage({ type: '', text: '' });
+
+        try {
+            const token = await getToken();
+            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const response = await fetch(`${apiBase}/api/v1/scrape/extract-voice`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ url })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.status === 'success' && data.voice_profile) {
+                    const profile = data.voice_profile;
+
+                    const calibrationText = `TONE: ${profile.tone}
+
+TARGET AUDIENCE: ${profile.target_audience}
+
+MESSAGING PILLARS:
+${profile.messaging_pillars?.map((p: string) => `- ${p}`).join('\n')}
+
+CALIBRATION SNIPPET:
+${profile.calibration_snippet}`;
+
+                    setFormData({ ...formData, brand_voice_calibration: calibrationText });
+                    setMessage({ type: 'success', text: 'Neural Voice extracted successfully. Push to Core to save.' });
+                } else {
+                    setMessage({ type: 'error', text: data.detail || 'Failed to extract voice profile.' });
+                }
+            } else {
+                const errData = await response.json();
+                setMessage({ type: 'error', text: errData.detail || 'Failed to connect to extraction node.' });
+            }
+        } catch (error) {
+            setMessage({ type: 'error', text: 'Connection error during scan.' });
+        } finally {
+            setIsScanning(false);
+        }
+    };
+
     return (
         <div className="max-w-6xl mx-auto space-y-12 pb-20">
             {/* Header Section */}
@@ -120,8 +167,8 @@ export default function BrandVaultPageContent() {
                         <button
                             onClick={() => setVaultContext('personal')}
                             className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'personal'
-                                    ? 'bg-[var(--foreground)] text-[var(--background)] shadow-lg'
-                                    : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]'
+                                ? 'bg-[var(--foreground)] text-[var(--background)] shadow-lg'
+                                : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]'
                                 }`}
                         >
                             Personal
@@ -129,8 +176,8 @@ export default function BrandVaultPageContent() {
                         <button
                             onClick={() => setVaultContext('organization')}
                             className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'organization'
-                                    ? 'bg-[var(--accent-primary)] text-white shadow-lg'
-                                    : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]'
+                                ? 'bg-[var(--accent-primary)] text-white shadow-lg'
+                                : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]'
                                 }`}
                         >
                             Organization
@@ -286,7 +333,7 @@ export default function BrandVaultPageContent() {
                         <VoiceTrainer
                             initialCalibration={formData.brand_voice_calibration}
                             isScanning={isScanning}
-                            onScan={(url) => setScanUrl(url)}
+                            onScan={handleNeuralScan}
                             onSave={(val) => setFormData({ ...formData, brand_voice_calibration: val })}
                         />
                     </div>

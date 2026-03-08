@@ -36,6 +36,7 @@ export default function GenerationStudio() {
     const [isGeneratingImage, setIsGeneratingImage] = useState(false);
     const [isCampaign, setIsCampaign] = useState(false);
     const [layoutTheme, setLayoutTheme] = useState('modern');
+    const [tone, setTone] = useState('professional');
     const [editingField, setEditingField] = useState<{ name: string; value: string; index?: number } | null>(null);
     const [isRefiningAI, setIsRefiningAI] = useState(false);
     const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
@@ -128,7 +129,7 @@ export default function GenerationStudio() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ url, is_campaign: isCampaign, layout_theme: layoutTheme }),
+                body: JSON.stringify({ url, is_campaign: isCampaign, layout_theme: layoutTheme, tone }),
             });
             const result = await res.json();
             if (!res.ok) throw new Error(result.detail || 'Failed to scrape');
@@ -448,6 +449,24 @@ export default function GenerationStudio() {
                                             <option value="playful">Playful // Vibrant</option>
                                         </select>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div className="p-6 bg-[var(--foreground)]/5 rounded-2xl border border-[var(--glass-border)] space-y-4">
+                                <h4 className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest">AI Tone</h4>
+                                <div className="relative">
+                                    <select
+                                        value={tone}
+                                        onChange={(e) => setTone(e.target.value)}
+                                        className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl py-3 px-4 text-[10px] text-[var(--foreground)] font-black uppercase tracking-widest appearance-none outline-none focus:ring-1 focus:ring-[var(--accent-secondary)] shadow-sm"
+                                    >
+                                        <option value="professional">Professional // Polished</option>
+                                        <option value="casual">Casual // Friendly</option>
+                                        <option value="bold">Bold // Attention-Grabbing</option>
+                                        <option value="luxury">Luxury // Aspirational</option>
+                                        <option value="playful">Playful // Energetic</option>
+                                        <option value="minimal">Minimal // Concise</option>
+                                    </select>
                                 </div>
                             </div>
 

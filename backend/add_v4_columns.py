@@ -43,10 +43,10 @@ def migrate():
             print("layout_theme column already exists.")
 
         conn.commit()
-        print("✅ Migration completed successfully!")
+        print("Migration completed successfully!")
 
     except Exception as e:
-        print(f"❌ Error during migration: {e}")
+        print(f"ERROR: Error during migration: {e}")
         conn.rollback()
     finally:
         conn.close()

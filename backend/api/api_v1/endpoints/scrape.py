@@ -12,6 +12,7 @@ class ScrapeRequest(BaseModel):
     url: str
     is_campaign: bool = False
     layout_theme: str = "modern"
+    tone: str = None
 
 from core.auth import get_current_user
 
@@ -43,7 +44,8 @@ async def scrape_url(request: ScrapeRequest, db: Session = Depends(get_db), curr
             result.get("text", ""), 
             request.url, 
             request.is_campaign,
-            brand_voice=brand_voice
+            brand_voice=brand_voice,
+            tone=request.tone
         )
         result["ai_content"] = ai_content
         result["is_campaign"] = request.is_campaign

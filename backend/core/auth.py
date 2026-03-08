@@ -15,14 +15,14 @@ class ClerkAuth:
 
     async def get_jwks(self):
         if not self.jwks:
-            print(f"🔍 Fetching JWKS from: {CLERK_JWKS_URL}")
+            print(f"Fetching JWKS from: {CLERK_JWKS_URL}")
             async with httpx.AsyncClient(timeout=10.0) as client:
                 response = await client.get(CLERK_JWKS_URL)
                 if response.status_code != 200:
-                    print(f"❌ Failed to fetch JWKS: {response.status_code}")
+                    print(f"Failed to fetch JWKS: {response.status_code}")
                     raise HTTPException(status_code=500, detail="Failed to fetch auth keys")
                 self.jwks = response.json()
-                print("✅ JWKS fetched successfully")
+                print("JWKS fetched successfully")
         return self.jwks
 
     async def verify_token(self, token: str):
@@ -47,18 +47,18 @@ clerk_auth = ClerkAuth()
 async def get_current_user(request: Request):
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
-        print("❌ Missing or invalid Authorization header")
+        print("Missing or invalid Authorization header")
         raise HTTPException(status_code=401, detail="Unauthorized")
     
     token = auth_header.split(" ")[1]
-    print(f"🛡️ Verifying token (prefix: {token[:10]}...)")
+    print(f"Verifying token (prefix: {token[:10]}...)")
     payload = await clerk_auth.verify_token(token)
     if not payload:
-        print("❌ Token verification returned None")
+        print("Token verification returned None")
         raise HTTPException(status_code=401, detail="Invalid token")
     
-    print(f"👤 User verified: {payload.get('sub')}")
+    print(f"User verified: {payload.get('sub')}")
     if payload.get("org_id"):
-        print(f"🏢 Active Organization: {payload.get('org_id')}")
+        print(f"Active Organization: {payload.get('org_id')}")
         
     return payload

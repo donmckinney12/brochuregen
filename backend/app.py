@@ -23,14 +23,14 @@ app.add_middleware(
 async def startup_event():
     print("BrochureGen API Starting...")
     if os.environ.get("STRIPE_SECRET_KEY"):
-        print("✅ STRIPE_SECRET_KEY found")
+        print("STRIPE_SECRET_KEY found")
     else:
-        print("❌ STRIPE_SECRET_KEY NOT found")
+        print("STRIPE_SECRET_KEY NOT found")
         
     if os.environ.get("STRIPE_PRICE_ID"):
-        print("✅ STRIPE_PRICE_ID found")
+        print("STRIPE_PRICE_ID found")
     else:
-        print("❌ STRIPE_PRICE_ID NOT found")
+        print("STRIPE_PRICE_ID NOT found")
 
 from services.payment import create_checkout_session
 from fastapi import Request

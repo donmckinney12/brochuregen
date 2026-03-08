@@ -9,7 +9,7 @@ class LeadCaptureBase(BaseModel):
     message: Optional[str] = None
 
 class LeadCaptureCreate(LeadCaptureBase):
-    brochure_id: int
+    pass
 
 class LeadCapture(LeadCaptureBase):
     id: int

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import ProspectingHub from './ProspectingHub';
 import ProactiveDraftsHub from './ProactiveDraftsHub';
+import LivePulse from './LivePulse';
 
 interface PulseItem {
     id: number;
@@ -91,28 +92,31 @@ export default function CommandCenter() {
     return (
         <div className="max-w-6xl mx-auto space-y-10 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             {/* Header Area */}
-            <div className="flex items-center justify-between mb-12">
-                <div>
-                    <h1 className="text-4xl font-black italic tracking-tighter uppercase flex items-center gap-4">
-                        Unified Command Center
-                        <div className="flex h-3 w-3 relative">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-12">
+                <div className="min-w-0">
+                    <h1 className="text-2xl sm:text-4xl font-black italic tracking-tighter uppercase flex items-center gap-3 sm:gap-4">
+                        <span className="truncate">Unified Command Center</span>
+                        <div className="flex h-3 w-3 relative shrink-0">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                         </div>
                     </h1>
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 mt-2">Protocol V15.0 // Autonomous Architect Hub</p>
                 </div>
-                <div className="flex gap-4">
-                    <div className="premium-card px-6 py-3 border border-white/5 bg-white/5 flex items-center gap-3">
+                <div className="flex gap-3 sm:gap-4 shrink-0">
+                    <div className="premium-card px-4 sm:px-6 py-2 sm:py-3 border border-white/5 bg-white/5 flex items-center gap-2 sm:gap-3">
                         <Users className="w-4 h-4 text-cyan-400" />
-                        <span className="text-xs font-black italic">{pulse.filter(p => p.type === 'LEAD').length} Leads</span>
+                        <span className="text-[10px] sm:text-xs font-black italic">{pulse.filter(p => p.type === 'LEAD').length} Leads</span>
                     </div>
-                    <div className="premium-card px-6 py-3 border border-indigo-500/20 bg-indigo-500/5 flex items-center gap-3">
+                    <div className="premium-card px-4 sm:px-6 py-2 sm:py-3 border border-indigo-500/20 bg-indigo-500/5 flex items-center gap-2 sm:gap-3">
                         <MessageSquare className="w-4 h-4 text-indigo-400" />
-                        <span className="text-xs font-black italic">{pulse.filter(p => p.type === 'FEEDBACK').length} Pulses</span>
+                        <span className="text-[10px] sm:text-xs font-black italic">{pulse.filter(p => p.type === 'FEEDBACK').length} Pulses</span>
                     </div>
                 </div>
             </div>
+
+            {/* Live Pulse */}
+            <LivePulse />
 
             {/* Proactive Drafting Section */}
             <div className="pb-12 border-b border-white/5">

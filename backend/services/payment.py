@@ -28,10 +28,10 @@ def create_checkout_session(user_id: str, email: str, plan: str = "professional"
         
     if not price_id:
         error_msg = f"Price ID not found for {plan} ({billing_cycle}). Checked env: {env_var_name}"
-        print(f"❌ {error_msg}")
+        print(f"ERROR: {error_msg}")
         raise HTTPException(status_code=500, detail=error_msg)
 
-    print(f"✅ Creating checkout session for {email} with price_id: {price_id}")
+    print(f"Creating checkout session for {email} with price_id: {price_id}")
 
     try:
         checkout_session = stripe.checkout.Session.create(
@@ -53,41 +53,17 @@ def create_checkout_session(user_id: str, email: str, plan: str = "professional"
                 'billing_cycle': billing_cycle
             }
         )
-        print(f"🚀 Stripe Session URL: {checkout_session.url}")
+        print(f"Stripe Session URL: {checkout_session.url}")
         return {"url": checkout_session.url}
     except Exception as e:
         print(f"Stripe Error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
 
-def create_portal_session(user_id: str):
+def create_portal_session(customer_id: str):
     if not stripe.api_key:
         raise HTTPException(status_code=500, detail="Stripe API key not configured")
     
     try:
-        # Crucial: This requires us to have at least one checkout completed by this user 
-        # OR we need to find the customer id by email.
-        # For a professional SaaS, we should store stripe_customer_id in our DB profiles.
-        # For now, we'll try to find customer by user_id metadata if possible, 
-        # but the most robust way is searching by email.
-        
-        # Search for customer by metadata user_id
-        customers = stripe.Customer.list(limit=1) # Simplified for now, searching by email is safer
-        # Filter logic here usually involves DB lookup
-        # Since we don't have stripe_customer_id in models.profile yet, let's assume 
-        # the user exists in Stripe. 
-        
-        # Better: create a session based on the customer who just checked out.
-        # REALISTIC: We need the customer ID. I'll mock finding it for now OR 
-        # recommend adding stripe_customer_id to the Profile model.
-        
-        # Let's assume the user has a customer account if they are on a plan
-        # We search by user_id in metadata
-        search = stripe.Customer.search(query=f"metadata['user_id']:'{user_id}'")
-        if not search.data:
-            raise HTTPException(status_code=404, detail="Stripe customer not found for this user")
-        
-        customer_id = search.data[0].id
-        
         portal_session = stripe.billing_portal.Session.create(
             customer=customer_id,
             return_url=f"{CLIENT_URL}/dashboard",

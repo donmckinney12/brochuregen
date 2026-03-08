@@ -19,6 +19,10 @@ export default function LeadsVault() {
     const [isLoading, setIsLoading] = useState(true);
     const [followupLoading, setFollowupLoading] = useState<number | null>(null);
     const [selectedFollowup, setSelectedFollowup] = useState<{ step: number; subject: string; body: string }[] | null>(null);
+    const [selectedLeadEmail, setSelectedLeadEmail] = useState<string>('');
+    const [sendingStep, setSendingStep] = useState<number | null>(null);
+    const [sentSteps, setSentSteps] = useState<Set<number>>(new Set());
+    const [sendingAll, setSendingAll] = useState(false);
 
     useEffect(() => {
         const fetchLeads = async () => {
@@ -79,6 +83,36 @@ export default function LeadsVault() {
         } finally {
             setFollowupLoading(null);
         }
+    };
+
+    const handleSendStep = async (step: { step: number; subject: string; body: string }) => {
+        if (!selectedLeadEmail) return;
+        setSendingStep(step.step);
+        try {
+            const token = await getToken();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/email/send-followup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ to_email: selectedLeadEmail, subject: step.subject, body: step.body })
+            });
+            if (res.ok) setSentSteps(prev => new Set([...prev, step.step]));
+        } catch (err) { console.error(err); }
+        finally { setSendingStep(null); }
+    };
+
+    const handleSendAll = async () => {
+        if (!selectedFollowup || !selectedLeadEmail) return;
+        setSendingAll(true);
+        try {
+            const token = await getToken();
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/email/send-sequence`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ to_email: selectedLeadEmail, sequence: selectedFollowup })
+            });
+            setSentSteps(new Set(selectedFollowup.map(s => s.step)));
+        } catch (err) { console.error(err); }
+        finally { setSendingAll(false); }
     };
 
     if (isLoading) {
@@ -150,7 +184,11 @@ export default function LeadsVault() {
 
                             <div className="flex gap-2 relative z-10">
                                 <button
-                                    onClick={() => handleGenerateFollowup(lead.id)}
+                                    onClick={() => {
+                                        handleGenerateFollowup(lead.id);
+                                        setSelectedLeadEmail(lead.email);
+                                        setSentSteps(new Set());
+                                    }}
                                     disabled={followupLoading === lead.id}
                                     className="px-4 py-2 bg-[var(--foreground)] text-[var(--background)] rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-[var(--accent-primary)] hover:text-white transition-all flex items-center gap-2 disabled:opacity-50"
                                 >
@@ -198,9 +236,21 @@ export default function LeadsVault() {
                             <div className="p-8 overflow-y-auto space-y-8 bg-[var(--foreground)]/5">
                                 {selectedFollowup.map((step) => (
                                     <div key={step.step} className="space-y-4">
-                                        <div className="flex items-center gap-4">
-                                            <div className="px-3 py-1 bg-[var(--accent-primary)] text-white text-[10px] font-black rounded-lg uppercase tracking-widest">Step {step.step}</div>
-                                            <div className="text-sm font-black text-[var(--foreground)] italic tracking-tight">{step.subject}</div>
+                                        <div className="flex items-center justify-between gap-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className="px-3 py-1 bg-[var(--accent-primary)] text-white text-[10px] font-black rounded-lg uppercase tracking-widest">Step {step.step}</div>
+                                                <div className="text-sm font-black text-[var(--foreground)] italic tracking-tight">{step.subject}</div>
+                                            </div>
+                                            <button
+                                                onClick={() => handleSendStep(step)}
+                                                disabled={sendingStep === step.step || sentSteps.has(step.step)}
+                                                className={`px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shrink-0 ${sentSteps.has(step.step)
+                                                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
+                                                        : 'bg-[var(--accent-primary)] text-white hover:opacity-90'
+                                                    } disabled:opacity-50`}
+                                            >
+                                                {sentSteps.has(step.step) ? 'Sent' : sendingStep === step.step ? 'Sending...' : 'Send Email'}
+                                            </button>
                                         </div>
                                         <div className="p-6 bg-[var(--background)] border border-[var(--glass-border)] rounded-2xl text-xs text-[var(--foreground)]/80 leading-relaxed font-medium whitespace-pre-wrap">
                                             {step.body}
@@ -209,9 +259,23 @@ export default function LeadsVault() {
                                 ))}
                             </div>
 
-                            <div className="p-8 border-t border-[var(--glass-border)] flex gap-4 bg-[var(--background)]">
-                                <button className="flex-1 py-4 bg-[var(--foreground)] text-[var(--background)] font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:opacity-90 transition-all">
-                                    Copy Entire Matrix
+                            <div className="p-8 border-t border-[var(--glass-border)] flex flex-wrap gap-4 bg-[var(--background)]">
+                                <button
+                                    onClick={handleSendAll}
+                                    disabled={sendingAll}
+                                    className="flex-1 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:opacity-90 transition-all disabled:opacity-50"
+                                >
+                                    {sendingAll ? 'Dispatching...' : 'Send Entire Sequence'}
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        if (selectedFollowup) {
+                                            navigator.clipboard.writeText(selectedFollowup.map(s => `Subject: ${s.subject}\n\n${s.body}`).join('\n\n---\n\n'));
+                                        }
+                                    }}
+                                    className="px-8 py-4 bg-[var(--foreground)] text-[var(--background)] font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:opacity-90 transition-all"
+                                >
+                                    Copy Matrix
                                 </button>
                                 <button onClick={() => setSelectedFollowup(null)} className="px-8 py-4 border border-[var(--glass-border)] text-[var(--foreground)] font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-[var(--foreground)]/5 transition-all">
                                     Close Feed

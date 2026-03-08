@@ -7,11 +7,18 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function Pricing() {
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-    const { isAuthenticated, user, getToken } = useAuth();
+    const { isAuthenticated, user, getToken, isLoading } = useAuth();
 
     const handleUpgrade = async (plan: string) => {
-        if (!user) {
+        if (isLoading) return;
+
+        if (!isAuthenticated) {
             window.location.href = '/signup';
+            return;
+        }
+
+        if (!user) {
+            alert("User profile is still syncing. Please wait a moment and try again.");
             return;
         }
 
@@ -132,7 +139,7 @@ export default function Pricing() {
                         },
                         {
                             name: 'Ultimate',
-                            price: prices.ultimate,
+                            price: 'Custom',
                             features: [
                                 'Unlimited Neural Syncs',
                                 'White-Label Protocol',
@@ -155,7 +162,7 @@ export default function Pricing() {
                                     {plan.name}
                                 </h3>
                                 <div className="flex items-baseline gap-2 text-[var(--foreground)]">
-                                    <span className="text-5xl font-black italic tracking-tighter">${plan.price}</span>
+                                    <span className="text-5xl font-black italic tracking-tighter">{typeof plan.price === 'number' ? `$${plan.price}` : plan.price}</span>
                                     {typeof plan.price === 'number' && <span className="text-[var(--foreground)]/80 text-[10px] font-black uppercase tracking-widest">/sync cycle</span>}
                                 </div>
                             </div>

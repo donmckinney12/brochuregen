@@ -3,7 +3,7 @@ import argparse
 
 def update_user(email: str, credits: int = None, name: str = None):
     if not engine:
-        print("❌ Database not connected.")
+        print("ERROR: Database not connected.")
         return
 
     try:
@@ -13,7 +13,7 @@ def update_user(email: str, credits: int = None, name: str = None):
             row = result.mappings().first()
             
             if not row:
-                print(f"❌ User with email '{email}' not found.")
+                print(f"ERROR: User with email '{email}' not found.")
                 return
 
             user_id = row['id']
@@ -24,19 +24,19 @@ def update_user(email: str, credits: int = None, name: str = None):
                     text("UPDATE profiles SET credits = :amount WHERE id = :uid"), 
                     {"amount": credits, "uid": user_id}
                 )
-                print(f"✅ Set credits to {credits}")
+                print(f"Set credits to {credits}")
 
             if name:
                 conn.execute(
                     text("UPDATE profiles SET full_name = :name WHERE id = :uid"), 
                     {"name": name, "uid": user_id}
                 )
-                print(f"✅ Set name to '{name}'")
+                print(f"Set name to '{name}'")
 
-            print(f"🎉 Updated user {email}!")
+            print(f"Updated user {email}!")
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Admin Tool: Update User")

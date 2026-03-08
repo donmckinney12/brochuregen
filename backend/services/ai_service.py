@@ -9,7 +9,16 @@ class AIService:
             print("Warning: OPENAI_API_KEY is not set.")
         self.client = AsyncOpenAI(api_key=self.api_key)
 
-    async def generate_brochure_content(self, text_content: str, url: str, is_campaign: bool = False, brand_voice: str = None) -> dict:
+    TONE_PRESETS = {
+        "professional": "Professional, polished, and authoritative. Use precise language.",
+        "casual": "Casual, friendly, and conversational. Use simple, approachable language.",
+        "bold": "Bold, daring, and attention-grabbing. Use power words and urgency.",
+        "luxury": "Luxurious, refined, and exclusive. Use elegant, aspirational language.",
+        "playful": "Playful, fun, and energetic. Use humor and creative metaphors.",
+        "minimal": "Minimalist and concise. Less is more. Every word counts.",
+    }
+
+    async def generate_brochure_content(self, text_content: str, url: str, is_campaign: bool = False, brand_voice: str = None, tone: str = None) -> dict:
         """
         Uses OpenAI (gpt-4o) to analyze the provided website text and generate 
         marketing copy for a 3-fold brochure, and optionally a full campaign.
@@ -27,6 +36,11 @@ class AIService:
         7. "social_posts": A list of exactly 4 items. 3 LinkedIn posts and 1 Twitter/X thread (indicate the platform in the text or preface it). Make them engaging and ready to post.
         8. "email_sequence": A list of exactly 3 emails for a drip sequence (e.g., [ {"subject": "...", "body": "..."}, {"subject": "...", "body": "..."}, {"subject": "...", "body": "..."} ]). Include Subject lines and Bodies for Welcome, Value Drop, and Call to Action.
             """
+
+        # Resolve tone
+        tone_instruction = ""
+        if tone and tone in self.TONE_PRESETS:
+            tone_instruction = f"\n        TONE DIRECTIVE (CRITICAL): Write all copy in this tone: {self.TONE_PRESETS[tone]}"
 
         prompt = f"""
         You are an expert marketing copywriter. Your goal is to create high-converting copy for a 3-fold brochure based on the following website content.
@@ -49,7 +63,7 @@ class AIService:
         
         BRAND VOICE CALIBRATION (CRITICAL):
         The user has specific brand guidelines you must follow. 
-        Tone/Style: {brand_voice if brand_voice else "Professional, modern, and engaging."}
+        Tone/Style: {brand_voice if brand_voice else "Professional, modern, and engaging."}{tone_instruction}
         """
 
         try:

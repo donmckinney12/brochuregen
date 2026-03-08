@@ -1,0 +1,12 @@
+# BrochureGen Robots
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://brochuregen.com/sitemap.xml
+
+# Disallow private/dashboard routes from indexing
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /settings
+Disallow: /api

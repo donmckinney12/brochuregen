@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .endpoints import scrape, pdf, payment, profiles, image, brochures, enterprise, newsletter, leads, export, social, analytics, command, collaboration, retargeting, intent
+from .endpoints import scrape, pdf, payment, profiles, image, brochures, enterprise, newsletter, leads, export, social, analytics, command, collaboration, retargeting, intent, admin, email, webhooks, teams, whitelabel, chat, audit, embeds, scheduling, gamification
 
 api_router = APIRouter()
 api_router.include_router(scrape.router, prefix="/scrape", tags=["scrape"])
@@ -18,3 +18,15 @@ api_router.include_router(command.router, prefix="/command", tags=["command"])
 api_router.include_router(collaboration.router, tags=["collaboration"])
 api_router.include_router(retargeting.router, prefix="/retargeting", tags=["retargeting"])
 api_router.include_router(intent.router, prefix="/intent", tags=["intent"])
+api_router.include_router(admin.router, prefix="/admin", tags=["admin"])
+api_router.include_router(email.router, prefix="/email", tags=["email"])
+api_router.include_router(webhooks.router, prefix="/webhooks", tags=["webhooks"])
+api_router.include_router(teams.router, prefix="/teams", tags=["teams"])
+api_router.include_router(whitelabel.router, prefix="/whitelabel", tags=["whitelabel"])
+api_router.include_router(chat.router, prefix="/chat", tags=["chat"])
+api_router.include_router(audit.router, prefix="/audit", tags=["audit"])
+api_router.include_router(embeds.router, prefix="/embeds", tags=["embeds"])
+api_router.include_router(scheduling.router, prefix="/scheduling", tags=["scheduling"])
+api_router.include_router(gamification.router, prefix="/gamification", tags=["gamification"])
+
+
