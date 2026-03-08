@@ -26,7 +26,7 @@ export default function Home() {
             <h1 className="text-7xl font-black text-[var(--foreground)] italic tracking-tighter uppercase leading-tight">
               Neural <span className="bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] bg-clip-text text-transparent">Brochure</span> Flow
             </h1>
-            <p className="text-[var(--foreground)]/40 font-bold tracking-[0.4em] uppercase text-sm">
+            <p className="text-[var(--foreground)]/80 font-bold tracking-[0.4em] uppercase text-sm">
               Convert Digital Assets into Print-Ready Genius
             </p>
           </div>

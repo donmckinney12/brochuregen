@@ -38,7 +38,7 @@ function DashboardContent() {
                                     <p className="text-emerald-500/80 dark:text-emerald-400/80 text-[10px] font-bold uppercase tracking-widest mt-0.5">Your God-Tier features are now active.</p>
                                 </div>
                             </div>
-                            <button onClick={() => setShowSuccess(false)} className="text-[var(--foreground)]/20 hover:text-[var(--foreground)] transition-colors p-2">
+                            <button onClick={() => setShowSuccess(false)} className="text-[var(--foreground)]/80 hover:text-[var(--foreground)] transition-colors p-2">
                                 <X size={20} />
                             </button>
                         </div>

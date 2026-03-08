@@ -100,7 +100,7 @@ export default function ThreeDBrochure({
                         {/* This constitutes the back of the front cover (Inside Right) */}
                         <div className="w-full text-center mb-6">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--accent-primary)] mb-2">Neural Lead Capture</h3>
-                            <p className="text-[var(--foreground)]/40 text-[10px] font-bold uppercase tracking-widest">Connect with our protocol</p>
+                            <p className="text-[var(--foreground)]/80 text-[10px] font-bold uppercase tracking-widest">Connect with our protocol</p>
                         </div>
                         <LeadForm
                             shareUuid={data.share_uuid}

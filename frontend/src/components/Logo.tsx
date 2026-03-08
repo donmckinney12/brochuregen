@@ -13,7 +13,7 @@ export default function Logo({ className = "", showText = true }: LogoProps) {
             </div>
             {showText && (
                 <span className="font-bold text-xl tracking-tight text-[var(--foreground)]">
-                    Brochure<span className="font-light text-[var(--foreground)]/40">Gen</span>
+                    Brochure<span className="font-light text-[var(--foreground)]/80">Gen</span>
                 </span>
             )}
         </div>

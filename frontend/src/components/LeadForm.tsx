@@ -47,7 +47,7 @@ export default function LeadForm({ shareUuid, primaryColor, onSuccess }: LeadFor
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
                 </div>
                 <h3 className="font-black text-[var(--foreground)] italic uppercase tracking-tighter text-xl mb-2">Protocol Sync Complete</h3>
-                <p className="text-[var(--foreground)]/40 text-[10px] font-bold uppercase tracking-[0.2em]">Transmission secured. A representative will reach out shortly.</p>
+                <p className="text-[var(--foreground)]/80 text-[10px] font-bold uppercase tracking-[0.2em]">Transmission secured. A representative will reach out shortly.</p>
             </motion.div>
         );
     }

@@ -378,7 +378,7 @@ export default function GenerationStudio() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4 sm:px-0">
                 <div>
                     <h1 className="text-3xl sm:text-4xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Generation Studio</h1>
-                    <p className="text-[var(--foreground)]/40 font-bold tracking-[0.3em] uppercase mt-2 text-[10px] sm:text-xs italic">
+                    <p className="text-[var(--foreground)]/80 font-bold tracking-[0.3em] uppercase mt-2 text-[10px] sm:text-xs italic">
                         Initialize Neural Crawl & Creative Synthesis
                     </p>
                 </div>
@@ -392,7 +392,7 @@ export default function GenerationStudio() {
                             <div className="absolute inset-0 scanline opacity-10 pointer-events-none"></div>
 
                             <div className="space-y-4">
-                                <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.3em] ml-2">Source URL Identifier</label>
+                                <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.3em] ml-2">Source URL Identifier</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
                                         <Globe size={18} className="text-[var(--accent-primary)] group-focus-within:text-[var(--foreground)] transition-colors" />
@@ -402,31 +402,31 @@ export default function GenerationStudio() {
                                         value={url}
                                         onChange={(e) => setUrl(e.target.value)}
                                         placeholder="https://your-digital-asset.com"
-                                        className="w-full bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-3xl py-4 sm:py-6 pl-14 sm:pl-16 pr-8 text-base sm:text-lg text-[var(--foreground)] placeholder:text-[var(--foreground)]/10 focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/30 transition-all font-medium"
+                                        className="w-full bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-3xl py-4 sm:py-6 pl-14 sm:pl-16 pr-8 text-base sm:text-lg text-[var(--foreground)] placeholder:text-[var(--foreground)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/30 transition-all font-medium"
                                     />
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="p-6 bg-[var(--foreground)]/5 rounded-2xl border border-[var(--glass-border)] space-y-4">
-                                    <h4 className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Protocol Type</h4>
+                                    <h4 className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest">Protocol Type</h4>
                                     <div className="flex gap-4">
                                         <button
                                             onClick={() => setIsCampaign(false)}
-                                            className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${!isCampaign ? 'bg-[var(--foreground)] text-[var(--background)] border-[var(--foreground)] shadow-lg' : 'bg-transparent text-[var(--foreground)]/40 border-[var(--glass-border)]'}`}
+                                            className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${!isCampaign ? 'bg-[var(--foreground)] text-[var(--background)] border-[var(--foreground)] shadow-lg' : 'bg-transparent text-[var(--foreground)]/80 border-[var(--glass-border)]'}`}
                                         >
                                             Standard
                                         </button>
                                         <button
                                             onClick={() => setIsCampaign(true)}
-                                            className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${isCampaign ? 'bg-[var(--accent-secondary)] text-white border-[var(--accent-secondary)] shadow-lg' : 'bg-transparent text-[var(--foreground)]/40 border-[var(--glass-border)]'}`}
+                                            className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${isCampaign ? 'bg-[var(--accent-secondary)] text-white border-[var(--accent-secondary)] shadow-lg' : 'bg-transparent text-[var(--foreground)]/80 border-[var(--glass-border)]'}`}
                                         >
                                             Campaign
                                         </button>
                                     </div>
                                 </div>
                                 <div className="p-6 bg-[var(--foreground)]/5 rounded-2xl border border-[var(--glass-border)] space-y-4">
-                                    <h4 className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Matrix Theme</h4>
+                                    <h4 className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest">Matrix Theme</h4>
                                     <div className="relative">
                                         <select
                                             value={layoutTheme}
@@ -485,14 +485,14 @@ export default function GenerationStudio() {
                         <div className="flex flex-wrap items-center gap-3">
                             <button
                                 onClick={() => setData(null)}
-                                className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/60 hover:text-[var(--foreground)] border border-[var(--glass-border)] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/80 hover:text-[var(--foreground)] border border-[var(--glass-border)] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
                             >
                                 New Workspace
                             </button>
                             <button
                                 onClick={handleExportPDF}
                                 disabled={exportLoading}
-                                className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/60 hover:text-[var(--foreground)] border border-[var(--glass-border)] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                                className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/80 hover:text-[var(--foreground)] border border-[var(--glass-border)] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                             >
                                 {exportLoading ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
                                 <span>PDF</span>
@@ -666,7 +666,7 @@ export default function GenerationStudio() {
                                         <Sparkles size={20} className="text-[var(--accent-primary)]" />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest italic leading-none">Perspective</p>
+                                        <p className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest italic leading-none">Perspective</p>
                                         <p className="text-xs font-bold text-[var(--foreground)] tracking-tight mt-1">Spatial Matrix Rendering</p>
                                     </div>
                                 </div>
@@ -679,11 +679,11 @@ export default function GenerationStudio() {
                                 {/* Metadata Section */}
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="p-4 bg-[var(--foreground)]/5 rounded-xl border border-[var(--glass-border)]">
-                                        <label className="text-[10px] font-black text-[var(--foreground)]/20 uppercase tracking-widest">Protocol ID</label>
+                                        <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest">Protocol ID</label>
                                         <p className="font-mono text-xs text-[var(--accent-primary)] mt-1">{data.share_uuid || 'UNINITIALIZED'}</p>
                                     </div>
                                     <div className="p-4 bg-[var(--foreground)]/5 rounded-xl border border-[var(--glass-border)]">
-                                        <label className="text-[10px] font-black text-[var(--foreground)]/20 uppercase tracking-widest">Matrix Theme</label>
+                                        <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest">Matrix Theme</label>
                                         <p className="font-mono text-xs text-[var(--accent-secondary)] mt-1 uppercase">{layoutTheme}</p>
                                     </div>
                                 </div>
@@ -703,7 +703,7 @@ export default function GenerationStudio() {
                                         ].map((field) => (
                                             <div key={field.id} className="group p-4 sm:p-6 bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-2xl hover:border-[var(--accent-primary)]/30 transition-all relative overflow-hidden">
                                                 <div className="flex items-center justify-between mb-3 relative z-10">
-                                                    <label className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.2em]">{field.label}</label>
+                                                    <label className="text-[10px] font-black text-[var(--foreground)]/50 uppercase tracking-[0.2em]">{field.label}</label>
                                                     <button
                                                         onClick={() => handleOpenRefiner(data.ai_content[field.id], field.id)}
                                                         className="p-2 bg-[var(--foreground)]/5 hover:bg-[var(--accent-primary)] hover:text-white rounded-lg transition-all"
@@ -721,7 +721,7 @@ export default function GenerationStudio() {
                                         ))}
 
                                         <div className="space-y-4">
-                                            <label className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.2em] ml-2">Neural Features</label>
+                                            <label className="text-[10px] font-black text-[var(--foreground)]/50 uppercase tracking-[0.2em] ml-2">Neural Features</label>
                                             <div className="grid grid-cols-1 gap-3">
                                                 {data.ai_content.features?.map((feature: string, i: number) => (
                                                     <div

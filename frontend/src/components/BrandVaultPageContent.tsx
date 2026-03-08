@@ -110,7 +110,7 @@ export default function BrandVaultPageContent() {
                     >
                         Neural Brand Vault
                     </motion.h1>
-                    <p className="text-[var(--foreground)]/40 font-bold tracking-[0.3em] uppercase mt-2 text-xs italic">
+                    <p className="text-[var(--foreground)]/80 font-bold tracking-[0.3em] uppercase mt-2 text-xs italic">
                         Configure Core Identity Matrix & Synchronization Parameters
                     </p>
                 </div>
@@ -121,7 +121,7 @@ export default function BrandVaultPageContent() {
                             onClick={() => setVaultContext('personal')}
                             className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'personal'
                                     ? 'bg-[var(--foreground)] text-[var(--background)] shadow-lg'
-                                    : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]'
+                                    : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]'
                                 }`}
                         >
                             Personal
@@ -130,7 +130,7 @@ export default function BrandVaultPageContent() {
                             onClick={() => setVaultContext('organization')}
                             className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'organization'
                                     ? 'bg-[var(--accent-primary)] text-white shadow-lg'
-                                    : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]'
+                                    : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]'
                                 }`}
                         >
                             Organization
@@ -164,7 +164,7 @@ export default function BrandVaultPageContent() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                             <div className="space-y-6">
-                                <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em] pl-1">Primary Asset Identifier</label>
+                                <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.2em] pl-1">Primary Asset Identifier</label>
                                 <div className="flex items-center gap-6 p-6 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--glass-border)] group hover:border-[var(--foreground)]/10 transition-colors">
                                     <div className="w-20 h-20 rounded-2xl bg-[var(--background)] border border-[var(--glass-border)] p-2 flex items-center justify-center shadow-2xl relative">
                                         <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent-primary)]/5 to-[var(--accent-secondary)]/5"></div>
@@ -180,16 +180,16 @@ export default function BrandVaultPageContent() {
                                             value={formData.brand_logo_url}
                                             onChange={(e) => setFormData({ ...formData, brand_logo_url: e.target.value })}
                                             placeholder="https://assets.yoursite.com/logo.png"
-                                            className="w-full bg-transparent border-none text-[var(--foreground)] font-mono text-xs focus:ring-0 outline-none placeholder:text-[var(--foreground)]/10"
+                                            className="w-full bg-transparent border-none text-[var(--foreground)] font-mono text-xs focus:ring-0 outline-none placeholder:text-[var(--foreground)]/50"
                                         />
                                         <div className="h-[1px] w-full bg-[var(--foreground)]/10" />
-                                        <p className="text-[9px] text-[var(--foreground)]/20 font-bold uppercase tracking-widest italic leading-tight">Sync High-Resolution Alpha Assets.</p>
+                                        <p className="text-[9px] text-[var(--foreground)]/80 font-bold uppercase tracking-widest italic leading-tight">Sync High-Resolution Alpha Assets.</p>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="space-y-6">
-                                <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em] pl-1">Chromospheric Schema</label>
+                                <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.2em] pl-1">Chromospheric Schema</label>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="p-4 bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-2xl space-y-3">
                                         <div className="flex items-center justify-between">
@@ -243,7 +243,7 @@ export default function BrandVaultPageContent() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                             <div className="space-y-4">
-                                <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em] pl-1">Vocal Amplitude</label>
+                                <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.2em] pl-1">Vocal Amplitude</label>
                                 <div className="relative group">
                                     <select
                                         value={formData.brand_voice_tone}
@@ -257,13 +257,13 @@ export default function BrandVaultPageContent() {
                                         <option value="Technical" className="bg-[var(--background)] text-[var(--foreground)]">SYSTEM_MANUAL</option>
                                     </select>
                                     <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <Type size={14} className="text-[var(--foreground)]/20" />
+                                        <Type size={14} className="text-[var(--foreground)]/80" />
                                     </div>
                                 </div>
                             </div>
 
                             <div className="space-y-4">
-                                <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em] pl-1">Typographical Matrix</label>
+                                <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.2em] pl-1">Typographical Matrix</label>
                                 <div className="relative group">
                                     <select
                                         value={formData.brand_font}
@@ -277,7 +277,7 @@ export default function BrandVaultPageContent() {
                                         <option value="Montserrat" className="bg-[var(--background)] text-[var(--foreground)]">MONTSERRAT // GEOMETRIC</option>
                                     </select>
                                     <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <Type size={14} className="text-[var(--foreground)]/20" />
+                                        <Type size={14} className="text-[var(--foreground)]/80" />
                                     </div>
                                 </div>
                             </div>
@@ -306,7 +306,7 @@ export default function BrandVaultPageContent() {
                                 { name: 'Color Echoes', status: 'Synchronized' },
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center justify-between">
-                                    <span className="text-xs font-bold text-[var(--foreground)]/60">{item.name}</span>
+                                    <span className="text-xs font-bold text-[var(--foreground)]/80">{item.name}</span>
                                     <div className="flex items-center space-x-2">
                                         <div className={`w-1.5 h-1.5 rounded-full ${item.status === 'Active' || item.status === 'Calibrated' || item.status === 'Synchronized' ? 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]' : 'bg-red-400'}`} />
                                         <span className={`text-[10px] font-black uppercase tracking-tighter ${item.status === 'Active' || item.status === 'Calibrated' || item.status === 'Synchronized' ? 'text-emerald-400' : 'text-red-400'}`}>

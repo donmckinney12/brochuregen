@@ -184,10 +184,10 @@ export default function Generator() {
                         </span>
                         Neural Brochure Engine
                     </h2>
-                    <p className="text-[9px] font-bold text-[var(--foreground)]/30 tracking-[0.3em] uppercase mt-2 ml-14">Protocol Version 4.8.2 // Active</p>
+                    <p className="text-[9px] font-bold text-[var(--foreground)]/50 tracking-[0.3em] uppercase mt-2 ml-14">Protocol Version 4.8.2 // Active</p>
                 </div>
                 {step === 'preview' && (
-                    <button onClick={() => setStep('input')} className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/20 hover:text-rose-500 transition-colors">
+                    <button onClick={() => setStep('input')} className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/80 hover:text-rose-500 transition-colors">
                         ABORT_SYNC
                     </button>
                 )}
@@ -207,7 +207,7 @@ export default function Generator() {
                 {step === 'input' && (
                     <form onSubmit={handleScrape} className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
                         <div>
-                            <label className="block text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.3em] mb-4 ml-1">
+                            <label className="block text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.3em] mb-4 ml-1">
                                 Remote Node URL
                             </label>
                             <div className="flex flex-col lg:flex-row gap-4 mb-4">
@@ -220,7 +220,7 @@ export default function Generator() {
                                         value={url}
                                         onChange={(e) => setUrl(e.target.value)}
                                         placeholder="target-domain.io"
-                                        className="w-full pl-24 pr-6 py-5 rounded-2xl bg-[var(--background)] border border-[var(--glass-border)] text-[var(--foreground)] font-mono text-xs focus:ring-1 focus:ring-[var(--accent-primary)]/50 focus:border-[var(--accent-primary)]/30 outline-none transition-all placeholder:text-[var(--foreground)]/10"
+                                        className="w-full pl-24 pr-6 py-5 rounded-2xl bg-[var(--background)] border border-[var(--glass-border)] text-[var(--foreground)] font-mono text-xs focus:ring-1 focus:ring-[var(--accent-primary)]/50 focus:border-[var(--accent-primary)]/30 outline-none transition-all placeholder:text-[var(--foreground)]/50"
                                         required
                                     />
                                 </div>
@@ -245,10 +245,10 @@ export default function Generator() {
                             </div>
                         </div>
                         <div className="flex items-center justify-between px-2">
-                            <p className="text-[10px] text-[var(--foreground)]/20 font-black uppercase tracking-widest animate-pulse">
+                            <p className="text-[10px] text-[var(--foreground)]/80 font-black uppercase tracking-widest animate-pulse">
                                 High-bandwidth scanning enabled
                             </p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/40">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/80">
                                 Available Frequency: <span className="text-[var(--accent-primary)] ml-2">
                                     {user?.credits && user.credits > 10000 ? 'GOD_MODE' : (user?.credits || 0)}
                                 </span>
@@ -282,7 +282,7 @@ export default function Generator() {
                         <div className="mb-10 flex flex-col md:flex-row items-center justify-between gap-6">
                             <div>
                                 <h3 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Visual Configuration</h3>
-                                <p className="text-[10px] font-bold text-[var(--foreground)]/30 uppercase tracking-[0.2em] mt-1">Refine neural weights via direct manipulation.</p>
+                                <p className="text-[10px] font-bold text-[var(--foreground)]/50 uppercase tracking-[0.2em] mt-1">Refine neural weights via direct manipulation.</p>
                             </div>
                             <span className="px-5 py-2 bg-[var(--accent-tertiary)]/10 border border-[var(--accent-tertiary)]/30 text-[var(--accent-tertiary)] text-[10px] font-black uppercase tracking-[0.3em] rounded-full backdrop-blur-md animate-pulse">
                                 Provisional Node
@@ -312,7 +312,7 @@ export default function Generator() {
                         <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-10 border-t border-[var(--glass-border)]">
                             <button
                                 onClick={() => setStep('input')}
-                                className="w-full sm:w-auto px-8 py-4 text-[var(--foreground)]/40 hover:text-[var(--foreground)] text-[10px] font-black uppercase tracking-[0.3em] transition-all"
+                                className="w-full sm:w-auto px-8 py-4 text-[var(--foreground)]/80 hover:text-[var(--foreground)] text-[10px] font-black uppercase tracking-[0.3em] transition-all"
                             >
                                 Back to Control
                             </button>
@@ -335,7 +335,7 @@ export default function Generator() {
                             <div className="absolute inset-0 border-[3px] border-[var(--accent-secondary)] rounded-full border-t-transparent animate-spin shadow-lg"></div>
                         </div>
                         <h3 className="text-2xl font-black text-[var(--foreground)] mb-4 italic uppercase tracking-tighter">Compiling Raster Data</h3>
-                        <p className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.4em] animate-pulse">Rendering 300DPI Neural Matrix...</p>
+                        <p className="text-[10px] font-black text-[var(--foreground)]/50 uppercase tracking-[0.4em] animate-pulse">Rendering 300DPI Neural Matrix...</p>
                     </div>
                 )}
 
@@ -347,7 +347,7 @@ export default function Generator() {
                             <svg className="w-12 h-12 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7"></path></svg>
                         </div>
                         <h3 className="text-4xl font-black text-[var(--foreground)] mb-4 italic tracking-tighter uppercase glitch-text">Sync Complete</h3>
-                        <p className="text-[var(--foreground)]/60 mb-12 max-w-sm text-sm font-medium leading-relaxed italic">
+                        <p className="text-[var(--foreground)]/80 mb-12 max-w-sm text-sm font-medium leading-relaxed italic">
                             Asset successfully exported to your local file system. Protocol remains active for further generation.
                         </p>
                         <button

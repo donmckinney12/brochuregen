@@ -68,12 +68,12 @@ export default function FeedbackHub() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <h1 className="text-4xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Feedback Hub</h1>
-                    <p className="text-[10px] font-bold text-[var(--foreground)]/40 uppercase tracking-[0.3em] mt-2 italic">Annotation Stream & Client Calibration</p>
+                    <p className="text-[10px] font-bold text-[var(--foreground)]/80 uppercase tracking-[0.3em] mt-2 italic">Annotation Stream & Client Calibration</p>
                 </div>
 
                 <div className="flex items-center gap-4">
                     <div className="relative group">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground)]/20 group-focus-within:text-[var(--accent-primary)] transition-colors" size={16} />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground)]/80 group-focus-within:text-[var(--accent-primary)] transition-colors" size={16} />
                         <input
                             type="text"
                             placeholder="Search annotations..."
@@ -87,7 +87,7 @@ export default function FeedbackHub() {
                             <button
                                 key={f}
                                 onClick={() => setFilter(f)}
-                                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${filter === f ? 'bg-[var(--foreground)] text-[var(--background)]' : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]'}`}
+                                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${filter === f ? 'bg-[var(--foreground)] text-[var(--background)]' : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]'}`}
                             >
                                 {f}
                             </button>
@@ -102,8 +102,8 @@ export default function FeedbackHub() {
                 </div>
             ) : filteredComments.length === 0 ? (
                 <div className="h-96 flex flex-col items-center justify-center premium-card border-dashed">
-                    <MessageSquare size={48} className="text-[var(--foreground)]/10 mb-6" />
-                    <p className="text-sm font-bold text-[var(--foreground)]/40 italic">No feedback nodes detected in this quadrant.</p>
+                    <MessageSquare size={48} className="text-[var(--foreground)]/50 mb-6" />
+                    <p className="text-sm font-bold text-[var(--foreground)]/80 italic">No feedback nodes detected in this quadrant.</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-6">
@@ -124,10 +124,10 @@ export default function FeedbackHub() {
                                 <div className="flex flex-col md:flex-row justify-between gap-6">
                                     <div className="flex-1 space-y-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="px-3 py-1 bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-full text-[8px] font-black uppercase tracking-widest text-[var(--foreground)]/40">
+                                            <div className="px-3 py-1 bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-full text-[8px] font-black uppercase tracking-widest text-[var(--foreground)]/80">
                                                 Section: {comment.section_id || 'General'}
                                             </div>
-                                            <span className="text-[10px] font-bold text-[var(--foreground)]/20 flex items-center gap-1">
+                                            <span className="text-[10px] font-bold text-[var(--foreground)]/80 flex items-center gap-1">
                                                 <Calendar size={10} />
                                                 {new Date(comment.created_at).toLocaleDateString()}
                                             </span>
@@ -147,14 +147,14 @@ export default function FeedbackHub() {
                                                 <Check size={18} />
                                             </button>
                                         )}
-                                        <button className="p-3 bg-[var(--foreground)]/5 text-[var(--foreground)]/40 hover:bg-rose-500/10 hover:text-rose-500 rounded-xl transition-all shadow-sm">
+                                        <button className="p-3 bg-[var(--foreground)]/5 text-[var(--foreground)]/80 hover:bg-rose-500/10 hover:text-rose-500 rounded-xl transition-all shadow-sm">
                                             <Trash2 size={18} />
                                         </button>
                                     </div>
                                 </div>
 
                                 <div className="absolute bottom-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <div className="text-[8px] font-black text-[var(--foreground)]/20 uppercase tracking-[0.2em] italic flex items-center gap-2">
+                                    <div className="text-[8px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.2em] italic flex items-center gap-2">
                                         <div className="w-1 h-1 rounded-full bg-[var(--accent-primary)]" />
                                         Node ID: {comment.id}
                                     </div>

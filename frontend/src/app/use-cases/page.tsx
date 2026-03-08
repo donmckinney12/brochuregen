@@ -42,7 +42,7 @@ export default function UseCasesPage() {
                     <h1 className="text-7xl font-black mb-6 tracking-tighter glitch-text text-[var(--foreground)]">
                         Engineered for <span className="gradient-text">Vertical Growth</span>
                     </h1>
-                    <p className="text-xl text-[var(--foreground)]/40 max-w-3xl mx-auto leading-relaxed font-medium">
+                    <p className="text-xl text-[var(--foreground)]/80 max-w-3xl mx-auto leading-relaxed font-medium">
                         Our neural engine is specifically calibrated for high-impact sectors. Select your sector to view optimized generation protocols.
                     </p>
                 </div>
@@ -62,7 +62,7 @@ export default function UseCasesPage() {
                                             {industry.icon}
                                         </div>
                                         <h3 className="text-3xl font-black italic tracking-tighter uppercase mb-4 group-hover:text-[var(--foreground)] transition-colors">{industry.name}</h3>
-                                        <p className="text-[var(--foreground)]/40 text-sm leading-relaxed font-medium">
+                                        <p className="text-[var(--foreground)]/80 text-sm leading-relaxed font-medium">
                                             {industry.description}
                                         </p>
                                     </div>
@@ -82,7 +82,7 @@ export default function UseCasesPage() {
                 <div className="mt-32 p-16 premium-card bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] flex flex-col md:flex-row items-center justify-between gap-12">
                     <div className="max-w-xl text-center md:text-left">
                         <h3 className="text-2xl font-black italic tracking-tighter uppercase mb-4">Request Industry Calibration</h3>
-                        <p className="text-[var(--foreground)]/40 font-medium">Don't see your sector? Our engineering team can calibrate a custom neural layer for your specific industry requirements.</p>
+                        <p className="text-[var(--foreground)]/80 font-medium">Don't see your sector? Our engineering team can calibrate a custom neural layer for your specific industry requirements.</p>
                     </div>
                     <button className="px-12 py-5 bg-[var(--foreground)] text-[var(--background)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:bg-[var(--accent-primary)] hover:scale-105 transition-all shadow-lg whitespace-nowrap">
                         Initialize Request

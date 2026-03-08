@@ -41,7 +41,7 @@ export default function Footer() {
                         <Link href="/" className="inline-block mb-8 hover:scale-105 transition-transform">
                             <Logo />
                         </Link>
-                        <p className="text-[var(--foreground)]/40 font-bold mb-8 max-w-xs leading-relaxed uppercase tracking-widest text-xs">
+                        <p className="text-[var(--foreground)]/80 font-bold mb-8 max-w-xs leading-relaxed uppercase tracking-widest text-xs">
                             Synthesizing high-fidelity marketing assets through neural cluster manifestation.
                         </p>
                         <div className="flex gap-6">
@@ -50,7 +50,7 @@ export default function Footer() {
                                 { name: 'GitHub', icon: 'M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22' },
                                 { name: 'LinkedIn', icon: 'M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z M2 9h4v12H2 z M4 4a2 2 0 1 0 0 4 2 2 0 1 0 0-4 z' }
                             ].map((social) => (
-                                <a key={social.name} href="#" className="w-12 h-12 rounded-xl bg-[var(--foreground)]/5 border border-[var(--glass-border)] flex items-center justify-center text-[var(--foreground)]/40 hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)]/50 hover:shadow-lg transition-all">
+                                <a key={social.name} href="#" className="w-12 h-12 rounded-xl bg-[var(--foreground)]/5 border border-[var(--glass-border)] flex items-center justify-center text-[var(--foreground)]/80 hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)]/50 hover:shadow-lg transition-all">
                                     <span className="sr-only">{social.name}</span>
                                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d={social.icon}></path></svg>
                                 </a>
@@ -68,7 +68,7 @@ export default function Footer() {
                             <h3 className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-[0.3em] mb-8 italic">{col.title}</h3>
                             <ul className="space-y-4">
                                 {col.links.map((link) => (
-                                    <li key={link.h}><Link href={link.h} className="text-[var(--foreground)]/40 font-bold hover:text-[var(--foreground)] transition-colors text-[10px] uppercase tracking-widest leading-none">{link.n}</Link></li>
+                                    <li key={link.h}><Link href={link.h} className="text-[var(--foreground)]/80 font-bold hover:text-[var(--foreground)] transition-colors text-[10px] uppercase tracking-widest leading-none">{link.n}</Link></li>
                                 ))}
                             </ul>
                         </div>
@@ -77,7 +77,7 @@ export default function Footer() {
 
                 <div className="border-t border-[var(--glass-border)] pt-12 pb-8">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                        <p className="text-[10px] font-black text-[var(--foreground)]/20 uppercase tracking-[0.2em]">
+                        <p className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.2em]">
                             © {new Date().getFullYear()} BROCHUREGEN_OPS. ALL SYSTEMS NOMINAL.
                         </p>
 
@@ -96,7 +96,7 @@ export default function Footer() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="SYNC STREAM..."
-                                className="bg-transparent border-none text-[10px] font-black tracking-widest px-4 py-2 text-[var(--foreground)] placeholder:text-[var(--foreground)]/20 focus:ring-0 w-full uppercase"
+                                className="bg-transparent border-none text-[10px] font-black tracking-widest px-4 py-2 text-[var(--foreground)] placeholder:text-[var(--foreground)]/80 focus:ring-0 w-full uppercase"
                             />
                             <button
                                 type="submit"

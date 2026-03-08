@@ -55,9 +55,9 @@ export default function EmbedModal({ isOpen, onClose, shareUuid }: EmbedModalPro
                             <Code className="text-[var(--accent-primary)]" />
                             Embed Matrix
                         </h2>
-                        <p className="text-[10px] font-bold text-[var(--foreground)]/40 uppercase tracking-widest mt-1 italic">Deploy the 3D Protocol to any landing page</p>
+                        <p className="text-[10px] font-bold text-[var(--foreground)]/80 uppercase tracking-widest mt-1 italic">Deploy the 3D Protocol to any landing page</p>
                     </div>
-                    <button onClick={onClose} className="p-3 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/40 hover:text-[var(--foreground)] rounded-2xl transition-all">
+                    <button onClick={onClose} className="p-3 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)]/80 hover:text-[var(--foreground)] rounded-2xl transition-all">
                         <X size={20} />
                     </button>
                 </div>
@@ -65,17 +65,17 @@ export default function EmbedModal({ isOpen, onClose, shareUuid }: EmbedModalPro
                 <div className="space-y-8">
                     {/* Configuration */}
                     <div className="p-6 bg-[var(--foreground)]/5 rounded-3xl border border-[var(--glass-border)] space-y-4">
-                        <label className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.2em] ml-2 font-mono">Behavior Configuration</label>
+                        <label className="text-[10px] font-black text-[var(--foreground)]/50 uppercase tracking-[0.2em] ml-2 font-mono">Behavior Configuration</label>
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setEmbedType('standard')}
-                                className={`flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${embedType === 'standard' ? 'bg-[var(--foreground)] text-[var(--background)] border-[var(--foreground)]' : 'bg-transparent text-[var(--foreground)]/40 border-[var(--glass-border)]'}`}
+                                className={`flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${embedType === 'standard' ? 'bg-[var(--foreground)] text-[var(--background)] border-[var(--foreground)]' : 'bg-transparent text-[var(--foreground)]/80 border-[var(--glass-border)]'}`}
                             >
                                 Standard View
                             </button>
                             <button
                                 onClick={() => setEmbedType('autoplay')}
-                                className={`flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${embedType === 'autoplay' ? 'bg-[var(--accent-secondary)] text-white border-[var(--accent-secondary)]' : 'bg-transparent text-[var(--foreground)]/40 border-[var(--glass-border)]'}`}
+                                className={`flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${embedType === 'autoplay' ? 'bg-[var(--accent-secondary)] text-white border-[var(--accent-secondary)]' : 'bg-transparent text-[var(--foreground)]/80 border-[var(--glass-border)]'}`}
                             >
                                 Auto-Flip On Load
                             </button>
@@ -85,7 +85,7 @@ export default function EmbedModal({ isOpen, onClose, shareUuid }: EmbedModalPro
                     {/* Code Display */}
                     <div className="space-y-4">
                         <div className="flex items-center justify-between px-2">
-                            <label className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.2em] font-mono italic flex items-center gap-2">
+                            <label className="text-[10px] font-black text-[var(--foreground)]/50 uppercase tracking-[0.2em] font-mono italic flex items-center gap-2">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-primary)] animate-pulse" />
                                 HTML Snippet
                             </label>
@@ -110,7 +110,7 @@ export default function EmbedModal({ isOpen, onClose, shareUuid }: EmbedModalPro
                             href={embedUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/40 hover:text-[var(--accent-primary)] transition-all flex items-center gap-2"
+                            className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/80 hover:text-[var(--accent-primary)] transition-all flex items-center gap-2"
                         >
                             <ExternalLink size={12} />
                             Preview Live Node

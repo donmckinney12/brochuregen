@@ -94,7 +94,7 @@ export default function LeadsVault() {
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Neural Lead Vault</h2>
-                    <p className="text-[10px] text-[var(--foreground)]/30 font-bold tracking-[0.3em] uppercase mt-1">Status: Monitoring Incoming Nodes</p>
+                    <p className="text-[10px] text-[var(--foreground)]/50 font-bold tracking-[0.3em] uppercase mt-1">Status: Monitoring Incoming Nodes</p>
                 </div>
                 <button
                     onClick={handleExport}
@@ -109,8 +109,8 @@ export default function LeadsVault() {
                     <div className="w-16 h-16 bg-[var(--foreground)]/5 rounded-2xl border border-[var(--glass-border)] flex items-center justify-center mx-auto mb-6 opacity-20">
                         <svg className="w-8 h-8 text-[var(--foreground)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
-                    <h3 className="text-lg font-bold text-[var(--foreground)]/40 italic">No Leads Detected</h3>
-                    <p className="text-sm text-[var(--foreground)]/20 mt-2">Activate Lead Magnets in your brochures to begin capture.</p>
+                    <h3 className="text-lg font-bold text-[var(--foreground)]/80 italic">No Leads Detected</h3>
+                    <p className="text-sm text-[var(--foreground)]/80 mt-2">Activate Lead Magnets in your brochures to begin capture.</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-4">
@@ -132,13 +132,13 @@ export default function LeadsVault() {
                                         <h4 className="font-black text-[var(--foreground)] italic tracking-tight text-lg">{lead.name || 'Anonymous Node'}</h4>
                                         <span className="px-2 py-0.5 bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 rounded text-[8px] font-black text-[var(--accent-primary)] uppercase tracking-widest leading-none">Verified</span>
                                     </div>
-                                    <p className="text-sm text-[var(--foreground)]/60 font-medium font-mono">{lead.email}</p>
+                                    <p className="text-sm text-[var(--foreground)]/80 font-medium font-mono">{lead.email}</p>
                                 </div>
                             </div>
 
                             <div className="flex flex-col xl:items-end gap-1 relative z-10">
                                 <span className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em]">{lead.company || 'Direct Protocol'}</span>
-                                <span className="text-[10px] text-[var(--foreground)]/20 font-bold uppercase tracking-widest">Captured: {new Date(lead.created_at).toLocaleDateString()}</span>
+                                <span className="text-[10px] text-[var(--foreground)]/80 font-bold uppercase tracking-widest">Captured: {new Date(lead.created_at).toLocaleDateString()}</span>
                             </div>
 
                             {lead.message && (
@@ -191,7 +191,7 @@ export default function LeadsVault() {
                                     <p className="text-[10px] text-[var(--accent-primary)] font-bold tracking-[0.4em] uppercase mt-1">Status: Sequenced & Ready</p>
                                 </div>
                                 <button onClick={() => setSelectedFollowup(null)} className="p-2 hover:bg-[var(--foreground)]/5 rounded-xl transition-all">
-                                    <svg className="w-6 h-6 text-[var(--foreground)]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    <svg className="w-6 h-6 text-[var(--foreground)]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                 </button>
                             </div>
 
@@ -202,7 +202,7 @@ export default function LeadsVault() {
                                             <div className="px-3 py-1 bg-[var(--accent-primary)] text-white text-[10px] font-black rounded-lg uppercase tracking-widest">Step {step.step}</div>
                                             <div className="text-sm font-black text-[var(--foreground)] italic tracking-tight">{step.subject}</div>
                                         </div>
-                                        <div className="p-6 bg-[var(--background)] border border-[var(--glass-border)] rounded-2xl text-xs text-[var(--foreground)]/60 leading-relaxed font-medium whitespace-pre-wrap">
+                                        <div className="p-6 bg-[var(--background)] border border-[var(--glass-border)] rounded-2xl text-xs text-[var(--foreground)]/80 leading-relaxed font-medium whitespace-pre-wrap">
                                             {step.body}
                                         </div>
                                     </div>

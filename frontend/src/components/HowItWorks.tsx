@@ -48,7 +48,7 @@ export default function HowItWorks() {
                                 </div>
                             </div>
                             <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">{step.title}</h3>
-                            <p className="text-[var(--foreground)]/60 leading-relaxed max-w-xs">
+                            <p className="text-[var(--foreground)]/80 leading-relaxed max-w-xs">
                                 {step.description}
                             </p>
                         </div>

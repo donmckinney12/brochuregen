@@ -41,7 +41,7 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
                     </div>
                     <div>
                         <h4 className="text-sm font-black italic uppercase tracking-tighter text-[var(--foreground)]">Vocal Pattern Analysis</h4>
-                        <p className="text-[10px] text-[var(--foreground)]/30 font-bold uppercase tracking-widest">Neural Calibration Lab</p>
+                        <p className="text-[10px] text-[var(--foreground)]/50 font-bold uppercase tracking-widest">Neural Calibration Lab</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
@@ -57,7 +57,7 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
                         <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-30 transition-opacity">
                             <Target size={12} />
                         </div>
-                        <p className="text-[8px] font-black uppercase tracking-widest text-[var(--foreground)]/30">{marker.name}</p>
+                        <p className="text-[8px] font-black uppercase tracking-widest text-[var(--foreground)]/50">{marker.name}</p>
                         <div className="flex items-end justify-between">
                             <span className={`text-xl font-black italic tracking-tighter ${marker.color}`}>{marker.value}%</span>
                             <div className="h-1 w-12 bg-[var(--foreground)]/10 rounded-full overflow-hidden">
@@ -77,7 +77,7 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
                 <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent-primary)]/20 to-transparent rounded-[2.5rem] blur opacity-10 group-focus-within:opacity-30 transition-opacity"></div>
                 <div className="relative bg-[var(--background)] border border-[var(--glass-border)] rounded-[2rem] overflow-hidden shadow-2xl">
                     <div className="px-8 py-4 border-b border-[var(--glass-border)] bg-[var(--foreground)]/5 flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-[var(--foreground)]/40">
+                        <div className="flex items-center gap-2 text-[var(--foreground)]/80">
                             <MessageSquare size={14} />
                             <span className="text-[10px] font-black uppercase tracking-widest">Calibration Input Stream</span>
                         </div>
@@ -90,7 +90,7 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
                     <textarea
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        className="w-full h-48 p-8 bg-transparent text-sm text-[var(--foreground)] font-medium leading-relaxed focus:outline-none placeholder:text-[var(--foreground)]/10 resize-none"
+                        className="w-full h-48 p-8 bg-transparent text-sm text-[var(--foreground)] font-medium leading-relaxed focus:outline-none placeholder:text-[var(--foreground)]/50 resize-none"
                         placeholder="Paste sample copy, mission statements, or brand manifestos here..."
                     />
                     <div className="px-8 py-6 bg-[var(--foreground)]/5 border-t border-[var(--glass-border)] flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -101,7 +101,7 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
                                     value={scanUrl}
                                     onChange={(e) => setScanUrl(e.target.value)}
                                     placeholder="Enter Protocol URL to scan..."
-                                    className="w-full bg-[var(--background)] border border-[var(--glass-border)] rounded-xl py-3 px-4 text-[10px] text-[var(--foreground)] focus:ring-1 focus:ring-[var(--accent-primary)]/50 outline-none placeholder:text-[var(--foreground)]/20"
+                                    className="w-full bg-[var(--background)] border border-[var(--glass-border)] rounded-xl py-3 px-4 text-[10px] text-[var(--foreground)] focus:ring-1 focus:ring-[var(--accent-primary)]/50 outline-none placeholder:text-[var(--foreground)]/80"
                                 />
                             </div>
                             <button
@@ -140,7 +140,7 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
                 </div>
                 <div>
                     <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)] italic">Neural Guard Enabled</p>
-                    <p className="text-[9px] text-[var(--foreground)]/40 font-bold uppercase tracking-tighter mt-0.5">Brand Voice consistency enforced across all generation nodes.</p>
+                    <p className="text-[9px] text-[var(--foreground)]/80 font-bold uppercase tracking-tighter mt-0.5">Brand Voice consistency enforced across all generation nodes.</p>
                 </div>
             </div>
         </div>

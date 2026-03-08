@@ -98,7 +98,7 @@ export default function ProactiveDraftsHub() {
 
             {drafts.length === 0 ? (
                 <div className="py-20 flex flex-col items-center justify-center text-center premium-card border-dashed border-white/10 bg-white/5 opacity-50">
-                    <Zap className="w-12 h-12 mb-4 text-[var(--foreground)]/20" />
+                    <Zap className="w-12 h-12 mb-4 text-[var(--foreground)]/80" />
                     <p className="text-sm font-bold uppercase tracking-widest">No Proactive Intents Manifested Yet...</p>
                 </div>
             ) : (

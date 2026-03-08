@@ -25,7 +25,7 @@ export default function FeaturedTemplates() {
             <div className="text-center mb-12">
                 <span className="text-[var(--accent-primary)] font-bold tracking-wider uppercase text-sm">Professional Output</span>
                 <h2 className="text-3xl font-bold text-[var(--foreground)] mt-2 mb-4">Featured Templates</h2>
-                <p className="text-[var(--foreground)]/60 max-w-2xl mx-auto">
+                <p className="text-[var(--foreground)]/80 max-w-2xl mx-auto">
                     Choose from our library of high-converting designs. Our AI automatically adapts your content to fit perfectly.
                 </p>
             </div>

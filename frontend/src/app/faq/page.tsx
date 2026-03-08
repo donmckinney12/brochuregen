@@ -42,7 +42,7 @@ export default function FAQPage() {
                     <h1 className="text-6xl font-black mb-6 tracking-tighter glitch-text text-[var(--foreground)]">
                         Frequently <span className="gradient-text">Asked Questions</span>
                     </h1>
-                    <p className="text-lg text-[var(--foreground)]/40 max-w-2xl mx-auto leading-relaxed font-medium">
+                    <p className="text-lg text-[var(--foreground)]/80 max-w-2xl mx-auto leading-relaxed font-medium">
                         Everything you need to know about the neural brochure generation engine and account management.
                     </p>
                 </div>
@@ -57,7 +57,7 @@ export default function FAQPage() {
                                 <span className={`text-lg font-black italic tracking-tight transition-colors ${openIndex === idx ? 'text-[var(--accent-primary)]' : 'text-[var(--foreground)]/80 group-hover:text-[var(--foreground)]'}`}>
                                     {idx + 1}. {faq.q}
                                 </span>
-                                <span className={`w-8 h-8 rounded-full border border-[var(--glass-border)] flex items-center justify-center transition-transform duration-500 ${openIndex === idx ? 'rotate-180 bg-[var(--accent-primary)] text-[var(--background)] border-[var(--accent-primary)]' : 'text-[var(--foreground)]/40 group-hover:text-[var(--foreground)]'}`}>
+                                <span className={`w-8 h-8 rounded-full border border-[var(--glass-border)] flex items-center justify-center transition-transform duration-500 ${openIndex === idx ? 'rotate-180 bg-[var(--accent-primary)] text-[var(--background)] border-[var(--accent-primary)]' : 'text-[var(--foreground)]/80 group-hover:text-[var(--foreground)]'}`}>
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7"></path></svg>
                                 </span>
                             </button>
@@ -71,7 +71,7 @@ export default function FAQPage() {
                                         transition={{ duration: 0.3, ease: 'easeOut' }}
                                     >
                                         <div className="px-6 pb-8 md:px-8 md:pb-10 italic">
-                                            <div className="p-6 bg-[var(--foreground)]/5 rounded-2xl border-l-4 border-[var(--accent-primary)] text-[var(--foreground)]/60 leading-relaxed font-medium">
+                                            <div className="p-6 bg-[var(--foreground)]/5 rounded-2xl border-l-4 border-[var(--accent-primary)] text-[var(--foreground)]/80 leading-relaxed font-medium">
                                                 {faq.a}
                                             </div>
                                         </div>
@@ -85,7 +85,7 @@ export default function FAQPage() {
                 <div className="mt-20 premium-card p-12 bg-gradient-to-br from-[var(--background)] to-[var(--accent-secondary)]/5 border-[var(--accent-secondary)]/20 text-center relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent-secondary)]/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
                     <h3 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase mb-2">Still have questions?</h3>
-                    <p className="text-[var(--foreground)]/40 mb-8 max-w-sm mx-auto text-sm font-medium">Can't find the answer you're looking for? Reach out to our neural support team.</p>
+                    <p className="text-[var(--foreground)]/80 mb-8 max-w-sm mx-auto text-sm font-medium">Can't find the answer you're looking for? Reach out to our neural support team.</p>
                     <button className="px-10 py-4 bg-[var(--accent-secondary)] text-[var(--foreground)] font-black text-[12px] uppercase tracking-[0.3em] rounded-2xl hover:opacity-90 hover:scale-105 transition-all shadow-lg">
                         Initialize Contact Sync
                     </button>

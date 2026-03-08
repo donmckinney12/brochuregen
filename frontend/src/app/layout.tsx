@@ -57,6 +57,7 @@ export const metadata: Metadata = {
 };
 
 import { ClerkProvider } from '@clerk/nextjs';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 export default function RootLayout({
   children,
@@ -64,29 +65,43 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} antialiased selection:bg-[var(--accent-primary)]/30 selection:text-[var(--foreground)] bg-[var(--background)] transition-colors duration-500`}
-        >
-          <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-            {/* Unified Base layer */}
-            <div className="absolute inset-0 bg-[var(--background)]"></div>
-            <div className="absolute inset-0 mesh-gradient opacity-30"></div>
-            {/* Single optimized glow layer */}
-            <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-b from-[var(--accent-primary)]/10 via-[var(--accent-secondary)]/10 to-transparent blur-[120px] opacity-40"></div>
-            {/* Animated decorative layer */}
-            <div className="absolute inset-0 animate-aurora mix-blend-screen opacity-20"></div>
-            {/* Optimize Scanline visibility */}
-            <div className="scanline"></div>
-          </div>
-          <AuthProvider>
-            {children}
-            <Footer />
-          </AuthProvider>
-          <ChatWidget />
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+                  if (!theme && supportDarkMode) theme = 'dark';
+                  if (theme === 'dark') document.documentElement.classList.add('dark');
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} antialiased selection:bg-[var(--accent-primary)]/30 selection:text-[var(--foreground)] bg-[var(--background)] transition-colors duration-500`}
+      >
+        <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+          <div className="absolute inset-0 bg-[var(--background)]"></div>
+          <div className="absolute inset-0 mesh-gradient opacity-30"></div>
+          <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-b from-[var(--accent-primary)]/10 via-[var(--accent-secondary)]/10 to-transparent blur-[120px] opacity-40"></div>
+          <div className="absolute inset-0 animate-aurora mix-blend-screen opacity-20"></div>
+          <div className="scanline"></div>
+        </div>
+        <ClerkProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              {children}
+              <Footer />
+            </AuthProvider>
+          </ThemeProvider>
+        </ClerkProvider>
+        <ChatWidget />
+      </body>
+    </html>
   );
 }

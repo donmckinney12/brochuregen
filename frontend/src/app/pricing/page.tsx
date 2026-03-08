@@ -67,7 +67,7 @@ export default function Pricing() {
                         Scale your impact <br />
                         <span className="gradient-text">with God-Tier Design.</span>
                     </h1>
-                    <p className="text-lg text-[var(--foreground)]/40 font-bold max-w-2xl mx-auto mb-12 uppercase tracking-widest leading-relaxed">
+                    <p className="text-lg text-[var(--foreground)]/80 font-bold max-w-2xl mx-auto mb-12 uppercase tracking-widest leading-relaxed">
                         The ultimate AI Studio for precision marketing. <br />Initialize your protocol today.
                     </p>
 
@@ -75,13 +75,13 @@ export default function Pricing() {
                     <div className="flex items-center justify-center gap-6 mb-20 p-2 bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-2xl w-fit mx-auto">
                         <button
                             onClick={() => setBillingCycle('monthly')}
-                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${billingCycle === 'monthly' ? 'bg-[var(--foreground)] text-[var(--background)] shadow-lg' : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]/60'}`}
+                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${billingCycle === 'monthly' ? 'bg-[var(--foreground)] text-[var(--background)] shadow-lg' : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]/80'}`}
                         >
                             Monthly Sync
                         </button>
                         <button
                             onClick={() => setBillingCycle('yearly')}
-                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${billingCycle === 'yearly' ? 'bg-[var(--accent-secondary)] text-white shadow-lg' : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]/60'}`}
+                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${billingCycle === 'yearly' ? 'bg-[var(--accent-secondary)] text-white shadow-lg' : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]/80'}`}
                         >
                             Annual Sync <span className="ml-2 opacity-60">(-20%)</span>
                         </button>
@@ -156,13 +156,13 @@ export default function Pricing() {
                                 </h3>
                                 <div className="flex items-baseline gap-2 text-[var(--foreground)]">
                                     <span className="text-5xl font-black italic tracking-tighter">${plan.price}</span>
-                                    {typeof plan.price === 'number' && <span className="text-[var(--foreground)]/20 text-[10px] font-black uppercase tracking-widest">/sync cycle</span>}
+                                    {typeof plan.price === 'number' && <span className="text-[var(--foreground)]/80 text-[10px] font-black uppercase tracking-widest">/sync cycle</span>}
                                 </div>
                             </div>
 
                             <ul className="flex-1 space-y-5 mb-10">
                                 {plan.features.map((feat, fi) => (
-                                    <li key={fi} className="flex items-center gap-3 text-[var(--foreground)]/60 text-xs font-bold uppercase tracking-wide">
+                                    <li key={fi} className="flex items-center gap-3 text-[var(--foreground)]/80 text-xs font-bold uppercase tracking-wide">
                                         <div className={`w-1.5 h-1.5 rounded-full ${plan.color === 'cyan' ? 'bg-[var(--accent-primary)]' : plan.color === 'fuchsia' ? 'bg-[var(--accent-secondary)]' : plan.color === 'amber' ? 'bg-[var(--accent-tertiary)]' : 'bg-[var(--foreground)]'}`} />
                                         {feat}
                                     </li>
@@ -198,7 +198,7 @@ export default function Pricing() {
                         ].map((faq, i) => (
                             <div key={i}>
                                 <h3 className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em] mb-4">{faq.q}</h3>
-                                <p className="text-[var(--foreground)]/40 text-xs font-bold leading-relaxed uppercase tracking-widest">{faq.a}</p>
+                                <p className="text-[var(--foreground)]/80 text-xs font-bold leading-relaxed uppercase tracking-widest">{faq.a}</p>
                             </div>
                         ))}
                     </div>

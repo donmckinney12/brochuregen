@@ -38,7 +38,7 @@ export default function BrochureCarousel() {
                 <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--foreground)] mt-2 mb-4">
                     Stunning Brochures, <br /> Generated in Seconds
                 </h2>
-                <p className="text-[var(--foreground)]/60 max-w-2xl mx-auto">
+                <p className="text-[var(--foreground)]/80 max-w-2xl mx-auto">
                     Our AI analyzes your property listing and automatically designs professional-grade marketing assets.
                 </p>
             </div>
@@ -87,7 +87,7 @@ export default function BrochureCarousel() {
 
                             <button
                                 onClick={() => setSelectedBrochure(brochure)}
-                                className="w-full py-2.5 rounded-lg border border-[var(--glass-border)] text-[var(--foreground)]/60 font-semibold text-sm hover:bg-[var(--foreground)]/5 transition-colors flex items-center justify-center gap-2 group/btn"
+                                className="w-full py-2.5 rounded-lg border border-[var(--glass-border)] text-[var(--foreground)]/80 font-semibold text-sm hover:bg-[var(--foreground)]/5 transition-colors flex items-center justify-center gap-2 group/btn"
                             >
                                 <svg className="w-4 h-4 text-[var(--accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 Preview Design
@@ -122,20 +122,20 @@ export default function BrochureCarousel() {
                         <div className="w-full md:w-1/3 p-8 flex flex-col justify-center">
                             <span className="text-xs font-bold text-[var(--accent-primary)] uppercase tracking-wider mb-2">{selectedBrochure.category}</span>
                             <h3 className="text-3xl font-bold text-[var(--foreground)] mb-4">{selectedBrochure.title}</h3>
-                            <p className="text-[var(--foreground)]/60 mb-8 leading-relaxed">
+                            <p className="text-[var(--foreground)]/80 mb-8 leading-relaxed">
                                 This template features {selectedBrochure.description || "a professional layout designed to maximize engagement."}
                             </p>
 
                             <div className="space-y-4">
-                                <div className="flex items-center gap-3 text-sm text-[var(--foreground)]/60">
+                                <div className="flex items-center gap-3 text-sm text-[var(--foreground)]/80">
                                     <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                                     Auto-generated Layout
                                 </div>
-                                <div className="flex items-center gap-3 text-sm text-[var(--foreground)]/60">
+                                <div className="flex items-center gap-3 text-sm text-[var(--foreground)]/80">
                                     <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                                     AI Copywriting Included
                                 </div>
-                                <div className="flex items-center gap-3 text-sm text-[var(--foreground)]/60">
+                                <div className="flex items-center gap-3 text-sm text-[var(--foreground)]/80">
                                     <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                                     Print-Ready Export
                                 </div>

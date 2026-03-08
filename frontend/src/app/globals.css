@@ -33,10 +33,10 @@
   /* Neon Magenta */
   --accent-tertiary: #39ff14;
   /* Acid Green */
-  --glass-bg: rgba(2, 6, 23, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --card-bg: rgba(0, 0, 0, 0.6);
-  --card-shadow: rgba(0, 0, 0, 0.5);
+  --glass-bg: rgba(2, 6, 23, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --card-bg: rgba(0, 0, 0, 0.7);
+  --card-shadow: rgba(0, 0, 0, 0.8);
   color-scheme: dark;
 }
 

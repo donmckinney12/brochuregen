@@ -87,7 +87,7 @@ export default function SocialPulseKit({ posts, brochureId }: SocialPulseKitProp
                 </div>
                 <div>
                     <h3 className="text-xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Social Pulse Kit</h3>
-                    <p className="text-[10px] font-bold text-[var(--foreground)]/40 uppercase tracking-widest mt-1 italic">AI-Generated Multi-Channel Distribution Assets</p>
+                    <p className="text-[10px] font-bold text-[var(--foreground)]/80 uppercase tracking-widest mt-1 italic">AI-Generated Multi-Channel Distribution Assets</p>
                 </div>
             </div>
 
@@ -111,12 +111,12 @@ export default function SocialPulseKit({ posts, brochureId }: SocialPulseKitProp
                                     <div className="p-2.5 bg-[var(--foreground)]/5 rounded-xl border border-[var(--glass-border)]">
                                         {getIcon(platform)}
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/40">{platform}</span>
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/80">{platform}</span>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2">
                                     <button
                                         onClick={() => handleCopy(postContent, i)}
-                                        className={`flex-1 sm:flex-none p-2 sm:p-2.5 rounded-xl border transition-all flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest ${copiedIndex === i ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-[var(--foreground)]/5 hover:bg-[var(--foreground)] text-[var(--foreground)]/40 hover:text-[var(--foreground)] border-[var(--glass-border)]'}`}
+                                        className={`flex-1 sm:flex-none p-2 sm:p-2.5 rounded-xl border transition-all flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest ${copiedIndex === i ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-[var(--foreground)]/5 hover:bg-[var(--foreground)] text-[var(--foreground)]/80 hover:text-[var(--foreground)] border-[var(--glass-border)]'}`}
                                     >
                                         {copiedIndex === i ? <Check size={12} /> : <Copy size={12} />}
                                         <span>{copiedIndex === i ? 'Copied' : 'Copy'}</span>

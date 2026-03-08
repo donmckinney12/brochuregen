@@ -279,7 +279,7 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
                             className="relative w-full max-w-md bg-[var(--background)] border border-[var(--glass-border)] rounded-[3rem] p-10 shadow-2xl overflow-hidden"
                         >
                             <div className="absolute top-0 right-0 p-6">
-                                <button onClick={() => setShowLeadForm(false)} className="p-2 hover:bg-[var(--foreground)]/5 rounded-full text-[var(--foreground)]/30 hover:text-[var(--foreground)] transition-all">
+                                <button onClick={() => setShowLeadForm(false)} className="p-2 hover:bg-[var(--foreground)]/5 rounded-full text-[var(--foreground)]/50 hover:text-[var(--foreground)] transition-all">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                 </button>
                             </div>
@@ -289,7 +289,7 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
                                     Neural Capture Node
                                 </div>
                                 <h3 className="text-3xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Initialize <span className="gradient-text">Protocol</span></h3>
-                                <p className="text-xs text-[var(--foreground)]/40 font-bold uppercase tracking-widest mt-2">{data.title}</p>
+                                <p className="text-xs text-[var(--foreground)]/80 font-bold uppercase tracking-widest mt-2">{data.title}</p>
                             </div>
 
                             <div className="relative px-2">
@@ -303,7 +303,7 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
                             </div>
 
                             <div className="mt-8 text-center">
-                                <p className="text-[8px] font-bold text-[var(--foreground)]/20 uppercase tracking-[0.4em]">Proprietary Generation Logic Applied</p>
+                                <p className="text-[8px] font-bold text-[var(--foreground)]/80 uppercase tracking-[0.4em]">Proprietary Generation Logic Applied</p>
                             </div>
                         </motion.div>
                     </div>

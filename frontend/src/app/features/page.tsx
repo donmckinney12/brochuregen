@@ -27,7 +27,7 @@ export default function FeaturesPage() {
                         <span className="gradient-text italic">Market Domination.</span>
                     </h1>
 
-                    <p className="text-xl text-[var(--foreground)]/40 font-bold max-w-2xl mx-auto mb-16 leading-relaxed uppercase tracking-widest animate-in fade-in slide-in-from-bottom-4 delay-200">
+                    <p className="text-xl text-[var(--foreground)]/80 font-bold max-w-2xl mx-auto mb-16 leading-relaxed uppercase tracking-widest animate-in fade-in slide-in-from-bottom-4 delay-200">
                         BrochureGen merges advanced LLM clusters with high-fidelity visual nodes to manifest print-ready logic in milliseconds.
                     </p>
 
@@ -58,7 +58,7 @@ export default function FeaturesPage() {
                         <h2 className="text-4xl font-black text-[var(--foreground)] mb-6 italic tracking-tighter uppercase">
                             Neural Data Extraction
                         </h2>
-                        <p className="text-lg text-[var(--foreground)]/40 font-bold leading-relaxed mb-8 uppercase tracking-widest">
+                        <p className="text-lg text-[var(--foreground)]/80 font-bold leading-relaxed mb-8 uppercase tracking-widest">
                             Our LLM clusters deconstruct your digital footprint, identifying core conversion nodes and restructuring them for high-impact physical manifestations.
                         </p>
                         <ul className="space-y-4">
@@ -68,7 +68,7 @@ export default function FeaturesPage() {
                                 "Stabilize and replicate brand vocal signature",
                                 "Purge navigational static and UI clutter"
                             ].map((item, i) => (
-                                <li key={i} className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-[var(--foreground)]/60">
+                                <li key={i} className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-[var(--foreground)]/80">
                                     <div className="w-2 h-2 rounded-full bg-[var(--accent-primary)] shadow-[0_0_10px_var(--accent-primary)]" />
                                     {item}
                                 </li>
@@ -112,7 +112,7 @@ export default function FeaturesPage() {
                         <h2 className="text-4xl font-black text-[var(--foreground)] mb-6 italic tracking-tighter uppercase">
                             Holographic Matrix Layout
                         </h2>
-                        <p className="text-lg text-[var(--foreground)]/40 font-bold leading-relaxed mb-8 uppercase tracking-widest">
+                        <p className="text-lg text-[var(--foreground)]/80 font-bold leading-relaxed mb-8 uppercase tracking-widest">
                             Eliminate the concept of margins. Our engine auto-calibrates content across a standard 6-panel tri-fold matrix with mathematical precision.
                         </p>
                         <ul className="space-y-4">
@@ -122,7 +122,7 @@ export default function FeaturesPage() {
                                 "Native 8.5\" x 11\" Letter Matrix Support",
                                 "Dynamic UI whitespace calibration"
                             ].map((item, i) => (
-                                <li key={i} className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-[var(--foreground)]/60">
+                                <li key={i} className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-[var(--foreground)]/80">
                                     <div className="w-2 h-2 rounded-full bg-[var(--accent-secondary)] shadow-[0_0_10px_var(--accent-secondary)]" />
                                     {item}
                                 </li>
@@ -142,7 +142,7 @@ export default function FeaturesPage() {
                         <h2 className="text-4xl font-black text-[var(--foreground)] mb-6 italic tracking-tighter uppercase">
                             High-Density Data Manifest
                         </h2>
-                        <p className="text-lg text-[var(--foreground)]/40 font-bold leading-relaxed mb-8 uppercase tracking-widest">
+                        <p className="text-lg text-[var(--foreground)]/80 font-bold leading-relaxed mb-8 uppercase tracking-widest">
                             Extract high-resolution PDF manifests ready for immediate physical hardware manifestation or professional matrix printing.
                         </p>
                         <ul className="space-y-4">
@@ -152,7 +152,7 @@ export default function FeaturesPage() {
                                 "Vectorized Typography for Infinite Clarity",
                                 "Universal PDF Cross-Protocol Support"
                             ].map((item, i) => (
-                                <li key={i} className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-[var(--foreground)]/60">
+                                <li key={i} className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-[var(--foreground)]/80">
                                     <div className="w-2 h-2 rounded-full bg-[var(--accent-tertiary)] shadow-[0_0_10px_var(--accent-tertiary)]" />
                                     {item}
                                 </li>
@@ -166,7 +166,7 @@ export default function FeaturesPage() {
                                 <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H8l4-4 4 4h-3v4h-2z"></path></svg>
                             </div>
                             <span className="font-black text-[10px] uppercase tracking-[0.3em] text-[var(--foreground)]">MANIFEST.PDF</span>
-                            <span className="text-[8px] font-black text-[var(--foreground)]/20 uppercase tracking-widest">SIZE: 2.4 MB</span>
+                            <span className="text-[8px] font-black text-[var(--foreground)]/80 uppercase tracking-widest">SIZE: 2.4 MB</span>
                         </div>
                     </div>
                 </div>

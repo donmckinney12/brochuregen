@@ -65,7 +65,7 @@ export default function ProspectingHub() {
 
             {!scanned && !loading && (
                 <div className="py-20 flex flex-col items-center justify-center text-center premium-card border-dashed border-white/10 bg-white/5 opacity-50">
-                    <Search className="w-12 h-12 mb-4 text-[var(--foreground)]/20" />
+                    <Search className="w-12 h-12 mb-4 text-[var(--foreground)]/80" />
                     <p className="text-sm font-bold uppercase tracking-widest">Awaiting Command to Scan Lead Resonance...</p>
                 </div>
             )}

@@ -93,13 +93,13 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
                 )}
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="hidden lg:block p-2 hover:bg-[var(--foreground)]/5 rounded-lg transition-colors text-[var(--foreground)]/60"
+                    className="hidden lg:block p-2 hover:bg-[var(--foreground)]/5 rounded-lg transition-colors text-[var(--foreground)]/80"
                 >
                     {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
                 </button>
                 <button
                     onClick={onClose}
-                    className="lg:hidden p-2 hover:bg-[var(--foreground)]/5 rounded-lg transition-colors text-[var(--foreground)]/60"
+                    className="lg:hidden p-2 hover:bg-[var(--foreground)]/5 rounded-lg transition-colors text-[var(--foreground)]/80"
                 >
                     <ChevronLeft size={20} />
                 </button>
@@ -115,7 +115,7 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
                                     organizationSwitcherTrigger: "text-[var(--foreground)] hover:bg-[var(--foreground)]/10 py-1 transition-all",
                                     organizationPreviewTextContainer: collapsed ? "hidden" : "block text-[var(--foreground)]",
                                     organizationPreviewMainIdentifier: "text-[var(--foreground)] font-medium",
-                                    organizationPreviewSecondaryIdentifier: "text-[var(--foreground)]/40"
+                                    organizationPreviewSecondaryIdentifier: "text-[var(--foreground)]/80"
                                 }
                             }}
                         />
@@ -135,7 +135,7 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
                             href={item.href}
                             className={`flex items-center p-3 rounded-xl transition-all group relative ${isActive
                                 ? 'bg-gradient-to-r from-[var(--accent-primary)]/10 to-[var(--accent-secondary)]/10 text-[var(--foreground)] border border-[var(--accent-primary)]/20'
-                                : 'text-[var(--foreground)]/60 hover:text-[var(--foreground)] hover:bg-[var(--foreground)]/5 border border-transparent'
+                                : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)] hover:bg-[var(--foreground)]/5 border border-transparent'
                                 }`}
                         >
                             <item.icon size={20} className={isActive ? 'text-[var(--accent-primary)]' : 'group-hover:text-[var(--accent-primary)] transition-colors'} />
@@ -172,7 +172,7 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
                             <span className="text-[10px] uppercase tracking-tighter text-[var(--accent-primary)] font-bold">Neural Balance</span>
                             <Zap size={12} className="text-yellow-500 animate-pulse" />
                         </div>
-                        <div className="text-xl font-black text-[var(--foreground)]">{user?.credits || 0} <span className="text-xs font-normal text-[var(--foreground)]/40">Tokens</span></div>
+                        <div className="text-xl font-black text-[var(--foreground)]">{user?.credits || 0} <span className="text-xs font-normal text-[var(--foreground)]/80">Tokens</span></div>
                         <div className="w-full bg-[var(--foreground)]/10 h-1 rounded-full mt-2 overflow-hidden">
                             <motion.div
                                 initial={{ width: 0 }}
@@ -185,7 +185,7 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
 
                 <Link
                     href="/"
-                    className="flex items-center p-3 text-[var(--foreground)]/40 hover:text-[var(--foreground)] transition-colors group"
+                    className="flex items-center p-3 text-[var(--foreground)]/80 hover:text-[var(--foreground)] transition-colors group"
                 >
                     <div className="w-5 h-5 flex items-center justify-center">
                         <motion.div whileHover={{ scale: 1.2 }}>
@@ -197,7 +197,7 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
 
                 <Link
                     href="/settings"
-                    className="flex items-center p-3 text-[var(--foreground)]/40 hover:text-[var(--foreground)] transition-colors"
+                    className="flex items-center p-3 text-[var(--foreground)]/80 hover:text-[var(--foreground)] transition-colors"
                 >
                     <Settings size={20} />
                     {!collapsed && <span className="ml-3 font-medium">Settings</span>}

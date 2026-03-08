@@ -85,7 +85,7 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                         <div>
                             <h2 className="text-2xl font-black italic tracking-tighter uppercase text-[var(--foreground)]">Refinement Matrix</h2>
                             <div className="flex items-center gap-2 mt-1">
-                                <span className="text-[10px] font-black text-[var(--foreground)]/30 uppercase tracking-[0.2em]">Node: {fieldType}</span>
+                                <span className="text-[10px] font-black text-[var(--foreground)]/50 uppercase tracking-[0.2em]">Node: {fieldType}</span>
                                 <span className="w-1 h-1 rounded-full bg-[var(--accent-primary)] animate-pulse"></span>
                                 <span className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em]">Manual Override Active</span>
                             </div>
@@ -95,7 +95,7 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                         onClick={onClose}
                         className="p-3 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 rounded-full transition-all hover:rotate-90"
                     >
-                        <svg className="w-5 h-5 text-[var(--foreground)]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        <svg className="w-5 h-5 text-[var(--foreground)]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
 
@@ -103,7 +103,7 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                     {/* Input Area */}
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.3em] ml-2">Direct Content Stream</label>
+                            <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.3em] ml-2">Direct Content Stream</label>
                             <button
                                 onClick={() => setCurrentText(initialText)}
                                 disabled={currentText === initialText}
