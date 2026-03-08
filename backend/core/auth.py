@@ -1,64 +1,53 @@
-import httpx
-from jose import jwt
-from fastapi import Request, HTTPException, Depends
+import jwt
+from jwt import PyJWKClient
+from fastapi import Request, HTTPException
 from core.config import settings
-from typing import Optional
 
 # Clerk JWKS URL
 CLERK_JWKS_URL = f"{settings.CLERK_FRONTEND_API}/.well-known/jwks.json"
 if not CLERK_JWKS_URL.startswith("http"):
     CLERK_JWKS_URL = f"https://{CLERK_JWKS_URL}"
 
-class ClerkAuth:
-    def __init__(self):
-        self.jwks = None
+print(f"[Auth] JWKS URL: {CLERK_JWKS_URL}")
 
-    async def get_jwks(self):
-        if not self.jwks:
-            print(f"Fetching JWKS from: {CLERK_JWKS_URL}")
-            async with httpx.AsyncClient(timeout=10.0) as client:
-                response = await client.get(CLERK_JWKS_URL)
-                if response.status_code != 200:
-                    print(f"Failed to fetch JWKS: {response.status_code}")
-                    raise HTTPException(status_code=500, detail="Failed to fetch auth keys")
-                self.jwks = response.json()
-                print("JWKS fetched successfully")
-        return self.jwks
+# PyJWT's built-in JWKS client handles key fetching and caching
+jwks_client = PyJWKClient(CLERK_JWKS_URL)
 
-    async def verify_token(self, token: str):
-        jwks = await self.get_jwks()
-        try:
-            # In a real app, you'd find the correct key in JWKS
-            # For simplicity, we'll use the first key or use a library that handles this
-            # Here we just decode with verification
-            payload = jwt.decode(
-                token,
-                jwks,
-                algorithms=["RS256"],
-                audience=None, # Clerk tokens don't always have audience by default
-            )
-            return payload
-        except Exception as e:
-            print(f"Token verification failed: {e}")
-            return None
 
-clerk_auth = ClerkAuth()
+def verify_token(token: str):
+    """Verify a Clerk JWT using PyJWT + JWKS endpoint."""
+    try:
+        signing_key = jwks_client.get_signing_key_from_jwt(token)
+        payload = jwt.decode(
+            token,
+            signing_key.key,
+            algorithms=["RS256"],
+            options={
+                "verify_aud": False,
+                "verify_iss": False,
+            }
+        )
+        return {"success": True, "payload": payload}
+    except jwt.ExpiredSignatureError:
+        print("[Auth] Token expired")
+        return {"success": False, "error": "Token expired"}
+    except jwt.InvalidTokenError as e:
+        print(f"[Auth] Invalid token: {e}")
+        return {"success": False, "error": f"Invalid token: {e}"}
+    except Exception as e:
+        print(f"[Auth] Unexpected error: {e}")
+        return {"success": False, "error": f"Unexpected error: {e}"}
+
 
 async def get_current_user(request: Request):
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
-        print("Missing or invalid Authorization header")
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    
+        raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
+
     token = auth_header.split(" ")[1]
-    print(f"Verifying token (prefix: {token[:10]}...)")
-    payload = await clerk_auth.verify_token(token)
-    if not payload:
-        print("Token verification returned None")
-        raise HTTPException(status_code=401, detail="Invalid token")
+    result = verify_token(token)
     
-    print(f"User verified: {payload.get('sub')}")
-    if payload.get("org_id"):
-        print(f"Active Organization: {payload.get('org_id')}")
-        
-    return payload
+    if not result["success"]:
+        raise HTTPException(status_code=401, detail=f"JWT Error: {result['error']}")
+
+    return result["payload"]
