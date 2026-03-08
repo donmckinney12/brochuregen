@@ -18,7 +18,7 @@ class AIService:
         "minimal": "Minimalist and concise. Less is more. Every word counts.",
     }
 
-    async def generate_brochure_content(self, text_content: str, url: str, is_campaign: bool = False, brand_voice: str = None, tone: str = None) -> dict:
+    async def generate_brochure_content(self, text_content: str, url: str, is_campaign: bool = False, brand_voice: str = None, tone: str = None, layout_theme: str = "modern") -> dict:
         """
         Uses OpenAI (gpt-4o) to analyze the provided website text and generate 
         marketing copy for a 3-fold brochure, and optionally a full campaign.
@@ -42,10 +42,27 @@ class AIService:
         if tone and tone in self.TONE_PRESETS:
             tone_instruction = f"\n        TONE DIRECTIVE (CRITICAL): Write all copy in this tone: {self.TONE_PRESETS[tone]}"
 
+        # Theme-specific logic
+        theme_instructions = ""
+        if "real-estate" in layout_theme:
+            theme_instructions = "LAYOUT CONTEXT: Focus on property specifications, lifestyle benefits, and high-impact visual descriptions. Ensure there is a clear section for 'Key Features' formatted as specs (e.g., '3BR / 2BA')."
+        elif "restaurant" in layout_theme or "menu" in layout_theme:
+            theme_instructions = "LAYOUT CONTEXT: Organize content like a menu or culinary brochure. Focus on appetizers, mains, and atmosphere. Use appetite-whetting adjectives."
+        elif "saas" in layout_theme or "tech" in layout_theme:
+            theme_instructions = "LAYOUT CONTEXT: Software/Digital product focus. Prioritize 'Problem/Solution' framing and clear value props for a technical or business audience."
+        elif "event" in layout_theme:
+            theme_instructions = "LAYOUT CONTEXT: High-energy event flyer. Focus on Date, Location, and 'Why attend?' urgency."
+        elif "luxury" in layout_theme:
+            theme_instructions = "LAYOUT CONTEXT: Editorial style. Use minimal but powerful prose. Focus on heritage, craftsmanship, and exclusivity."
+        else:
+            theme_instructions = f"LAYOUT CONTEXT: Standard {layout_theme} layout. Balance text and whitespace effectively."
+
         prompt = f"""
         You are an expert marketing copywriter. Your goal is to create high-converting copy for a 3-fold brochure based on the following website content.
         
         Website URL: {url}
+        
+        {theme_instructions}
         
         Content:
         {truncated_text}

@@ -104,10 +104,10 @@ Phase 3-4 hardening with admin controls, email automation, and marketplace:
 
 -   **👑 Admin Dashboard**: Live platform stats, user management, plan/credit overrides
 -   **📧 Email Automation**: SMTP-powered follow-up emails and drip sequences for leads
--   **🏪 Template Marketplace**: 12 premium templates across 10 categories with direct studio linking
--   **📊 Advanced Analytics**: Conversion funnel (views→leads→feedback) and top-performers leaderboard
+-   **🏪 Template Marketplace**: 12 premium templates across 10 categories with **Neural Template Logic** for layout-aware synthesis
+-   **📊 Advanced Analytics**: Real-time conversion funnel (views→leads→feedback) and top-performers leaderboard
 -   **🎨 AI Tone Engine**: 6 writing presets (Professional, Casual, Bold, Luxury, Playful, Minimal)
--   **🔔 Notification System**: Toast notifications with 5 types + header bell dropdown
+-   **🔔 Notification System**: Multi-channel toast notifications with 5 types + header bell dropdown
 
 ---
 
@@ -116,11 +116,11 @@ Phase 3-4 hardening with admin controls, email automation, and marketplace:
 Enterprise security, SEO, PWA, and integration infrastructure:
 
 -   **🛡️ Rate Limiting**: slowapi-powered request throttling (60/min)
--   **🔐 Security Headers**: HSTS, X-Frame-Options, CSP, Referrer-Policy on both backend and frontend
--   **🌐 SEO Engine**: JSON-LD structured data, robots.txt, comprehensive sitemap
--   **📱 PWA Support**: Service worker, manifest.json, offline capability, install prompt
--   **🔗 Webhooks**: Configure, test, and dispatch event notifications to external services
--   **✨ UI Polish**: Micro-interactions (hover-lift, hover-glow, press-scale), accessibility, reduced-motion
+-   **🔐 API Key Management**: Secure SHA256 hashed keys with names, prefixes, and one-time secret reveals
+-   **🌐 SEO Engine**: JSON-LD structured data, robots.txt, and automated metadata generation
+-   **📱 PWA Support**: Service worker, manifest.json, offline capability, and install prompts
+-   **🔗 Persistent Webhooks**: DB-backed config for `lead.created` and `brochure.generated` events with async dispatch
+-   **✨ UI Polish**: Micro-interactions (hover-lift, glow, press-scale), accessibility focus, and Tech Noir aesthetics
 
 ---
 
@@ -130,7 +130,7 @@ Real-time collaboration, multi-language, and team management:
 
 -   **📡 Live Pulse Dashboard**: WebSocket-powered real-time event feed with animated counters
 -   **🌍 Multi-Language**: 12-language translation selector leveraging AI-powered content translation
--   **👥 Team Collaboration**: Invite/manage team members with owner/editor/viewer roles
+-   **👥 Persistent Team Collaboration**: DB-backed invitation system with owner/editor/viewer roles
 -   **📈 A/B Testing Lab**: Side-by-side variant comparison with confidence indicators
 -   **🎯 White-Label**: Custom domains, logos, colors, and BrochureGen badge control
 

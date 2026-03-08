@@ -54,9 +54,6 @@ export default function Navbar() {
                             {item}
                         </Link>
                     ))}
-                    {isAuthenticated && (
-                        <Link href="/dashboard" className={`text-[11px] font-bold uppercase tracking-[0.2em] hover:text-[var(--accent-primary)] transition-all ${pathname === '/dashboard' ? 'text-[var(--accent-primary)]' : 'text-[var(--foreground)]/80'}`}>Dashboard</Link>
-                    )}
                 </div>
 
                 {/* Right Side Actions */}
@@ -77,6 +74,9 @@ export default function Navbar() {
                                     </SignUpButton>
                                 </SignedOut>
                                 <SignedIn>
+                                    <Link href="/dashboard" className="hidden sm:block text-[10px] font-bold uppercase tracking-widest bg-[var(--foreground)] text-[var(--background)] px-4 sm:px-6 py-2.5 rounded-lg hover:bg-[var(--accent-primary)] hover:text-white transition-all shadow-lg active:scale-95 whitespace-nowrap mr-2">
+                                        Dashboard
+                                    </Link>
                                     <div className="hidden xs:flex flex-col items-end border-r border-[var(--glass-border)] pr-4 mr-2">
                                         <span className="text-[10px] font-bold text-[var(--foreground)]/80 uppercase leading-none mb-1">Matrix</span>
                                         <span className="text-sm font-extrabold text-[var(--accent-primary)] leading-none">{user?.credits}</span>
@@ -120,9 +120,6 @@ export default function Navbar() {
                         ))}
                         {mounted && (
                             <>
-                                <SignedIn>
-                                    <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--foreground)]/80 hover:text-[var(--accent-primary)]">Dashboard</Link>
-                                </SignedIn>
                                 <SignedOut>
                                     <div className="flex flex-col gap-4 pt-4 border-t border-white/5">
                                         <SignInButton mode="modal">

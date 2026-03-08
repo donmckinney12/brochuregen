@@ -13,6 +13,6 @@ jinja2
 openai
 python-dotenv
 pydantic-settings
-python-jose[cryptography]
 email-validator
 pytest
+PyJWT

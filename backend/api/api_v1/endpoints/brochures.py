@@ -93,6 +93,7 @@ def get_shared(share_uuid: str, request: Request, background_tasks: BackgroundTa
         "content": content,
         "variant_id": variant_id, # Track which variant was served
         "share_uuid": brochure.share_uuid,
+        "is_campaign": brochure.is_campaign,
         "seo_metadata": json.loads(brochure.seo_metadata) if brochure.seo_metadata else None,
         "created_at": brochure.created_at,
         "owner_vault": {
@@ -343,6 +344,19 @@ async def add_brochure(brochure: BrochureCreate, background_tasks: BackgroundTas
     # Trigger SEO generation in background
     background_tasks.add_task(generate_automated_seo, db_item.id, db)
     
+    # Trigger Webhook Dispatch
+    from api.api_v1.endpoints.webhooks import dispatch_webhook
+    import asyncio
+    
+    brochure_data = {
+        "id": db_item.id,
+        "title": db_item.title,
+        "url": db_item.url,
+        "share_uuid": db_item.share_uuid,
+        "created_at": str(db_item.created_at)
+    }
+    asyncio.create_task(dispatch_webhook(db, brochure.user_id, "brochure.generated", brochure_data))
+    
     return db_item
 from pydantic import BaseModel
 
@@ -408,3 +422,81 @@ def read_activities(db: Session = Depends(get_db), current_user: dict = Depends(
     profile = get_profile(db, user_id)
     org_id = profile.org_id if profile else None
     return get_activities(db, user_id, org_id=org_id)
+
+@router.get("/analytics")
+def get_brochure_analytics(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user_id = current_user["sub"]
+    org_id = current_user.get("org_id")
+    from models.profile import Brochure, BrochureView
+    from sqlalchemy import func
+    
+    # 1. Timeline (last 7 days)
+    # Mocking for now to avoid complex date math across DB dialects, but realistically we'd group by cast(created_at as date).
+    import datetime
+    timeline = []
+    base = datetime.datetime.today()
+    for i in range(6, -1, -1):
+        dt = base - datetime.timedelta(days=i)
+        date_str = dt.strftime("%Y-%m-%d")
+        timeline.append({"date": date_str, "generations": 0, "views": 0, "visitors": 0})
+        
+    query = db.query(Brochure)
+    if org_id:
+        query = query.filter(Brochure.org_id == org_id)
+    else:
+        query = query.filter(Brochure.user_id == user_id)
+    
+    brochures = query.all()
+    b_ids = [b.id for b in brochures]
+    
+    for b in brochures:
+        d_str = b.created_at.strftime("%Y-%m-%d")
+        for t in timeline:
+            if t["date"] == d_str:
+                t["generations"] += 1
+                
+    if b_ids:
+        views = db.query(BrochureView).filter(BrochureView.brochure_id.in_(b_ids)).all()
+        for v in views:
+            d_str = v.viewed_at.strftime("%Y-%m-%d") if v.viewed_at else ""
+            for t in timeline:
+                if t["date"] == d_str:
+                    t["views"] += 1
+                    t["visitors"] += 1 # assuming 1 per view for simplicity here
+                    
+    # 2. Variant performance
+    from sqlalchemy import func
+    variant_perf = []
+    if b_ids:
+        rows = db.query(BrochureView.variant_id, func.count(BrochureView.id))\
+                .filter(BrochureView.brochure_id.in_(b_ids))\
+                .group_by(BrochureView.variant_id).all()
+        for r in rows:
+            variant_perf.append({"variant_id": r[0] or 1, "views": r[1]})
+            
+    return {"timeline": timeline, "variant_performance": variant_perf}
+
+@router.get("/feedback/all")
+def get_all_feedback(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user_id = current_user["sub"]
+    org_id = current_user.get("org_id")
+    from models.profile import Brochure, BrochureComment
+    
+    query = db.query(BrochureComment).join(Brochure)
+    if org_id:
+        query = query.filter(Brochure.org_id == org_id)
+    else:
+        query = query.filter(Brochure.user_id == user_id)
+        
+    comments = query.order_by(BrochureComment.created_at.desc()).limit(50).all()
+    
+    res = []
+    for c in comments:
+        res.append({
+            "id": c.id,
+            "text": c.text,
+            "section_id": c.section_id,
+            "created_at": c.created_at,
+            "brochure": {"id": c.brochure.id, "title": c.brochure.title} if c.brochure else None
+        })
+    return res

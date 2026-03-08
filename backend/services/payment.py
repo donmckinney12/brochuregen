@@ -27,9 +27,14 @@ def create_checkout_session(user_id: str, email: str, plan: str = "professional"
         price_id = os.environ.get("STRIPE_PRICE_ID")
         
     if not price_id:
-        error_msg = f"Price ID not found for {plan} ({billing_cycle}). Checked env: {env_var_name}"
-        print(f"ERROR: {error_msg}")
-        raise HTTPException(status_code=500, detail=error_msg)
+        # Check if we are in local dev and provide a dummy if so
+        if os.environ.get("DEBUG") == "True" or os.environ.get("CLIENT_URL", "").startswith("http://localhost"):
+            print("WARNING: Using dummy Stripe Price ID for local development")
+            price_id = "price_dummy_12345"
+        else:
+            error_msg = f"Stripe Price ID not found for {plan} ({billing_cycle}). Please configure {env_var_name} in .env"
+            print(f"ERROR: {error_msg}")
+            raise HTTPException(status_code=500, detail=error_msg)
 
     print(f"Creating checkout session for {email} with price_id: {price_id}")
 

@@ -58,6 +58,7 @@ export default async function SharedBrochurePage({ params }: Props) {
     const formattedData: any = {
         title: data.title,
         url: data.url,
+        is_campaign: data.is_campaign,
         ai_content: JSON.parse(data.content),
     };
 

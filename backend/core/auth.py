@@ -25,7 +25,8 @@ def verify_token(token: str):
             options={
                 "verify_aud": False,
                 "verify_iss": False,
-            }
+            },
+            leeway=60
         )
         return {"success": True, "payload": payload}
     except jwt.ExpiredSignatureError:
@@ -45,6 +46,11 @@ async def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
 
     token = auth_header.split(" ")[1]
+    print(f"[Auth] Received token type: {type(token)}, length: {len(token)}, start: {token[:15] if token else 'None'}")
+    
+    if token == "null" or not token:
+        raise HTTPException(status_code=401, detail="JWT Error: Provided token is literally 'null' or empty")
+
     result = verify_token(token)
     
     if not result["success"]:

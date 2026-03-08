@@ -26,6 +26,23 @@ def submit_lead(share_uuid: str, lead: LeadCaptureCreate, db: Session = Depends(
     db.add(db_lead)
     db.commit()
     db.refresh(db_lead)
+
+    # 3. Dispatch Webhook
+    from api.api_v1.endpoints.webhooks import dispatch_webhook
+    import asyncio
+    
+    lead_data = {
+        "id": db_lead.id,
+        "email": db_lead.email,
+        "name": db_lead.name,
+        "company": db_lead.company,
+        "message": db_lead.message,
+        "brochure_id": brochure.id,
+        "brochure_title": brochure.title
+    }
+    # Using background tasks or async fire-and-forget
+    asyncio.create_task(dispatch_webhook(db, brochure.user_id, "lead.created", lead_data))
+
     return db_lead
 
 @router.get("/all", response_model=List[LeadCapture])

@@ -21,10 +21,10 @@ export default function BillingPage() {
                 }
             });
             const data = await response.json();
-            if (data.url) {
+            if (response.ok && data.url) {
                 window.location.href = data.url;
             } else {
-                alert("Could not open billing portal. Please contact support.");
+                alert(data.detail || "Could not open billing portal. Please contact support.");
             }
         } catch (error) {
             console.error("Portal error:", error);
@@ -84,14 +84,20 @@ export default function BillingPage() {
                                         <h3 className="font-bold mb-1">Manage Subscription</h3>
                                         <p className="text-sm text-slate-500 dark:text-slate-400">Update payment method, download invoices, or cancel your plan.</p>
                                     </div>
-                                    <button
-                                        onClick={handleManageBilling}
-                                        disabled={isLoadingPortal}
-                                        className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
-                                    >
-                                        {isLoadingPortal ? 'Opening...' : 'Manage via Stripe'}
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </button>
+                                    {user?.credits === 9999 ? (
+                                        <div className="px-6 py-3 bg-[var(--foreground)]/5 text-[var(--foreground)]/60 font-medium rounded-xl border border-[var(--glass-border)] text-sm">
+                                            Granted by Administrator
+                                        </div>
+                                    ) : (
+                                        <button
+                                            onClick={handleManageBilling}
+                                            disabled={isLoadingPortal}
+                                            className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                                        >
+                                            {isLoadingPortal ? 'Opening...' : 'Manage via Stripe'}
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>

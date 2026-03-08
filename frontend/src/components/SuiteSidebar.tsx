@@ -27,6 +27,7 @@ const navItems = [
     { name: 'Studio Insights', href: '/insights', icon: BarChart3 },
     { name: 'Leads Vault', href: '/leads', icon: Users, badgeKey: 'unread_leads' },
     { name: 'Feedback Hub', href: '/feedback', icon: MessageSquare, badgeKey: 'unread_comments' },
+    { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 interface SuiteSidebarProps {
@@ -49,6 +50,7 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
         const fetchPulse = async () => {
             try {
                 const token = await getToken();
+                if (!token) return;
                 const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/command/pulse`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -78,7 +80,7 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
                 width: collapsed ? 80 : 280,
                 x: mobileOpen ? 0 : (typeof window !== 'undefined' && window.innerWidth < 1024 ? -280 : 0)
             }}
-            className={`h-screen fixed lg:sticky top-0 left-0 bg-[var(--glass-bg)] backdrop-blur-xl border-r border-[var(--glass-border)] flex flex-col z-50 overflow-hidden transition-colors duration-500 ${mobileOpen ? 'shadow-2xl' : ''} ${!mobileOpen ? 'max-lg:-translate-x-full' : ''}`}
+            className={`h-screen fixed lg:sticky top-0 left-0 bg-[var(--glass-bg)] backdrop-blur-xl border-r border-[var(--glass-border)] flex flex-col z-50 overflow-y-auto overflow-x-hidden transition-colors duration-500 ${mobileOpen ? 'shadow-2xl translate-x-0' : 'max-lg:-translate-x-full'}`}
         >
             {/* Logo Area */}
             <div className="p-6 flex items-center justify-between">
@@ -197,13 +199,6 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
                     {!collapsed && <span className="ml-3 font-medium whitespace-nowrap">Exit to Website</span>}
                 </Link>
 
-                <Link
-                    href="/settings"
-                    className="flex items-center p-3 text-[var(--foreground)]/80 hover:text-[var(--foreground)] transition-colors"
-                >
-                    <Settings size={20} />
-                    {!collapsed && <span className="ml-3 font-medium">Settings</span>}
-                </Link>
             </div>
         </motion.aside>
     );

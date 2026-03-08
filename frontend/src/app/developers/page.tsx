@@ -1,26 +1,115 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
+import { Key, Plus, Trash2, Copy, CheckCircle2, ShieldAlert, Cpu } from 'lucide-react';
+
+interface APIKey {
+    id: number;
+    name: string;
+    prefix: string;
+    is_active: boolean;
+    last_used_at: string | null;
+    created_at: string;
+}
 
 export default function DeveloperPortal() {
-    const [apiKey, setApiKey] = useState('bg_live_••••••••••••••••••••••••••••');
-    const [showKey, setShowKey] = useState(false);
+    const { getToken } = useAuth();
+    const [keys, setKeys] = useState<APIKey[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [creating, setCreating] = useState(false);
+    const [newKeyName, setNewKeyName] = useState('');
+    const [showNewKeyModal, setShowNewKeyModal] = useState(false);
+    const [recentlyCreatedKey, setRecentlyCreatedKey] = useState<{ id: number, secret: string } | null>(null);
+    const [copied, setCopied] = useState(false);
     const [activeLang, setActiveLang] = useState<'javascript' | 'python' | 'curl'>('javascript');
 
-    const generateNewKey = () => {
-        if (confirm("Are you sure? Your old API key will stop working immediately.")) {
-            setApiKey('bg_live_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
-            setShowKey(true);
+    useEffect(() => {
+        fetchKeys();
+    }, []);
+
+    const fetchKeys = async () => {
+        try {
+            const token = await getToken();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/keys/`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setKeys(data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch API keys", error);
+        } finally {
+            setLoading(false);
         }
     };
+
+    const handleCreateKey = async () => {
+        if (!newKeyName.trim()) return;
+        setCreating(true);
+        try {
+            const token = await getToken();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/keys/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: newKeyName.trim() })
+            });
+
+            if (res.ok) {
+                const newKey: any = await res.json();
+                setKeys([...keys, newKey]);
+                setRecentlyCreatedKey({ id: newKey.id, secret: newKey.secret });
+                setShowNewKeyModal(false);
+                setNewKeyName('');
+            } else {
+                const errorData = await res.json();
+                alert(errorData.detail || 'Failed to create API key');
+            }
+        } catch (error) {
+            console.error("Failed to create API key", error);
+            alert("An error occurred");
+        } finally {
+            setCreating(false);
+        }
+    };
+
+    const handleRevoke = async (id: number) => {
+        if (!confirm("Are you sure you want to revoke this key? Any integrations using it will immediately stop working.")) return;
+
+        try {
+            const token = await getToken();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/keys/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                setKeys(keys.filter(k => k.id !== id));
+            }
+        } catch (error) {
+            console.error("Failed to revoke API key", error);
+        }
+    };
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    const displayKey = recentlyCreatedKey?.secret || (keys.length > 0 ? keys[0].prefix + '********************' : 'YOUR_API_KEY');
 
     const codeExamples = {
         javascript: `// Install: npm install @brochuregen/sdk
 import { BrochureGen } from '@brochuregen/sdk';
 
-const bg = new BrochureGen('${showKey ? apiKey : 'YOUR_API_KEY'}');
+const bg = new BrochureGen('${displayKey}');
 
 const brochure = await bg.generate({
   url: 'https://example.com',
@@ -32,7 +121,7 @@ console.log(brochure.pdf_url);`,
         python: `# Install: pip install brochuregen
 from brochuregen import BrochureGen
 
-client = BrochureGen('${showKey ? apiKey : 'YOUR_API_KEY'}')
+client = BrochureGen('${displayKey}')
 
 brochure = client.generate(
     url="https://example.com",
@@ -42,7 +131,7 @@ brochure = client.generate(
 
 print(brochure.pdf_url)`,
         curl: `curl -X POST https://api.brochuregen.com/v1/generate \\
-  -H "Authorization: Bearer ${showKey ? apiKey : 'YOUR_API_KEY'}" \\
+  -H "Authorization: Bearer ${displayKey}" \\
   -H "Content-Type: application/json" \\
   -d '{
     "url": "https://example.com",
@@ -104,43 +193,55 @@ print(brochure.pdf_url)`,
 
                         {/* API Keys Card */}
                         <div className="premium-card p-10 bg-black/40 border-cyan-500/20">
-                            <h2 className="text-xl font-bold mb-8 flex items-center gap-3 text-cyan-400">
-                                <div className="p-2.5 bg-cyan-500/10 rounded-xl text-cyan-400 ring-1 ring-cyan-500/30">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-                                </div>
-                                API Authentication
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-                                <div className="md:col-span-2">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="flex-1 relative group">
-                                            <input
-                                                type={showKey ? "text" : "password"}
-                                                value={apiKey}
-                                                readOnly
-                                                className="w-full px-5 py-3.5 rounded-xl bg-black/60 border border-white/10 font-mono text-sm outline-none focus:ring-1 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all text-white/90"
-                                            />
-                                            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity" />
-                                        </div>
-                                        <button
-                                            onClick={() => setShowKey(!showKey)}
-                                            className="p-3.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-cyan-500/30 transition-all text-slate-400 hover:text-cyan-400"
-                                        >
-                                            {showKey ?
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg> :
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                            }
-                                        </button>
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                                <h2 className="text-xl font-bold flex items-center gap-3 text-cyan-400">
+                                    <div className="p-2.5 bg-cyan-500/10 rounded-xl text-cyan-400 ring-1 ring-cyan-500/30">
+                                        <Key className="w-5 h-5" />
                                     </div>
-                                    <button onClick={generateNewKey} className="text-[10px] font-bold text-red-500 uppercase tracking-[0.2em] hover:text-red-400 transition-colors">Revoke and Regenerate Key</button>
-                                </div>
-                                <div className="p-5 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
-                                    <p className="text-[11px] text-slate-500 leading-relaxed mb-4 font-medium italic">Never share your secret API keys in client-side code or public repositories.</p>
-                                    <Link href="/docs#security" className="text-[10px] font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 uppercase tracking-widest transition-all">
-                                        Security Guide <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                                    </Link>
-                                </div>
+                                    API Authentication
+                                </h2>
+                                <button
+                                    onClick={() => setShowNewKeyModal(true)}
+                                    disabled={keys.length >= 5}
+                                    className="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 disabled:hover:bg-cyan-500 text-black rounded-lg text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-cyan-500/20 flex items-center gap-2"
+                                >
+                                    <Plus size={14} /> Generate New Key
+                                </button>
                             </div>
+
+                            {loading ? (
+                                <div className="h-32 flex items-center justify-center">
+                                    <Cpu size={24} className="animate-pulse text-cyan-500/50" />
+                                </div>
+                            ) : keys.length === 0 ? (
+                                <div className="p-8 text-center bg-white/5 border border-white/5 rounded-xl">
+                                    <Key size={24} className="mx-auto mb-3 text-white/20" />
+                                    <h3 className="text-sm font-bold text-white/60">No API keys active</h3>
+                                    <p className="text-xs text-white/40 mt-1">Generate a key to authenticate your requests.</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {keys.map(key => (
+                                        <div key={key.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-white/5 border border-white/10 rounded-xl hover:border-cyan-500/30 transition-all">
+                                            <div>
+                                                <h4 className="text-sm font-bold text-white/90 mb-1">{key.name}</h4>
+                                                <div className="flex items-center gap-3 text-xs font-mono text-cyan-400/80">
+                                                    <span>{key.prefix}••••••••••••••••••••</span>
+                                                    <span className="text-white/30">•</span>
+                                                    <span className="text-slate-400 text-[10px] tracking-wider uppercase">Created {new Date(key.created_at).toLocaleDateString()}</span>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => handleRevoke(key.id)}
+                                                className="px-3 py-1.5 text-rose-400 hover:bg-rose-500/10 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-1.5"
+                                            >
+                                                <Trash2 size={12} /> Revoke
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <p className="text-[10px] text-slate-500 text-center mt-4 uppercase tracking-widest">You can have up to 5 active keys deployed simultaneously.</p>
+                                </div>
+                            )}
                         </div>
 
                         {/* Interactive Code Example */}
@@ -226,6 +327,61 @@ print(brochure.pdf_url)`,
                     </div>
                 </div>
             </main>
+
+            {/* Modals */}
+            <AnimatePresence>
+                {showNewKeyModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowNewKeyModal(false)} className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+                        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative bg-[#020617] border border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl">
+                            <h3 className="text-xl font-black text-white italic uppercase tracking-tighter mb-2">Create Access Token</h3>
+                            <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-6">Assign an internal designation for this protocol.</p>
+
+                            <div className="space-y-4">
+                                <input
+                                    type="text"
+                                    value={newKeyName}
+                                    onChange={e => setNewKeyName(e.target.value)}
+                                    placeholder="e.g. Zapier Integration"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:border-cyan-500/50 outline-none uppercase font-bold tracking-widest"
+                                    autoFocus
+                                />
+                                <div className="flex gap-3">
+                                    <button onClick={() => setShowNewKeyModal(false)} className="flex-1 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Cancel</button>
+                                    <button onClick={handleCreateKey} disabled={creating || !newKeyName.trim()} className="flex-1 py-3 bg-cyan-500 hover:bg-cyan-600 disabled:opacity-50 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg flex justify-center items-center">
+                                        {creating ? <Cpu size={14} className="animate-pulse" /> : 'Generate'}
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+
+                {recentlyCreatedKey && recentlyCreatedKey.secret && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
+                        <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} className="relative bg-gradient-to-b from-slate-900 to-black border border-emerald-500/30 rounded-[2rem] p-8 max-w-xl w-full shadow-[0_0_50px_rgba(16,185,129,0.2)]">
+                            <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mb-6 border border-emerald-500/50">
+                                <ShieldAlert size={20} />
+                            </div>
+                            <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter mb-2">Token Generated</h3>
+                            <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-8">Save this key now. It will never be shown again.</p>
+
+                            <div className="bg-black/50 border border-white/10 rounded-xl p-4 flex items-center gap-4 mb-8 relative overflow-hidden group">
+                                <div className="absolute inset-y-0 left-0 w-1 bg-emerald-500"></div>
+                                <code className="text-sm text-cyan-300 font-mono flex-1 break-all select-all">{recentlyCreatedKey.secret}</code>
+                                <button onClick={() => copyToClipboard(recentlyCreatedKey.secret!)} className="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-all shrink-0">
+                                    {copied ? <CheckCircle2 size={16} className="text-emerald-400" /> : <Copy size={16} className="text-white/60" />}
+                                </button>
+                            </div>
+
+                            <button onClick={() => setRecentlyCreatedKey(null)} className="w-full py-4 bg-white hover:bg-gray-200 text-black rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all shadow-lg">
+                                I Have Saved This Token securely
+                            </button>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

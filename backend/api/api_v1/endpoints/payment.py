@@ -35,7 +35,7 @@ async def create_portal(user_id: str, db: Session = Depends(get_db), current_use
         from services.db_orm import get_profile
         profile = get_profile(db, user_id)
         if not profile or not profile.stripe_customer_id:
-            raise HTTPException(status_code=400, detail="No active subscription found. Upgrade your plan first.")
+            raise HTTPException(status_code=400, detail="No billing account found. This plan was either granted manually or the subscription is inactive.")
             
         print(f"create_portal hit for user: {user_id} with customer: {profile.stripe_customer_id}")
         return create_portal_session(profile.stripe_customer_id)

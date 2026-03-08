@@ -38,6 +38,10 @@ export default function CommandCenter() {
     const fetchPulse = async () => {
         try {
             const token = await getToken();
+            if (!token) {
+                setLoading(false);
+                return;
+            }
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/command/pulse`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });

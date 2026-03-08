@@ -45,7 +45,8 @@ async def scrape_url(request: ScrapeRequest, db: Session = Depends(get_db), curr
             request.url, 
             request.is_campaign,
             brand_voice=brand_voice,
-            tone=request.tone
+            tone=request.tone,
+            layout_theme=request.layout_theme
         )
         result["ai_content"] = ai_content
         result["is_campaign"] = request.is_campaign

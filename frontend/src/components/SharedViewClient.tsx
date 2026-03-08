@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ThreeDBrochure from '@/components/ThreeDBrochure';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,10 +26,22 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showCommentForm, setShowCommentForm] = useState(false);
     const [showLeadForm, setShowLeadForm] = useState(false);
+    const [hasCapturedLead, setHasCapturedLead] = useState(false);
     const [isAudioEnabled, setIsAudioEnabled] = useState(false);
     const [isARActive, setIsARActive] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const hoverStartTime = useRef<{ [key: string]: number }>({});
+
+    useEffect(() => {
+        // Gating Logic for Campaign Brochures
+        let timer: NodeJS.Timeout;
+        if (data?.is_campaign && !hasCapturedLead) {
+            timer = setTimeout(() => {
+                setShowLeadForm(true);
+            }, 15000); // 15 seconds
+        }
+        return () => clearTimeout(timer);
+    }, [data?.is_campaign, hasCapturedLead]);
 
     const handleAddComment = async () => {
         if (!newComment.trim()) return;
@@ -297,6 +309,7 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
                                     shareUuid={shareUuid}
                                     primaryColor={activeVault?.primaryColor || '#4F46E5'}
                                     onSuccess={() => {
+                                        setHasCapturedLead(true);
                                         setTimeout(() => setShowLeadForm(false), 2000);
                                     }}
                                 />
