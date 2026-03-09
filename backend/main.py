@@ -27,33 +27,38 @@ if HAS_SLOWAPI and limiter:
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Configure CORS
-origins = [
+# Note: allow_origins=["*"] is not allowed when allow_credentials=True
+# We use settings.CLIENT_URL and specific production domains as base.
+base_origins = [
     settings.CLIENT_URL,
     "http://localhost:3000",
     "https://brochuregen.netlify.app",
     "https://brochuregen.com",
     "https://www.brochuregen.com",
-    # Allow all Netlify subdomains for the main app
-    "https://brochuregen.netlify.app", 
 ]
 
-# Simple middleware to log origins if helpful for debugging
-@app.middleware("http")
-async def log_origin(request: Request, call_next):
-    origin = request.headers.get("origin")
-    if origin:
-        # We can enable this if we see 403s on Netlify
-        # print(f"DEBUG: Request from origin: {origin}")
-        pass
-    return await call_next(request)
+# Filtering out empty origins and normalizing
+allowed_origins = [o for o in base_origins if o]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o for o in origins if o] or ["*"],
+    allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*brochuregen\.netlify\.app", # Resilient Netlify subdomain support
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Diagnostic Middleware: Log Origin for production debugging
+@app.middleware("http")
+async def log_origin(request: Request, call_next):
+    origin = request.headers.get("origin")
+    if origin and origin not in allowed_origins:
+        # Check against regex manually for the log
+        import re
+        if not re.match(r"https://.*brochuregen\.netlify\.app", origin):
+             print(f"⚠️ [CORS ALERT] Blocked request from unauthorized origin: {origin}")
+    return await call_next(request)
 
 
 # --- Secure Headers Middleware ---

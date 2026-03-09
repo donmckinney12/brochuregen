@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function Pricing() {
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-    const { isAuthenticated, user, getToken, isLoading } = useAuth();
+    const { isAuthenticated, user, getToken, isLoading, syncError } = useAuth();
 
     const handleUpgrade = async (plan: string) => {
         if (isLoading) return;
@@ -18,7 +18,12 @@ export default function Pricing() {
         }
 
         if (!user) {
-            alert("User profile is still syncing. Please wait a moment and try again.");
+            if (syncError) {
+                const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+                alert(`❌ Protocol Sync Failed: ${syncError}\n\nCause: The frontend cannot reach the backend at ${apiBase}.\n\nFix: Ensure NEXT_PUBLIC_API_URL is set correctly in your Netlify dashboard.`);
+            } else {
+                alert("User profile is still syncing. If this persists, check your browser console for connection errors.");
+            }
             return;
         }
 

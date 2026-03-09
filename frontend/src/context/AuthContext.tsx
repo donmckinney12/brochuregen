@@ -21,12 +21,14 @@ interface UserProfile {
     org_id?: string | null;
     org_name?: string | null;
     created_at?: string;
+    syncError?: string;
 }
 
 interface AuthContextType {
     user: UserProfile | null;
     isAuthenticated: boolean;
     isLoading: boolean;
+    syncError: string | null;
     signOut: () => Promise<void>;
     refreshProfile: () => Promise<void>;
     currentPlan: Plan;
@@ -42,11 +44,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { getToken } = useClerkAuth();
     const [user, setUser] = useState<UserProfile | null>(null);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+    const [syncError, setSyncError] = useState<string | null>(null);
     const router = useRouter();
 
     const fetchProfile = async () => {
         console.log("🔄 Starting fetchProfile...");
-        setIsLoadingProfile(true); // Ensure loading state is active during sync
+        setIsLoadingProfile(true);
+        setSyncError(null);
 
         if (!clerkUser) {
             console.log("ℹ️ No Clerk user found, skipping fetchProfile");
@@ -73,6 +77,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log("🎟️ Token fetched (first 20 chars):", token.substring(0, 20));
 
             const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+            // Critical Diagnostic: Check for environment mismatch
+            if (typeof window !== 'undefined' &&
+                window.location.hostname !== 'localhost' &&
+                apiBase.includes('localhost')) {
+                const msg = `⚠️ NODE_ENV ALERT: Production app is attempting to sync with LOCALHOST API (${apiBase}). This will fail unless NEXT_PUBLIC_API_URL is set on Netlify.`;
+                console.error(msg);
+                setSyncError("Localhost API Mismatch");
+            }
+
             console.log(`🌐 Syncing with backend: ${apiBase}/api/v1/profiles/`);
 
             const response = await fetch(`${apiBase}/api/v1/profiles/`, {
@@ -107,10 +121,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 try { errDoc = JSON.parse(errText); } catch (e) { errDoc = { detail: errText }; }
 
                 console.error(`❌ Backend error (${response.status}):`, errDoc);
-                // Don't clear user here to avoid UI flickering if it was a transient error,
-                // BUT we may want to track a 'sync_error' state.
+                setSyncError(`Backend Error ${response.status}`);
             }
         } catch (error: any) {
+            setSyncError(error.message || "Connection Error");
             if (error.name === 'AbortError') {
                 console.error("❌ Profile fetch aborted due to timeout");
             } else {
@@ -170,6 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             user,
             isAuthenticated: !!isSignedIn,
             isLoading: !isClerkLoaded || isLoadingProfile,
+            syncError,
             signOut,
             refreshProfile: fetchProfile,
             currentPlan: user?.plan || null,
