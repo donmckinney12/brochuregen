@@ -33,11 +33,23 @@ origins = [
     "https://brochuregen.netlify.app",
     "https://brochuregen.com",
     "https://www.brochuregen.com",
+    # Allow all Netlify subdomains for the main app
+    "https://brochuregen.netlify.app", 
 ]
+
+# Simple middleware to log origins if helpful for debugging
+@app.middleware("http")
+async def log_origin(request: Request, call_next):
+    origin = request.headers.get("origin")
+    if origin:
+        # We can enable this if we see 403s on Netlify
+        # print(f"DEBUG: Request from origin: {origin}")
+        pass
+    return await call_next(request)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o for o in origins if o],
+    allow_origins=[o for o in origins if o] or ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

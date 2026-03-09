@@ -25,6 +25,10 @@ export default function Pricing() {
         try {
             const token = await getToken();
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+            // Helpful debug log for production
+            console.log(`📡 Initializing checkout protocol via: ${apiUrl}`);
+
             const res = await fetch(`${apiUrl}/api/v1/payment/create-checkout-session`, {
                 method: 'POST',
                 headers: {
@@ -39,16 +43,22 @@ export default function Pricing() {
                 }),
             });
 
+            if (!res.ok) {
+                const errBody = await res.text();
+                throw new Error(`Backend Error (${res.status}): ${errBody}`);
+            }
+
             const result = await res.json();
             if (result.url) {
+                console.log("🔗 Redirecting to Stripe...");
                 window.location.href = result.url;
             } else {
-                console.error("Checkout Error:", result);
-                alert(`Failed to initiate checkout: ${result.detail || 'Unknown error'}`);
+                console.error("❌ Checkout Error (No URL):", result);
+                alert(`Failed to initiate checkout: ${result.detail || 'Service did not return a checkout URL'}`);
             }
-        } catch (e) {
-            console.error(e);
-            alert("Error communicating with payment server");
+        } catch (e: any) {
+            console.error("❌ Payment Initiation Failed:", e);
+            alert(`Error communicating with payment server: ${e.message || 'Check your internet connection or API settings'}`);
         }
     };
 

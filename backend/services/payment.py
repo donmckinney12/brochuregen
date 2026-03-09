@@ -36,9 +36,19 @@ def create_checkout_session(user_id: str, email: str, plan: str = "professional"
             print(f"ERROR: {error_msg}")
             raise HTTPException(status_code=500, detail=error_msg)
 
-    print(f"Creating checkout session for {email} with price_id: {price_id}")
+    print(f"--- Payment Init (Stripe) ---")
+    print(f"Target: {email} | Plan: {plan} | Cycle: {billing_cycle}")
+    print(f"Redirect Base: {CLIENT_URL}")
+    print(f"Environment Cycle Key: {env_var_name}")
+    print(f"Price ID Resolved: {price_id}")
 
     try:
+        success_url = f'{CLIENT_URL}/dashboard?payment=success&plan={plan}'
+        cancel_url = f'{CLIENT_URL}/dashboard?payment=cancelled'
+        
+        print(f"Success URL: {success_url}")
+        print(f"Cancel URL: {cancel_url}")
+
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[
@@ -48,8 +58,8 @@ def create_checkout_session(user_id: str, email: str, plan: str = "professional"
                 },
             ],
             mode='subscription',
-            success_url=f'{CLIENT_URL}/dashboard?payment=success&plan={plan}',
-            cancel_url=f'{CLIENT_URL}/dashboard?payment=cancelled',
+            success_url=success_url,
+            cancel_url=cancel_url,
             customer_email=email,
             client_reference_id=user_id,
             metadata={
