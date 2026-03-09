@@ -161,8 +161,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const warmUpBackend = async () => {
+        try {
+            console.log("🔥 Initializing backend warm-up protocol...");
+            // Non-blocking ping to wake up Fly.io machine
+            fetch(`${API_URL}/health`).catch(() => { });
+        } catch (e) { }
+    };
+
     useEffect(() => {
         if (isClerkLoaded) {
+            warmUpBackend();
             fetchProfile();
         }
     }, [clerkUser?.id, isClerkLoaded]);
