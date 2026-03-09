@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setIsLoadingProfile(false);
                 return;
             }
-            console.log("🎟️ Token received, prefix:", token.substring(0, 10));
+            console.log("🎟️ Token fetched (first 20 chars):", token.substring(0, 20));
 
             const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
             console.log(`🌐 Syncing with backend: ${apiBase}/api/v1/profiles/`);

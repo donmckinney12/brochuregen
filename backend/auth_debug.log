@@ -1,0 +1,11 @@
+--- Auth Init: https://neutral-shrimp-50.clerk.accounts.dev/.well-known/jwks.json ---
+--- Auth Init: https://neutral-shrimp-50.clerk.accounts.dev/.well-known/jwks.json ---
+--- Auth Init: https://neutral-shrimp-50.clerk.accounts.dev/.well-known/jwks.json ---
+[Auth] Received token length: 13, start: invalid_token
+[Auth] Invalid token: Not enough segments
+[Auth] Sync failed: Invalid token: Not enough segments
+--- Auth Init: https://neutral-shrimp-50.clerk.accounts.dev/.well-known/jwks.json ---
+[Auth] Received token length: 944, start: eyJhbGciOiJSUzI
+[Auth] Received token length: 944, start: eyJhbGciOiJSUzI
+[Auth] Received token length: 944, start: eyJhbGciOiJSUzI
+[Auth] Received token length: 944, start: eyJhbGciOiJSUzI
