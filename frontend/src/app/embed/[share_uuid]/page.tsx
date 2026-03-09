@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import ThreeDBrochure from '@/components/ThreeDBrochure';
+import { API_URL } from '@/config';
 
 type Props = {
     params: { share_uuid: string }
 };
 
 export default async function EmbedBrochurePage({ params }: Props) {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    const res = await fetch(`${apiUrl}/api/v1/brochures/shared/${params.share_uuid}`, { next: { revalidate: 0 } });
+    const res = await fetch(`${API_URL}/api/v1/brochures/shared/${params.share_uuid}`, { next: { revalidate: 0 } });
 
     if (!res.ok) {
         return <div className="flex items-center justify-center h-screen text-xs text-white/20 uppercase tracking-widest bg-transparent">Neural Sync Error</div>;

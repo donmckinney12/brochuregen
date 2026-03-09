@@ -2,16 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-import {
-    Search,
-    Target,
-    TrendingUp,
-    ShieldCheck,
-    ChevronRight,
-    Zap,
-    BrainCircuit,
-    Loader2
-} from 'lucide-react';
+import { Target, Search, Filter, Mail, ChevronRight, Sparkles, Globe, Loader2, Database, ShieldCheck, Zap, BrainCircuit } from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface Prospect {
     company: string;
@@ -33,7 +25,7 @@ export default function ProspectingHub() {
                 setLoading(false);
                 return;
             }
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/retargeting/analyze`, {
+            const res = await fetch(`${API_URL}/api/v1/retargeting/analyze`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

@@ -5,6 +5,7 @@ import ThreeDBrochure from '@/components/ThreeDBrochure';
 import AIRefinerModal from '@/components/AIRefinerModal';
 import NeuralLoading from '@/components/NeuralLoading';
 import { AnimatePresence } from 'framer-motion';
+import { API_URL } from '@/config';
 
 type Step = 'input' | 'processing' | 'preview' | 'generating' | 'success';
 
@@ -45,7 +46,7 @@ export default function Generator() {
             }
 
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/scrape/scrape`, {
+            const res = await fetch(`${API_URL}/api/v1/scrape/scrape`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,7 +86,7 @@ export default function Generator() {
 
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/pdf/generate-pdf`, {
+            const res = await fetch(`${API_URL}/api/v1/pdf/generate-pdf`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

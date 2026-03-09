@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Building2, Users, Shield, Zap, Globe, MessageSquare, ArrowRight, CheckCircle2, Star, Sparkles, Loader2 } from 'lucide-react';
+import { API_URL } from '@/config';
 import Navbar from '@/components/Navbar';
 
 export default function EnterprisePage() {
@@ -10,7 +12,7 @@ export default function EnterprisePage() {
         lastName: '',
         email: '',
         company: '',
-        size: '50 - 200 employees',
+        size: '50-200 employees',
         useCase: 'Brand Scalability',
         message: ''
     });
@@ -20,8 +22,7 @@ export default function EnterprisePage() {
         setStatus('loading');
 
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${apiUrl}/api/v1/enterprise/intake`, {
+            const res = await fetch(`${API_URL}/api/v1/enterprise/intake`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -138,8 +139,8 @@ export default function EnterprisePage() {
                                             onChange={(e) => setFormData({ ...formData, size: e.target.value })}
                                             className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none cursor-pointer text-sm font-bold"
                                         >
-                                            <option>50 - 200 units</option>
-                                            <option>201 - 500 units</option>
+                                            <option>50-200 units</option>
+                                            <option>201-500 units</option>
                                             <option>500+ units</option>
                                         </select>
                                     </div>

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Shield, Users, Database, Zap, Sparkles, Layout, Activity, Search, Trash2, BarChart3, Loader2 } from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface AdminUser {
     id: string;
@@ -32,7 +34,6 @@ export default function AdminDashboard() {
     const [overrideForm, setOverrideForm] = useState({ credits: 0, refine_credits: 0, plan: '' });
     const [overrideStatus, setOverrideStatus] = useState<string | null>(null);
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,8 +42,8 @@ export default function AdminDashboard() {
                 const headers = { 'Authorization': `Bearer ${token}` };
 
                 const [statsRes, usersRes] = await Promise.all([
-                    fetch(`${apiUrl}/api/v1/admin/stats`, { headers }),
-                    fetch(`${apiUrl}/api/v1/admin/users`, { headers }),
+                    fetch(`${API_URL}/api/v1/admin/stats`, { headers }),
+                    fetch(`${API_URL}/api/v1/admin/users`, { headers }),
                 ]);
 
                 if (statsRes.ok) setStats(await statsRes.json());
@@ -54,12 +55,12 @@ export default function AdminDashboard() {
             }
         };
         fetchData();
-    }, [getToken, apiUrl]);
+    }, [getToken, API_URL]);
 
     const handleOverride = async (userId: string) => {
         try {
             const token = await getToken();
-            const res = await fetch(`${apiUrl}/api/v1/admin/users/${userId}/override`, {
+            const res = await fetch(`${API_URL}/api/v1/admin/users/${userId}/override`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(overrideForm),

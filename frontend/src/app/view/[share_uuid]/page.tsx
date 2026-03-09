@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import SharedViewClient from '@/components/SharedViewClient';
+import { API_URL } from '@/config';
 import { Metadata, ResolvingMetadata } from 'next';
 
 type Props = {
@@ -11,8 +12,7 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        const res = await fetch(`${apiUrl}/api/v1/brochures/shared/${params.share_uuid}`, { next: { revalidate: 0 } });
+        const res = await fetch(`${API_URL}/api/v1/brochures/shared/${params.share_uuid}`, { next: { revalidate: 0 } });
 
         if (!res.ok) return { title: 'Not Found' };
 
@@ -45,8 +45,7 @@ export async function generateMetadata(
 }
 
 export default async function SharedBrochurePage({ params }: Props) {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    const res = await fetch(`${apiUrl}/api/v1/brochures/shared/${params.share_uuid}`, { next: { revalidate: 0 } });
+    const res = await fetch(`${API_URL}/api/v1/brochures/shared/${params.share_uuid}`, { next: { revalidate: 0 } });
 
     if (!res.ok) {
         if (res.status === 404) notFound();

@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, Loader2, Check, ChevronDown } from 'lucide-react';
+import { Globe, Check, ChevronDown, Sparkles, Loader2 } from 'lucide-react';
+import { API_URL } from '@/config';
 import { useAuth } from '@clerk/nextjs';
 
 const LANGUAGES = [
@@ -39,7 +40,7 @@ export default function LanguageSelector({ brochureId, onTranslated }: LanguageS
         try {
             const token = await getToken();
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/brochures/${brochureId}/translate`,
+                `${API_URL}/api/v1/brochures/${brochureId}/translate`,
                 {
                     method: 'POST',
                     headers: {

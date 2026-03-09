@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@clerk/nextjs';
-import { FlaskConical, Trophy, ArrowUpRight, BarChart3, Eye, Users } from 'lucide-react';
+import { FlaskConical, Trophy, ArrowUpRight, BarChart3, Eye, Users, Activity, TrendingUp, Target, Zap, Clock, ChevronRight, Filter, ShieldCheck, Sparkles, Loader2 } from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface Variant {
     id: number;
@@ -24,13 +25,12 @@ export default function ABTestDashboard() {
     const [brochures, setBrochures] = useState<BrochureWithVariants[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const token = await getToken();
-                const res = await fetch(`${apiUrl}/api/v1/brochures/`, {
+                const res = await fetch(`${API_URL}/api/v1/brochures/`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {

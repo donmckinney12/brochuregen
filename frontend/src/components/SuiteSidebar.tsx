@@ -14,8 +14,11 @@ import {
     ChevronRight,
     MessageSquare,
     Radio,
-    Grid3X3
+    Grid3X3,
+    Activity,
+    LogOut
 } from 'lucide-react';
+import { API_URL } from '@/config';
 import { useAuth } from '@/context/AuthContext';
 import { OrganizationSwitcher } from '@clerk/nextjs';
 
@@ -51,7 +54,7 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
             try {
                 const token = await getToken();
                 if (!token) return;
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/command/pulse`, {
+                const res = await fetch(`${API_URL}/api/v1/command/pulse`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {

@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wifi, WifiOff, Eye, Users, MessageSquare, Zap } from 'lucide-react';
+import { Wifi, WifiOff, Eye, Users, MessageSquare, Activity, Shield, Zap } from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface LiveEvent {
     id: string;
@@ -36,7 +37,7 @@ export default function LivePulse({ orgId = "default" }: LivePulseProps) {
     const feedRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const wsUrl = `${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace('http', 'ws')}/ws/${orgId}`;
+        const wsUrl = `${API_URL.replace('http', 'ws')}/ws/${orgId}`;
 
         try {
             const ws = new WebSocket(wsUrl);
@@ -61,7 +62,7 @@ export default function LivePulse({ orgId = "default" }: LivePulseProps) {
                     setLiveCounts(prev => ({
                         ...prev,
                         [data.type === 'view' ? 'views' : data.type === 'lead' ? 'leads' : 'feedback']:
-                            prev[data.type === 'view' ? 'views' : data.type === 'lead' ? 'leads' : 'feedback'] + 1,
+                            (prev[data.type === 'view' ? 'views' : data.type === 'lead' ? 'leads' : 'feedback'] || 0) + 1,
                     }));
                 } catch { /* ignore parse errors */ }
             };

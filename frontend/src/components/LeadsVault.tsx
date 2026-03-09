@@ -2,6 +2,21 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+import {
+    Users,
+    Trash2,
+    Search,
+    Download,
+    Mail,
+    Calendar,
+    ChevronRight,
+    Filter,
+    ShieldCheck,
+    Activity,
+    Database,
+    Loader2
+} from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface Lead {
     id: number;
@@ -28,7 +43,7 @@ export default function LeadsVault() {
         const fetchLeads = async () => {
             try {
                 const token = await getToken();
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/leads/all`, {
+                const res = await fetch(`${API_URL}/api/v1/leads/all`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
@@ -48,7 +63,7 @@ export default function LeadsVault() {
     const handleExport = async () => {
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/leads/export`, {
+            const res = await fetch(`${API_URL}/api/v1/leads/export`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -70,7 +85,7 @@ export default function LeadsVault() {
         setFollowupLoading(leadId);
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/leads/followup/${leadId}`, {
+            const res = await fetch(`${API_URL}/api/v1/leads/followup/${leadId}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -90,7 +105,7 @@ export default function LeadsVault() {
         setSendingStep(step.step);
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/email/send-followup`, {
+            const res = await fetch(`${API_URL}/api/v1/email/send-followup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ to_email: selectedLeadEmail, subject: step.subject, body: step.body })
@@ -105,7 +120,7 @@ export default function LeadsVault() {
         setSendingAll(true);
         try {
             const token = await getToken();
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/email/send-sequence`, {
+            await fetch(`${API_URL}/api/v1/email/send-sequence`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ to_email: selectedLeadEmail, sequence: selectedFollowup })
@@ -225,7 +240,7 @@ export default function LeadsVault() {
                         >
                             <div className="p-8 border-b border-[var(--glass-border)] flex items-center justify-between">
                                 <div>
-                                    <h2 className="text-2xl font-black text-[var(--foreground)] italic italic tracking-tighter uppercase">Neural Follow-up Matrix</h2>
+                                    <h2 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Neural Follow-up Matrix</h2>
                                     <p className="text-[10px] text-[var(--accent-primary)] font-bold tracking-[0.4em] uppercase mt-1">Status: Sequenced & Ready</p>
                                 </div>
                                 <button onClick={() => setSelectedFollowup(null)} className="p-2 hover:bg-[var(--foreground)]/5 rounded-xl transition-all">

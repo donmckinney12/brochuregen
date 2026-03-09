@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { useAuth } from '@/context/AuthContext';
 import { Sparkles, Activity, Shield, Zap, Target } from 'lucide-react';
+import { API_URL } from '@/config';
 
 export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () => void }) {
     const { getToken } = useAuth();
@@ -21,7 +22,7 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
         const fetchAnalytics = async () => {
             try {
                 const token = await getToken();
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/brochures/analytics`, {
+                const res = await fetch(`${API_URL}/api/v1/brochures/analytics`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
@@ -51,7 +52,7 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
         const fetchActivities = async () => {
             try {
                 const token = await getToken();
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/brochures/activities/stream`, {
+                const res = await fetch(`${API_URL}/api/v1/brochures/activities/stream`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) setActivities(await res.json());
@@ -61,13 +62,13 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
         const fetchEngagement = async () => {
             try {
                 const token = await getToken();
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/brochures/`, {
+                const res = await fetch(`${API_URL}/api/v1/brochures/`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
                     const brochures = await res.json();
                     if (brochures.length > 0) {
-                        const engRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/analytics/${brochures[0].id}`, {
+                        const engRes = await fetch(`${API_URL}/api/v1/analytics/${brochures[0].id}`, {
                             headers: { 'Authorization': `Bearer ${token}` }
                         });
                         if (engRes.ok) setEngagementData(await engRes.json());
@@ -79,7 +80,7 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
         const fetchFeedback = async () => {
             try {
                 const token = await getToken();
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/brochures/feedback/all`, {
+                const res = await fetch(`${API_URL}/api/v1/brochures/feedback/all`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) setFeedback(await res.json());
@@ -89,7 +90,7 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
         const fetchFunnel = async () => {
             try {
                 const token = await getToken();
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/analytics/funnel/data`, {
+                const res = await fetch(`${API_URL}/api/v1/analytics/funnel/data`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) setFunnel(await res.json());
@@ -99,7 +100,7 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
         const fetchTopPerformers = async () => {
             try {
                 const token = await getToken();
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/analytics/top-performers/data`, {
+                const res = await fetch(`${API_URL}/api/v1/analytics/top-performers/data`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) setTopPerformers(await res.json());

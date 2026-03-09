@@ -3,18 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import {
-    Activity,
-    Users,
-    MessageSquare,
-    Zap,
-    Target,
-    ChevronRight,
-    Sparkles,
-    Copy,
-    CheckCircle2,
-    Clock,
-    BrainCircuit
+    Zap, Sparkles, BrainCircuit, Rocket, Target, Send, Loader2, Layout, Database,
+    ChevronRight, Search, Activity, Command, Boxes, Users, MessageSquare, Clock, Copy
 } from 'lucide-react';
+import { API_URL } from '@/config';
 import ProspectingHub from './ProspectingHub';
 import ProactiveDraftsHub from './ProactiveDraftsHub';
 import LivePulse from './LivePulse';
@@ -42,7 +34,7 @@ export default function CommandCenter() {
                 setLoading(false);
                 return;
             }
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/command/pulse`, {
+            const res = await fetch(`${API_URL}/api/v1/command/pulse`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) setPulse(await res.json());
@@ -63,7 +55,7 @@ export default function CommandCenter() {
         setIsSuggesting(true);
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/command/suggest`, {
+            const res = await fetch(`${API_URL}/api/v1/command/suggest`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

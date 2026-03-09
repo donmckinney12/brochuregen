@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, X, Wand2, Check, RotateCcw, Zap, BrainCircuit, Loader2 } from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface AIRefinerModalProps {
     isOpen: boolean;
@@ -40,7 +42,7 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
 
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/scrape/refine-text`, {
+            const res = await fetch(`${API_URL}/api/v1/scrape/refine-text`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

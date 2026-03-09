@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '@clerk/nextjs';
-import { Bot, Send, X, Sparkles, Loader2, MessageCircle } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { MessageSquare, Send, Sparkles, BrainCircuit, Zap, Target, Loader2, X, Bot, MessageCircle } from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface Message {
     id: string;
@@ -39,7 +40,7 @@ export default function AIChatPanel() {
         try {
             const token = await getToken();
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/chat/message`,
+                `${API_URL}/api/v1/chat/message`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -111,8 +112,8 @@ export default function AIChatPanel() {
                             {messages.map(msg => (
                                 <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[80%] px-4 py-3 rounded-2xl text-xs leading-relaxed ${msg.role === 'user'
-                                            ? 'bg-indigo-500 text-white rounded-br-sm'
-                                            : 'bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-bl-sm'
+                                        ? 'bg-indigo-500 text-white rounded-br-sm'
+                                        : 'bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-bl-sm'
                                         }`}>
                                         {msg.content}
                                     </div>

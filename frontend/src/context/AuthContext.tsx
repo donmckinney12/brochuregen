@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useUser, useClerk, useAuth as useClerkAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { API_URL } from '@/config';
 
 type Plan = 'free' | 'pro' | 'agency' | 'enterprise' | null;
 
@@ -76,20 +77,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
             console.log("🎟️ Token fetched (first 20 chars):", token.substring(0, 20));
 
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            console.log(`🌐 Syncing with backend: ${API_URL}/api/v1/profiles/`);
 
-            // Critical Diagnostic: Check for environment mismatch
-            if (typeof window !== 'undefined' &&
-                window.location.hostname !== 'localhost' &&
-                apiBase.includes('localhost')) {
-                const msg = `⚠️ NODE_ENV ALERT: Production app is attempting to sync with LOCALHOST API (${apiBase}). This will fail unless NEXT_PUBLIC_API_URL is set on Netlify.`;
-                console.error(msg);
-                setSyncError("Localhost API Mismatch");
-            }
-
-            console.log(`🌐 Syncing with backend: ${apiBase}/api/v1/profiles/`);
-
-            const response = await fetch(`${apiBase}/api/v1/profiles/`, {
+            const response = await fetch(`${API_URL}/api/v1/profiles/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,6 +105,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.log("✅ Profile fetched successfully:", data.id);
                 setUser(data);
                 console.log("📊 Fetched plan:", data.plan);
+            } else if (response.status === 401) {
+                console.warn("⚠️ 401 Unauthorized. Retrying with skipCache: true...");
+                const freshToken = await getToken({ skipCache: true });
+                if (freshToken) {
+                    const retryResponse = await fetch(`${API_URL}/api/v1/profiles/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${freshToken}`
+                        },
+                        signal: controller.signal,
+                        body: JSON.stringify({
+                            id: clerkUser.id,
+                            email: clerkUser.primaryEmailAddress?.emailAddress,
+                            full_name: clerkUser.fullName,
+                            plan: 'free',
+                            credits: 10,
+                            refine_credits: 5,
+                            org_id: (clerkUser as any).organizationId || null,
+                            org_name: (clerkUser as any).organizationName || "Unified Org"
+                        })
+                    });
+
+                    if (retryResponse.ok) {
+                        const data = await retryResponse.json();
+                        console.log("✅ Profile fetched after token refresh:", data.id);
+                        setUser(data);
+                        return;
+                    }
+                }
+                const errText = await response.text();
+                let errDoc;
+                try { errDoc = JSON.parse(errText); } catch (e) { errDoc = { detail: errText }; }
+                console.error(`❌ Backend error after retry (${response.status}):`, errDoc);
+                setSyncError(`Backend Error ${response.status}`);
             } else {
                 const errText = await response.text();
                 let errDoc;
@@ -153,8 +178,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         try {
             const token = await getToken();
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiBase}/api/v1/profiles/deduct`, {
+            const response = await fetch(`${API_URL}/api/v1/profiles/deduct`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@clerk/nextjs';
 import { UserPlus, Users, Trash2, Shield, Edit3, Eye, Loader2 } from 'lucide-react';
+import { API_URL } from '@/config';
 
 const ROLES = [
     { value: 'editor', label: 'Editor', icon: <Edit3 size={12} />, color: 'text-blue-400' },
@@ -23,12 +24,11 @@ export default function TeamPanel() {
     const [isInviting, setIsInviting] = useState(false);
     const [error, setError] = useState('');
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
     const fetchMembers = async () => {
         try {
             const token = await getToken();
-            const res = await fetch(`${apiUrl}/api/v1/teams/members`, {
+            const res = await fetch(`${API_URL}/api/v1/teams/members`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -47,7 +47,7 @@ export default function TeamPanel() {
 
         try {
             const token = await getToken();
-            const res = await fetch(`${apiUrl}/api/v1/teams/invite`, {
+            const res = await fetch(`${API_URL}/api/v1/teams/invite`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ email, role }),
@@ -65,7 +65,7 @@ export default function TeamPanel() {
 
     const handleRemove = async (memberEmail: string) => {
         const token = await getToken();
-        await fetch(`${apiUrl}/api/v1/teams/members/${encodeURIComponent(memberEmail)}`, {
+        await fetch(`${API_URL}/api/v1/teams/members/${encodeURIComponent(memberEmail)}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` },
         });

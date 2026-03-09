@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { Key, Plus, Trash2, Copy, CheckCircle2, ShieldAlert, Cpu } from 'lucide-react';
+import { Code2, Key, Shield, Zap, Cpu, Terminal, Copy, Check, Trash2, Plus, Sparkles, Loader2, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface APIKey {
     id: number;
@@ -33,7 +34,7 @@ export default function DeveloperPortal() {
     const fetchKeys = async () => {
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/keys/`, {
+            const res = await fetch(`${API_URL}/api/v1/keys/`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -52,7 +53,7 @@ export default function DeveloperPortal() {
         setCreating(true);
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/keys/`, {
+            const res = await fetch(`${API_URL}/api/v1/keys/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -84,7 +85,7 @@ export default function DeveloperPortal() {
 
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/keys/${id}`, {
+            const res = await fetch(`${API_URL}/api/v1/keys/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

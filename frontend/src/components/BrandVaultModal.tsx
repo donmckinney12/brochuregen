@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Upload, X, Shield, Zap, Palette, Globe, Target, Command, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react';
+import { API_URL } from '@/config';
 import { useAuth } from '@/context/AuthContext';
-import { Loader2, Zap } from 'lucide-react';
 
 interface BrandVaultModalProps {
     isOpen: boolean;
@@ -46,8 +47,7 @@ export default function BrandVaultModal({ isOpen, onClose }: BrandVaultModalProp
 
         try {
             const token = await getToken();
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiBase}/api/v1/scrape/extract-voice`, {
+            const response = await fetch(`${API_URL}/api/v1/scrape/extract-voice`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,8 +82,7 @@ export default function BrandVaultModal({ isOpen, onClose }: BrandVaultModalProp
 
         try {
             const token = await getToken();
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiBase}/api/v1/profiles/me`, {
+            const response = await fetch(`${API_URL}/api/v1/profiles/me`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

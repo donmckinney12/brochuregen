@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { Send, Loader2, ShieldCheck, Mail, User, Phone } from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface LeadFormProps {
     shareUuid: string;
@@ -17,7 +19,7 @@ export default function LeadForm({ shareUuid, primaryColor, onSuccess }: LeadFor
         setStatus('loading');
 
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const apiUrl = API_URL;
             const res = await fetch(`${apiUrl}/api/v1/leads/submit/${shareUuid}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

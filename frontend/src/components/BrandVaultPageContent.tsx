@@ -1,8 +1,12 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-import { Palette, MessageSquare, Type, Zap, Check, Loader2, Sparkles } from 'lucide-react';
+import {
+    Plus, Search, Trash2, Edit3, Globe, Command, Shield, Zap, Sparkles,
+    ChevronRight, Layers, Database, Palette, Target, Loader2, Type, MessageSquare, Check
+} from 'lucide-react';
+import { API_URL } from '@/config';
 import VoiceTrainer from './VoiceTrainer';
 
 export default function BrandVaultPageContent() {
@@ -28,8 +32,7 @@ export default function BrandVaultPageContent() {
         if (!user?.org_id) return;
         try {
             const token = await getToken();
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiBase}/api/v1/profiles/organization/brand`, {
+            const response = await fetch(`${API_URL}/api/v1/profiles/organization/brand`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -65,10 +68,9 @@ export default function BrandVaultPageContent() {
 
         try {
             const token = await getToken();
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
             const endpoint = vaultContext === 'organization'
-                ? `${apiBase}/api/v1/profiles/organization/brand`
-                : `${apiBase}/api/v1/profiles/me`;
+                ? `${API_URL}/api/v1/profiles/organization/brand`
+                : `${API_URL}/api/v1/profiles/me`;
 
             const method = vaultContext === 'organization' ? 'PUT' : 'PATCH';
 
@@ -104,8 +106,7 @@ export default function BrandVaultPageContent() {
 
         try {
             const token = await getToken();
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiBase}/api/v1/scrape/extract-voice`, {
+            const response = await fetch(`${API_URL}/api/v1/scrape/extract-voice`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import EmbedModal from './EmbedModal';
 import SocialPulseKit from './SocialPulseKit';
+import { API_URL } from '@/config';
 
 export default function GenerationStudio() {
     const [url, setUrl] = useState('');
@@ -63,7 +64,7 @@ export default function GenerationStudio() {
 
         const connectWS = () => {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const host = process.env.NEXT_PUBLIC_API_URL?.replace(/^http?:\/\//, '') || 'localhost:8000';
+            const host = API_URL.replace(/^https?:\/\//, '');
             const ws = new WebSocket(`${protocol}//${host}/api/v1/collaboration/ws/${user.org_id}`);
 
             ws.onmessage = (event) => {
@@ -122,8 +123,7 @@ export default function GenerationStudio() {
             }
 
             const token = await getToken();
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${apiUrl}/api/v1/scrape/scrape`, {
+            const res = await fetch(`${API_URL}/api/v1/scrape/scrape`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ export default function GenerationStudio() {
         setExportLoading(true);
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/pdf/generate-pdf`, {
+            const res = await fetch(`${API_URL}/api/v1/pdf/generate-pdf`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({
@@ -200,10 +200,9 @@ export default function GenerationStudio() {
         setIsLaunching(true);
         try {
             const token = await getToken();
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
             // 1. Sync to Cloud Vault
-            const res = await fetch(`${apiUrl}/api/v1/brochures/`, {
+            const res = await fetch(`${API_URL}/api/v1/brochures/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -239,8 +238,7 @@ export default function GenerationStudio() {
         setIsGeneratingVariant(true);
         try {
             const token = await getToken();
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${apiUrl}/api/v1/brochures/${data.id}/generate-variant`, {
+            const res = await fetch(`${API_URL}/api/v1/brochures/${data.id}/generate-variant`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -262,7 +260,7 @@ export default function GenerationStudio() {
         try {
             const token = await getToken();
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${apiUrl}/api/v1/export/brochure/${data.id}/html`, {
+            const res = await fetch(`${API_URL}/api/v1/export/brochure/${data.id}/html`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -288,7 +286,7 @@ export default function GenerationStudio() {
         setIsSyncing(true);
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/export/brochure/${data.id}/deploy`, {
+            const res = await fetch(`${API_URL}/api/v1/export/brochure/${data.id}/deploy`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

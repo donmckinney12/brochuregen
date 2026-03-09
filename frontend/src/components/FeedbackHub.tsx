@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Check, Trash2, ExternalLink, Calendar, User, Search, Filter } from 'lucide-react';
+import { MessageSquare, Check, Trash2, Calendar, User, Star, Loader2, Search, Filter } from 'lucide-react';
+import { API_URL } from '@/config';
 import { useAuth } from '@/context/AuthContext';
 
 interface Comment {
@@ -24,7 +25,7 @@ export default function FeedbackHub() {
     const fetchFeedback = async () => {
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/brochures/feedback/all`, {
+            const res = await fetch(`${API_URL}/api/v1/brochures/feedback/all`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -45,7 +46,7 @@ export default function FeedbackHub() {
     const markAsRead = async (id: number) => {
         try {
             const token = await getToken();
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/brochures/feedback/${id}/read`, {
+            const res = await fetch(`${API_URL}/api/v1/brochures/feedback/${id}/read`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

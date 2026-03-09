@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Logo from './Logo';
+import { Globe, Shield, Zap, Sparkles, MessageSquare, ExternalLink, Mail, Github, Twitter, Linkedin } from 'lucide-react';
+import { API_URL } from '@/config';
 
 export default function Footer() {
     const [email, setEmail] = useState('');
@@ -12,8 +14,7 @@ export default function Footer() {
         if (!email) return;
         setStatus('loading');
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${apiUrl}/api/v1/newsletter/subscribe`, {
+            const res = await fetch(`${API_URL}/api/v1/newsletter/subscribe`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),

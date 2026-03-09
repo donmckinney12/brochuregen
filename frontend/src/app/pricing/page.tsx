@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import BrochureCarousel from '@/components/BrochureCarousel';
 import { useAuth } from '@/context/AuthContext';
+import { API_URL } from '@/config';
 
 export default function Pricing() {
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
@@ -19,8 +20,7 @@ export default function Pricing() {
 
         if (!user) {
             if (syncError) {
-                const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-                alert(`❌ Protocol Sync Failed: ${syncError}\n\nCause: The frontend cannot reach the backend at ${apiBase}.\n\nFix: Ensure NEXT_PUBLIC_API_URL is set correctly in your Netlify dashboard.`);
+                alert(`❌ Protocol Sync Failed: ${syncError}\n\nCause: The frontend cannot reach the backend at ${API_URL}.\n\nFix: Ensure NEXT_PUBLIC_API_URL is set correctly in your Netlify dashboard.`);
             } else {
                 alert("User profile is still syncing. If this persists, check your browser console for connection errors.");
             }
@@ -29,12 +29,11 @@ export default function Pricing() {
 
         try {
             const token = await getToken();
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
             // Helpful debug log for production
-            console.log(`📡 Initializing checkout protocol via: ${apiUrl}`);
+            console.log(`📡 Initializing checkout protocol via: ${API_URL}`);
 
-            const res = await fetch(`${apiUrl}/api/v1/payment/create-checkout-session`, {
+            const res = await fetch(`${API_URL}/api/v1/payment/create-checkout-session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

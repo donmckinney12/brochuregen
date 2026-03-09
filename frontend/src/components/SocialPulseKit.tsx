@@ -1,7 +1,11 @@
 "use client";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Share2, Copy, Check, Twitter, Linkedin, Instagram, Sparkles, Send, Loader2 } from 'lucide-react';
+import {
+    Share2, Copy, Check, Twitter, Linkedin, Instagram, Sparkles, Send,
+    Loader2
+} from 'lucide-react';
+import { API_URL } from '@/config';
 import { useAuth } from '@/context/AuthContext';
 
 interface SocialPost {
@@ -45,8 +49,7 @@ export default function SocialPulseKit({ posts, brochureId }: SocialPulseKitProp
         setDispatchingIndex(index);
         try {
             const token = await getToken();
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${apiUrl}/api/v1/social/dispatch`, {
+            const res = await fetch(`${API_URL}/api/v1/social/dispatch`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

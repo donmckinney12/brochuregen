@@ -3,6 +3,8 @@ import { useState, useRef, useEffect } from 'react';
 import ThreeDBrochure from '@/components/ThreeDBrochure';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Globe, Download, Share2, Shield, Zap, Sparkles, ChevronRight, MessageSquare, Info, Layout, Layers, Heart, Users, ExternalLink } from 'lucide-react';
+import { API_URL } from '@/config';
 import LeadForm from '@/components/LeadForm';
 
 interface Comment {
@@ -48,8 +50,7 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
         setIsSubmitting(true);
 
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${apiUrl}/api/v1/brochures/shared/${shareUuid}/comments`, {
+            const res = await fetch(`${API_URL}/api/v1/brochures/shared/${shareUuid}/comments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -87,8 +88,7 @@ export default function SharedViewClient({ shareUuid, data, activeVault, initial
                 const duration = Date.now() - start;
                 // Only track if duration > 500ms to avoid noise
                 if (duration > 500) {
-                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-                    fetch(`${apiUrl}/api/v1/analytics/track`, {
+                    fetch(`${API_URL}/api/v1/analytics/track`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

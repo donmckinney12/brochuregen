@@ -22,6 +22,15 @@ def verify_token(token: str):
     """Verify a Clerk JWT using PyJWT + JWKS endpoint."""
     try:
         signing_key = jwks_client.get_signing_key_from_jwt(token)
+        # For diagnostics: peek at payload without verification first to see timestamps
+        unverified = jwt.decode(token, options={"verify_signature": False})
+        iat = unverified.get("iat")
+        exp = unverified.get("exp")
+        import time
+        now = int(time.time())
+        
+        log_auth(f"[Auth] Token iat: {iat}, exp: {exp}, current_time: {now}, delta_to_exp: {exp - now if exp else 'N/A'}")
+
         payload = jwt.decode(
             token,
             signing_key.key,
@@ -30,11 +39,12 @@ def verify_token(token: str):
                 "verify_aud": False,
                 "verify_iss": False,
             },
-            leeway=60
+            leeway=300 # Increased from 60 to 300 (5 mins) to handle server/client clock drift
         )
         return {"success": True, "payload": payload}
     except jwt.ExpiredSignatureError:
-        log_auth("[Auth] Token expired")
+        # Re-fetch timestamps for error log if not already done
+        log_auth("[Auth] Token expired definitively (even after 300s leeway)")
         return {"success": False, "error": "Token expired"}
     except jwt.InvalidTokenError as e:
         log_auth(f"[Auth] Invalid token: {e}")

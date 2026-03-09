@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@clerk/nextjs';
-import { Trophy, Star, Zap, Lock } from 'lucide-react';
+import { Trophy, Star, Zap, Target, Shield, Award, Sparkles, Loader2, Info, Lock } from 'lucide-react';
+import { API_URL } from '@/config';
 
 interface Achievement {
     id: string;
@@ -30,7 +31,7 @@ export default function AchievementBadges() {
             try {
                 const token = await getToken();
                 const res = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/gamification/profile`,
+                    `${API_URL}/api/v1/gamification/profile`,
                     { headers: { 'Authorization': `Bearer ${token}` } }
                 );
                 if (res.ok) setProfile(await res.json());
@@ -79,8 +80,8 @@ export default function AchievementBadges() {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: i * 0.05 }}
                         className={`relative p-4 rounded-2xl border text-center transition-all ${ach.unlocked
-                                ? 'border-amber-500/20 bg-amber-500/5 hover:border-amber-500/30'
-                                : 'border-white/5 bg-white/[0.02] opacity-50'
+                            ? 'border-amber-500/20 bg-amber-500/5 hover:border-amber-500/30'
+                            : 'border-white/5 bg-white/[0.02] opacity-50'
                             }`}
                     >
                         <span className="text-2xl">{ach.icon}</span>

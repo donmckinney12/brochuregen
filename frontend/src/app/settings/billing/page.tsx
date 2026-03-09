@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { useAuth } from '@/context/AuthContext';
+import { API_URL } from '@/config';
 import Link from 'next/link';
 
 export default function BillingPage() {
@@ -12,9 +13,8 @@ export default function BillingPage() {
         setIsLoadingPortal(true);
         try {
             const token = await getToken();
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
             // Updated to use the new v1 API endpoint
-            const response = await fetch(`${apiBase}/api/v1/payment/create-portal-session?user_id=${user?.id}`, {
+            const response = await fetch(`${API_URL}/api/v1/payment/create-portal-session?user_id=${user?.id}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { API_URL } from '@/config';
 
 export default function UsageHistory() {
     const { user, getToken } = useAuth();
@@ -12,7 +13,7 @@ export default function UsageHistory() {
             if (!user?.id) return;
             try {
                 const token = await getToken();
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/brochures/?user_id=${user.id}`, {
+                const response = await fetch(`${API_URL}/api/v1/brochures/?user_id=${user.id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
