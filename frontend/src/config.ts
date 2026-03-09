@@ -23,7 +23,7 @@ const getApiUrl = (): string => {
                 `❌ [CRITICAL CONFIG ERROR] Production domain "${hostname}" is trying to connect to "${finalUrl}".\n` +
                 `This WILL fail due to CORS and loopback restrictions.\n\n` +
                 `FIX: You must set the "NEXT_PUBLIC_API_URL" environment variable in your Netlify/Vercel dashboard.\n` +
-                `Expected Value: https://brochuregen-api.onrender.com (or your actual backend URL)`
+                `Expected Value: https://brochuregen-backend-dm.fly.dev`
             );
         } else if (!isLocal) {
             console.log(`🌐 Application running on "${hostname}". API target: "${finalUrl}"`);

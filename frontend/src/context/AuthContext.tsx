@@ -62,10 +62,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
-            console.warn("⚠️ fetchProfile timed out after 30s");
+            console.warn("⚠️ fetchProfile timed out after 60s");
             controller.abort();
             setIsLoadingProfile(false);
-        }, 30000);
+        }, 60000);
 
         try {
             console.log("🛡️ Getting Clerk token...");
