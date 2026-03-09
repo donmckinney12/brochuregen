@@ -49,14 +49,26 @@ def sync_profile(profile: ProfileCreate, db: Session = Depends(get_db), current_
         if current_user["sub"] != profile.id:
              raise HTTPException(status_code=403, detail="Forbidden")
         
+        # --- Enterprise Sync ---
+        # If frontend sends org context, ensure it's synced in our DB
+        # This prevents FK errors or missing org data
+        org_id = current_user.get("org_id") or profile.org_id
+        if org_id:
+            from services.db_orm import sync_enterprise_context
+            # Note: ProfileCreate schema has org_id but we might also have org_name from somewhere (future)
+            sync_enterprise_context(db, profile.id, org_id)
+
         db_profile = get_profile(db, profile.id)
         if db_profile:
             print(f"DEBUG: Found existing profile: {db_profile.id}, plan: {db_profile.plan}")
             return db_profile
+            
         print(f"DEBUG: Creating new profile for: {profile.id}")
         return create_profile(db, profile)
     except Exception as e:
         print(f"Error in sync_profile: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/organization/brand")

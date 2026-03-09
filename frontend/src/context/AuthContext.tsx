@@ -46,6 +46,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const fetchProfile = async () => {
         console.log("🔄 Starting fetchProfile...");
+        setIsLoadingProfile(true); // Ensure loading state is active during sync
+
         if (!clerkUser) {
             console.log("ℹ️ No Clerk user found, skipping fetchProfile");
             setUser(null);
@@ -101,7 +103,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.log("📊 Fetched plan:", data.plan);
             } else {
                 const errText = await response.text();
-                console.error(`❌ Backend error (${response.status}):`, errText);
+                let errDoc;
+                try { errDoc = JSON.parse(errText); } catch (e) { errDoc = { detail: errText }; }
+
+                console.error(`❌ Backend error (${response.status}):`, errDoc);
+                // Don't clear user here to avoid UI flickering if it was a transient error,
+                // BUT we may want to track a 'sync_error' state.
             }
         } catch (error: any) {
             if (error.name === 'AbortError') {
