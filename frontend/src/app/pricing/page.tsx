@@ -20,7 +20,7 @@ export default function Pricing() {
 
         if (!user) {
             if (syncError) {
-                alert(`❌ Protocol Sync Failed: ${syncError}\n\nCause: The frontend cannot reach the backend at ${API_URL}.\n\nFix: Ensure NEXT_PUBLIC_API_URL is set correctly in your Netlify dashboard.`);
+                alert(`❌ [v28.1] Protocol Sync Failed: ${syncError}\n\nCause: The frontend cannot reach the backend at ${API_URL}.\n\nFix: Ensure NEXT_PUBLIC_API_URL is set correctly in your Netlify dashboard.`);
             } else {
                 alert("User profile is still syncing. If this persists, check your browser console for connection errors.");
             }

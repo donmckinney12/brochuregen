@@ -38,7 +38,8 @@ base_origins = [
 ]
 
 # Filtering out empty origins and normalizing
-allowed_origins = [o for o in base_origins if o]
+allowed_origins = [o.rstrip("/") for o in base_origins if o]
+print(f"CORS Authorized Origins: {allowed_origins}")
 
 app.add_middleware(
     CORSMiddleware,
@@ -53,11 +54,14 @@ app.add_middleware(
 @app.middleware("http")
 async def log_origin(request: Request, call_next):
     origin = request.headers.get("origin")
-    if origin and origin not in allowed_origins:
-        # Check against regex manually for the log
+    if origin:
         import re
-        if not re.match(r"https://.*brochuregen\.netlify\.app", origin):
+        is_netlify_subdomain = bool(re.match(r"https://.*brochuregen\.netlify\.app", origin))
+        if origin not in allowed_origins and not is_netlify_subdomain:
              print(f"⚠️ [CORS ALERT] Blocked request from unauthorized origin: {origin}")
+        else:
+             # Helpful for confirming it IS authorized
+             print(f"✅ [CORS DEBUG] Authorized origin: {origin}")
     return await call_next(request)
 
 

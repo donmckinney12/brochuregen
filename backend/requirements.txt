@@ -16,3 +16,4 @@ pydantic-settings
 email-validator
 pytest
 PyJWT
+cryptography

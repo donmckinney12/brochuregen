@@ -4,33 +4,28 @@
  */
 
 const getApiUrl = (): string => {
-    // 1. Check environment variable (Priority)
     const envUrl = process.env.NEXT_PUBLIC_API_URL;
+    const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isLocal = !hostname || hostname === 'localhost' || hostname === '127.0.0.1';
+    const prodBackend = 'https://brochuregen-backend-dm.fly.dev';
 
-    // 2. Identify Host Context
-    const hostname = typeof window !== 'undefined' ? window.location.hostname : 'node-server';
-    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
-    const isProdOrigin = hostname.includes('brochuregen.com') || hostname.includes('netlify.app');
-
-    // 3. Fallback logic
-    // If we're on a local machine, default to local backend.
-    // If we're on a production domain, we HAVE to have the envUrl or it will fail.
-    const finalUrl = envUrl || 'http://localhost:8000';
-
-    if (typeof window !== 'undefined') {
-        if (isProdOrigin && (!envUrl || envUrl.includes('localhost'))) {
-            console.error(
-                `❌ [CRITICAL CONFIG ERROR] Production domain "${hostname}" is trying to connect to "${finalUrl}".\n` +
-                `This WILL fail due to CORS and loopback restrictions.\n\n` +
-                `FIX: You must set the "NEXT_PUBLIC_API_URL" environment variable in your Netlify/Vercel dashboard.\n` +
-                `Expected Value: https://brochuregen-backend-dm.fly.dev`
-            );
-        } else if (!isLocal) {
-            console.log(`🌐 Application running on "${hostname}". API target: "${finalUrl}"`);
-        }
+    // 1. If we are local, use the environment variable or localhost:8000 fallback
+    if (isLocal) {
+        return envUrl || 'http://localhost:8000';
     }
 
-    return finalUrl;
+    // 2. If we are in PRODUCTION (anything not local)
+    // We MUST use the Fly.io backend if the envUrl is missing, points to localhost, or points to Clerk.
+    const isInvalidProdUrl = !envUrl || envUrl.includes('localhost') || envUrl.includes('clerk');
+
+    if (isInvalidProdUrl) {
+        if (typeof window !== 'undefined') {
+            console.warn(`🛡️ [PRODUCTION SECURITY OVERRIDE] API target forced to: ${prodBackend}`);
+        }
+        return prodBackend;
+    }
+
+    return envUrl;
 };
 
 export const API_URL = getApiUrl();

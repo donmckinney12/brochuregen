@@ -1,11 +1,12 @@
 import stripe
 import os
 from fastapi import HTTPException
+from core.config import settings
 
 # Configure Stripe
-stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
-CLIENT_URL = os.environ.get("CLIENT_URL", "http://localhost:3000")
+CLIENT_URL = settings.CLIENT_URL
 
 def create_checkout_session(user_id: str, email: str, plan: str = "professional", billing_cycle: str = "monthly"):
     if not stripe.api_key:

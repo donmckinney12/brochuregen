@@ -40,10 +40,10 @@ export default function EnterprisePage() {
             } else {
                 throw new Error('Failed to submit protocol');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
             setStatus('idle');
-            alert('Protocol Sync Failed. Please try again.');
+            alert(`❌ [v28.1] Protocol Sync Failed: ${err.message || 'Connection Error'}\n\nCause: The frontend cannot reach the backend at ${API_URL}.\n\nFix: Ensure NEXT_PUBLIC_API_URL is set correctly in your Netlify dashboard.`);
         }
     };
 

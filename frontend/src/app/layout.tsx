@@ -111,7 +111,11 @@ export default function RootLayout({
           <div className="absolute inset-0 animate-aurora mix-blend-screen opacity-20"></div>
           <div className="scanline"></div>
         </div>
-        <ClerkProvider>
+        <ClerkProvider
+          domain={process.env.NEXT_PUBLIC_CLERK_DOMAIN || "brochuregen.com"}
+          isSatellite={false}
+          afterSignOutUrl="/"
+        >
           <ThemeProvider>
             <AuthProvider>
               {children}

@@ -46,17 +46,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<UserProfile | null>(null);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [syncError, setSyncError] = useState<string | null>(null);
+    const fetchingProfileRef = React.useRef(false);
     const router = useRouter();
 
-    const fetchProfile = async () => {
-        console.log("🔄 Starting fetchProfile...");
+    const fetchProfile = async (skipCache = false) => {
+        if (fetchingProfileRef.current && !skipCache) {
+            console.log("⏭️ fetchProfile already active, skipping re-initialization.");
+            return;
+        }
+
+        fetchingProfileRef.current = true;
+        console.log(`🔄 Starting fetchProfile... (skipCache: ${skipCache})`);
         setIsLoadingProfile(true);
         setSyncError(null);
 
         if (!clerkUser) {
-            console.log("ℹ️ No Clerk user found, skipping fetchProfile");
+            console.log("ℹ️ No Clerk user found, clearing profile state");
             setUser(null);
             setIsLoadingProfile(false);
+            fetchingProfileRef.current = false;
             return;
         }
 
@@ -157,7 +165,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
         } finally {
             setIsLoadingProfile(false);
-            console.log("🏁 fetchProfile finished");
+            fetchingProfileRef.current = false;
+            console.log("🏁 fetchProfile completed");
         }
     };
 
@@ -170,16 +179,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     useEffect(() => {
-        if (isClerkLoaded) {
-            warmUpBackend();
-            fetchProfile();
-        }
-    }, [clerkUser?.id, isClerkLoaded]);
+        if (!isClerkLoaded) return;
+
+        const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+        const isPaymentReturn = urlParams?.has('payment');
+
+        // Small delay to let Clerk's session stabilize on mount/navigation
+        const stabilizeTimer = setTimeout(() => {
+            if (isSignedIn && clerkUser?.id) {
+                // Persistent guard against rapid-fire reloads/redirects
+                const lastSync = sessionStorage.getItem(`last_sync_${clerkUser.id}`);
+                const now = Date.now();
+                if (lastSync && now - parseInt(lastSync) < 2000) {
+                    console.log("🛡️ Critical synchronization guard: skipping rapid-fire sync.");
+                    return;
+                }
+                sessionStorage.setItem(`last_sync_${clerkUser.id}`, now.toString());
+
+                warmUpBackend();
+                fetchProfile();
+            } else if (isClerkLoaded && !isSignedIn) {
+                if (isPaymentReturn) {
+                    console.log("⏳ Payment return detected: delaying state clear for session stabilization...");
+                    return;
+                }
+                console.log("ℹ️ User not signed in, clearing state.");
+                setUser(null);
+                setIsLoadingProfile(false);
+            }
+        }, isPaymentReturn ? 3000 : 500);
+
+        return () => clearTimeout(stabilizeTimer);
+    }, [clerkUser?.id, isClerkLoaded, isSignedIn]);
 
     const signOut = async () => {
-        await clerkSignOut();
         setUser(null);
-        router.push('/');
+        await clerkSignOut({ redirectUrl: '/' });
     };
 
     const deductCredit = async (type: 'generate' | 'refine') => {
