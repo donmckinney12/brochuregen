@@ -49,16 +49,24 @@ def sync_profile(profile: ProfileCreate, db: Session = Depends(get_db), current_
         if current_user["sub"] != profile.id:
              raise HTTPException(status_code=403, detail="Forbidden")
         
+        # --- Profile Migration / Collision Handling ---
+        db_profile = get_profile(db, profile.id)
+        
+        # Scenario: Collision! Profile not found by ID, but email already exists under a different ID.
+        if not db_profile and profile.email:
+            from services.db_orm import get_profile_by_email, migrate_profile_id
+            old_profile = get_profile_by_email(db, profile.email)
+            if old_profile:
+                print(f"🔄 COLLISION DETECTED: Profile {old_profile.id} shares email {profile.email}. Migrating to {profile.id}")
+                migrate_profile_id(db, old_profile.id, profile.id)
+                db_profile = get_profile(db, profile.id)
+
         # --- Enterprise Sync ---
-        # If frontend sends org context, ensure it's synced in our DB
-        # This prevents FK errors or missing org data
         org_id = current_user.get("org_id") or profile.org_id
         if org_id:
             from services.db_orm import sync_enterprise_context
-            # Note: ProfileCreate schema has org_id but we might also have org_name from somewhere (future)
             sync_enterprise_context(db, profile.id, org_id)
 
-        db_profile = get_profile(db, profile.id)
         if db_profile:
             print(f"DEBUG: Found existing profile: {db_profile.id}, plan: {db_profile.plan}")
             return db_profile

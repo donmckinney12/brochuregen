@@ -6,6 +6,34 @@ from typing import Optional
 def get_profile(db: Session, user_id: str) -> Optional[Profile]:
     return db.query(Profile).filter(Profile.id == user_id).first()
 
+def get_profile_by_email(db: Session, email: str) -> Optional[Profile]:
+    return db.query(Profile).filter(Profile.email == email).first()
+
+def migrate_profile_id(db: Session, old_id: str, new_id: str):
+    """
+    Safely migrates a profile and all its linked data to a new ID.
+    Used for account recovery when a Clerk ID changes but the email remains the same.
+    """
+    profile = get_profile(db, old_id)
+    if not profile:
+        return False
+        
+    # 1. Update ID in the profile table
+    # Note: SQLite doesn't allow changing primary keys in all cases easily,
+    # but SQLAlchemy handle this by updating the identity.
+    profile.id = new_id
+    
+    # 2. Update all linked tables (Brochures, ActivityLogs)
+    # They should update automatically if foreign keys have ON UPDATE CASCADE,
+    # but we'll do it manually to be safe on SQLite versions that might lack it.
+    from models.profile import Brochure, ActivityLog
+    db.query(Brochure).filter(Brochure.user_id == old_id).update({Brochure.user_id: new_id})
+    db.query(ActivityLog).filter(ActivityLog.user_id == old_id).update({ActivityLog.user_id: new_id})
+
+    db.commit()
+    db.refresh(profile)
+    return True
+
 def create_profile(db: Session, profile: ProfileCreate) -> Profile:
     db_item = Profile(**profile.dict())
     db.add(db_item)
