@@ -98,6 +98,14 @@ def health_check():
 
 @app.on_event("startup")
 async def startup_event():
+    # --- DB Schema Auto-Fix ---
+    try:
+        from fix_prod_db import fix_db
+        fix_db()
+        print("✅ Production DB Schema Sync complete")
+    except Exception as e:
+        print(f"❌ DB Schema Sync failed: {e}")
+
     print(f"{settings.PROJECT_NAME} Starting...")
     db_host = settings.DATABASE_URL.split('@')[-1] if settings.DATABASE_URL else "None"
     print(f"Database Host: {db_host}")
