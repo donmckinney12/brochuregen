@@ -94,7 +94,7 @@ export default function LandingHero() {
                     <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-primary)]/20 to-[var(--accent-secondary)]/20 blur-3xl opacity-50 group-hover:opacity-100 transition-opacity" />
                     <div className="relative premium-card p-2 rounded-[3rem] border-[var(--glass-border)] bg-white/5 backdrop-blur-3xl glow-on-hover">
                         <img
-                            src="/premium_brochure_showcase_1773186037524.png"
+                            src="/hero-showcase.png"
                             alt="Neural Brochure Showcase"
                             className="rounded-[2.8rem] shadow-2xl brightness-110 group-hover:scale-[1.02] transition-transform duration-700"
                         />
