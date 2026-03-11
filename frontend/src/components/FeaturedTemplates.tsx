@@ -32,7 +32,7 @@ export default function FeaturedTemplates() {
         {
             title: "Neural Report",
             category: "Analytics",
-            image: "https://images.unsplash.com/photo-1551288049-bb8c83345199?auto=format&fit=crop&w=800&q=80",
+            image: "https://images.unsplash.com/photo-1543286386-713bcd53baae?auto=format&fit=crop&w=800&q=80",
             color: "from-orange-600 to-amber-600",
             desc: "Data-heavy institutional reporting for stakeholders.",
             icon: BarChart3
@@ -64,7 +64,7 @@ export default function FeaturedTemplates() {
         {
             title: "FinTech Ledger",
             category: "Financial",
-            image: "https://images.unsplash.com/photo-1559526324-49c01c039174?auto=format&fit=crop&w=800&q=80",
+            image: "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80",
             color: "from-blue-700 to-indigo-900",
             desc: "Encrypted visual data for decentralized asset management.",
             icon: Landmark
@@ -133,6 +133,10 @@ export default function FeaturedTemplates() {
                                 src={template.image}
                                 alt={template.title}
                                 loading="lazy"
+                                onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80"; // Abstract fallback
+                                }}
                                 className="w-full h-full object-cover transform group-hover:scale-110 grayscale-[0.8] group-hover:grayscale-0 transition-all duration-1000 opacity-50 group-hover:opacity-100"
                             />
 
@@ -183,7 +187,7 @@ export default function FeaturedTemplates() {
             <div className="mt-24 text-center pb-12">
                 <div className="inline-block px-10 py-4 border border-white/5 rounded-2xl bg-white/[0.02]">
                     <p className="text-[10px] font-black uppercase tracking-[0.6em] text-[var(--foreground)]/10 animate-pulse">
-                        Global Distribution Hub • v29.2 • 100% Operational
+                        Global Distribution Hub • v29.4 • 100% Operational
                     </p>
                 </div>
             </div>
