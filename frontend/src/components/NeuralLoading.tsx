@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function NeuralLoading() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -16,29 +16,32 @@ export default function NeuralLoading() {
         let height = (canvas.height = window.innerHeight);
 
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/πΩΣΔ";
-        const fontSize = 14;
+        const fontSize = 16;
         const columns = Math.floor(width / fontSize);
         const drops: number[] = new Array(columns).fill(0);
 
         const draw = () => {
-            ctx.fillStyle = document.documentElement.classList.contains('dark') ? "rgba(0, 0, 0, 0.05)" : "rgba(248, 250, 252, 0.05)";
+            // High-contrast elite background sync
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
             ctx.fillRect(0, 0, width, height);
 
-            ctx.fillStyle = document.documentElement.classList.contains('dark') ? "#0ff" : "#6366f1"; // Cyan for Dark, Indigo for Light
-            ctx.font = `${fontSize}px monospace`;
+            ctx.fillStyle = "#0ff"; // Primary Cyan
+            ctx.font = `black ${fontSize}px monospace`;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#0ff";
 
             for (let i = 0; i < drops.length; i++) {
                 const text = characters.charAt(Math.floor(Math.random() * characters.length));
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-                if (drops[i] * fontSize > height && Math.random() > 0.975) {
+                if (drops[i] * fontSize > height && Math.random() > 0.985) {
                     drops[i] = 0;
                 }
                 drops[i]++;
             }
         };
 
-        const interval = setInterval(draw, 33);
+        const interval = setInterval(draw, 45);
 
         const handleResize = () => {
             width = canvas.width = window.innerWidth;
@@ -61,44 +64,73 @@ export default function NeuralLoading() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[var(--background)]/95 backdrop-blur-md transition-colors duration-500"
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black transition-colors duration-1000"
         >
-            <canvas ref={canvasRef} className="absolute inset-0 z-0 opacity-[0.2] dark:opacity-40" />
+            <canvas ref={canvasRef} className="absolute inset-0 z-0 opacity-40 shadow-[inset_0_0_100px_rgba(0,0,0,1)]" />
 
-            <div className="relative z-10 flex flex-col items-center">
-                <div className="w-24 h-24 mb-8 relative">
-                    <div className="absolute inset-0 border-4 border-[var(--accent-primary)]/20 rounded-full animate-ping"></div>
-                    <div className="absolute inset-0 border-4 border-[var(--accent-primary)] rounded-full border-t-transparent animate-spin"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-2xl font-black italic text-[var(--accent-primary)]">BG</span>
+            <div className="relative z-10 flex flex-col items-center max-w-xl w-full px-12">
+                <div className="w-32 h-32 mb-12 relative flex items-center justify-center">
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-x-0 bottom-0 top-0 border-[1px] border-cyan-500/20 rounded-full"
+                    />
+                    <motion.div
+                        animate={{ rotate: -360 }}
+                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-4 border-[1px] border-cyan-400/40 rounded-full border-t-transparent"
+                    />
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-[0_0_40px_rgba(6,182,212,0.6)] animate-pulse">
+                        <span className="text-3xl font-black italic text-white">BG</span>
                     </div>
                 </div>
 
-                <h2 className="text-4xl font-black text-[var(--foreground)] italic tracking-tighter uppercase mb-4 text-center">
-                    Neural Sync <span className="gradient-text">In Progress</span>
-                </h2>
+                <div className="text-center space-y-6">
+                    <h2 className="text-5xl font-black text-white italic tracking-tighter uppercase mb-4 leading-none">
+                        Neural <span className="text-cyan-400">Synthesis</span>
+                    </h2>
+                    <p className="text-[10px] font-black text-cyan-500/60 uppercase tracking-[0.5em] animate-pulse">
+                        Orchestrating Cluster Node Sync...
+                    </p>
+                </div>
 
-                <div className="flex items-center gap-4 mb-2">
-                    <div className="h-1 w-32 bg-[var(--foreground)]/5 rounded-full overflow-hidden border border-[var(--glass-border)]">
+                <div className="mt-16 w-full space-y-4">
+                    <div className="flex justify-between items-end">
+                        <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em]">Matrix Load Sequence</span>
+                        <span className="text-[10px] font-mono text-cyan-400 italic">88%</span>
+                    </div>
+                    <div className="h-[2px] w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
                         <motion.div
-                            className="h-full bg-[var(--accent-primary)] shadow-lg"
-                            initial={{ width: "0%" }}
-                            animate={{ width: "100%" }}
-                            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                            className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 shadow-[0_0_20px_rgba(6,182,212,0.8)]"
+                            initial={{ width: "0%", x: "-100%" }}
+                            animate={{ width: "100%", x: "0%" }}
+                            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
                         />
                     </div>
                 </div>
 
-                <p className="text-[10px] font-black text-[var(--accent-primary)]/60 uppercase tracking-[0.4em] animate-pulse">
-                    Analyzing Cluster Nodes...
+                <div className="mt-12 flex gap-8">
+                    {['SECURE_SYNC', 'DEEP_CRAWL', 'ELITE_NODE'].map(label => (
+                        <div key={label} className="flex items-center gap-2">
+                            <div className="w-1 h-1 rounded-full bg-cyan-500 animate-ping" />
+                            <span className="text-[7px] font-black text-white/30 uppercase tracking-widest">{label}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Elite Diagnostic Overlay */}
+            <div className="absolute top-12 left-12 p-6 border-l border-white/10 space-y-4">
+                <p className="text-[9px] font-mono text-white/20 uppercase tracking-[0.3em] leading-relaxed">
+                    ID: CLUSTER_0x921<br />
+                    LOAD: NOMINAL<br />
+                    SYNC: v3.0.1_STABLE
                 </p>
             </div>
 
-            <div className="absolute bottom-10 left-10 border-l border-[var(--accent-primary)]/50 pl-4 py-2">
-                <p className="text-[8px] font-black text-[var(--accent-primary)]/40 uppercase tracking-widest leading-loose">
-                    Matrix Status: Active<br />
-                    Protocol: 0.5.4<br />
-                    Secure Link Established
+            <div className="absolute bottom-12 right-12 text-right">
+                <p className="text-[10px] font-black text-cyan-500 italic tracking-tighter uppercase">
+                    Institutional Elite Operating System
                 </p>
             </div>
         </motion.div>
