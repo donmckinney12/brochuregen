@@ -1,4 +1,5 @@
 "use client";
+import React from 'react';
 import SuiteLayout from '@/components/SuiteLayout';
 import CommandCenter from '@/components/CommandCenter';
 
