@@ -32,7 +32,7 @@ export default function FeaturedTemplates() {
         {
             title: "Neural Report",
             category: "Analytics",
-            image: "https://images.unsplash.com/photo-1454165833267-0248482b7f3b?auto=format&fit=crop&w=800&q=80",
+            image: "https://images.unsplash.com/photo-1551288049-bb8c83345199?auto=format&fit=crop&w=800&q=80",
             color: "from-orange-600 to-amber-600",
             desc: "Data-heavy institutional reporting for stakeholders.",
             icon: BarChart3
@@ -64,7 +64,7 @@ export default function FeaturedTemplates() {
         {
             title: "FinTech Ledger",
             category: "Financial",
-            image: "https://images.unsplash.com/photo-1611974714015-7b8c7694f83e?auto=format&fit=crop&w=800&q=80",
+            image: "https://images.unsplash.com/photo-1559526324-49c01c039174?auto=format&fit=crop&w=800&q=80",
             color: "from-blue-700 to-indigo-900",
             desc: "Encrypted visual data for decentralized asset management.",
             icon: Landmark
