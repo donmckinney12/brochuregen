@@ -13,8 +13,10 @@ import {
     Globe,
     Eye,
     Lock,
-    ToggleLeft as Toggle,
-    Save
+    ToggleLeft,
+    ToggleRight,
+    Save,
+    Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -30,6 +32,21 @@ export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState('general');
     const [isSaving, setIsSaving] = useState(false);
 
+    // Toggle States [v29.6]
+    const [interfaceSettings, setInterfaceSettings] = useState({
+        nightMode: true,
+        glassmorphism: true,
+        hapticFeedback: false,
+        microAnimations: true
+    });
+
+    const toggleSetting = (key: keyof typeof interfaceSettings) => {
+        setInterfaceSettings(prev => ({
+            ...prev,
+            [key]: !prev[key]
+        }));
+    };
+
     const handleSave = () => {
         setIsSaving(true);
         setTimeout(() => setIsSaving(false), 1500);
@@ -43,7 +60,7 @@ export default function SettingsPage() {
                     <div>
                         <h1 className="text-4xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Command Settings</h1>
                         <p className="text-[var(--foreground)]/80 font-bold tracking-[0.3em] uppercase mt-2 text-xs italic">
-                            Configure Protocol Parameters & Security Clearances
+                            Configure Protocol Parameters • [v29.6] Operational
                         </p>
                     </div>
                     <motion.button
@@ -69,8 +86,8 @@ export default function SettingsPage() {
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id)}
                                 className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${activeTab === item.id
-                                        ? 'bg-[var(--accent-primary)]/10 border-[var(--accent-primary)]/30 text-[var(--foreground)]'
-                                        : 'bg-white/5 border-white/5 text-[var(--foreground)]/60 hover:text-[var(--foreground)] hover:bg-white/10'
+                                    ? 'bg-[var(--accent-primary)]/10 border-[var(--accent-primary)]/30 text-[var(--foreground)]'
+                                    : 'bg-white/5 border-white/5 text-[var(--foreground)]/60 hover:text-[var(--foreground)] hover:bg-white/10'
                                     }`}
                             >
                                 <div className={`p-2 rounded-lg ${activeTab === item.id ? 'bg-[var(--accent-primary)] text-white' : 'bg-white/5 group-hover:bg-white/20'}`}>
@@ -103,19 +120,28 @@ export default function SettingsPage() {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                             {[
-                                                { label: "Neural Night Mode", desc: "For optimal contrast during high-frequency synthesis." },
-                                                { label: "Glassmorphic Focus", desc: "Enable blur protocols for depth perception." },
-                                                { label: "Haptic Feedback", desc: "Initialize mechanical resonance on interaction." },
-                                                { label: "Micro-Animations", desc: "Smooth state transitions for better situational awareness." }
-                                            ].map((pref, i) => (
-                                                <div key={i} className="flex items-center justify-between p-6 bg-white/5 rounded-2xl border border-white/5 group hover:border-[var(--accent-primary)]/20 transition-all">
+                                                { id: 'nightMode' as const, label: "Neural Night Mode", desc: "Optimal contrast during high-frequency synthesis." },
+                                                { id: 'glassmorphism' as const, label: "Glassmorphic Focus", desc: "Enable blur protocols for depth perception." },
+                                                { id: 'hapticFeedback' as const, label: "Haptic Feedback", desc: "Initialize mechanical resonance on interaction." },
+                                                { id: 'microAnimations' as const, label: "Micro-Animations", desc: "Smooth state transitions for better awareness." }
+                                            ].map((pref) => (
+                                                <div
+                                                    key={pref.id}
+                                                    onClick={() => toggleSetting(pref.id)}
+                                                    className={`flex items-center justify-between p-6 bg-white/5 rounded-2xl border transition-all cursor-pointer group hover:scale-[1.02] active:scale-[0.98] ${interfaceSettings[pref.id] ? 'border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/[0.02]' : 'border-white/5'
+                                                        }`}
+                                                >
                                                     <div className="space-y-1">
-                                                        <div className="text-xs font-black uppercase tracking-tight text-[var(--foreground)]">{pref.label}</div>
-                                                        <div className="text-[9px] font-bold uppercase text-[var(--foreground)]/30 tracking-widest leading-none">{pref.desc}</div>
+                                                        <div className={`text-xs font-black uppercase tracking-tight transition-colors ${interfaceSettings[pref.id] ? 'text-[var(--accent-primary)]' : 'text-[var(--foreground)]'}`}>
+                                                            {pref.label}
+                                                        </div>
+                                                        <div className="text-[9px] font-bold uppercase text-[var(--foreground)]/30 tracking-widest leading-none">
+                                                            {pref.desc}
+                                                        </div>
                                                     </div>
-                                                    <button className="text-[var(--accent-primary)] hover:scale-110 transition-transform">
-                                                        <Toggle size={24} />
-                                                    </button>
+                                                    <div className={`transition-all duration-300 ${interfaceSettings[pref.id] ? 'text-[var(--accent-primary)]' : 'text-white/20 group-hover:text-white/40'}`}>
+                                                        {interfaceSettings[pref.id] ? <ToggleRight size={28} /> : <ToggleLeft size={28} />}
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
