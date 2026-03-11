@@ -185,9 +185,9 @@ export default function FeaturedTemplates() {
 
             {/* Version Stamp */}
             <div className="mt-24 text-center pb-12">
-                <div className="inline-block px-10 py-4 border border-white/5 rounded-2xl bg-white/[0.02]">
-                    <p className="text-[10px] font-black uppercase tracking-[0.6em] text-[var(--foreground)]/10 animate-pulse">
-                        Global Distribution Hub • v29.4 • 100% Operational
+                <div className="inline-block px-10 py-4 border border-[var(--foreground)]/20 rounded-2xl bg-[var(--foreground)]/[0.02] shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                    <p className="text-[10px] font-black uppercase tracking-[0.6em] text-[var(--foreground)]/50 animate-pulse">
+                        Global Distribution Hub • v29.5 • 100% Operational
                     </p>
                 </div>
             </div>
