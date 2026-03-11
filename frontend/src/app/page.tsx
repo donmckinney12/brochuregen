@@ -39,12 +39,12 @@ export default function Home() {
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-[var(--accent-tertiary)]/20 blur-[80px] rounded-full translate-y-1/2 -translate-x-1/2" />
 
               <h2 className="text-5xl font-black italic uppercase tracking-tighter leading-tight relative z-10">
-                Ready to Synthesize Your <br />
-                <span className="text-black/20">First Protocol?</span>
+                Scale Your Marketing <br />
+                <span className="text-black/20">Organization Today</span>
               </h2>
 
               <p className="text-xl font-bold text-white/80 max-w-2xl mx-auto italic relative z-10">
-                Join 48,000+ marketers and developers automating their creative collateral with neural precision.
+                Deploy institutional-grade creative infrastructure. High-fidelity synthesis for global teams.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
@@ -53,28 +53,28 @@ export default function Home() {
                   className="w-full sm:w-auto px-12 py-6 bg-white text-[var(--accent-primary)] hover:bg-black hover:text-white rounded-[2rem] font-black uppercase tracking-widest italic shadow-xl transition-all flex items-center justify-center gap-3 group"
                 >
                   <Rocket size={24} className="group-hover:rotate-12 transition-transform" />
-                  Launch Studio
+                  Initialize Access
                 </Link>
                 <Link
                   href="/login"
                   className="w-full sm:w-auto px-12 py-6 bg-transparent hover:bg-white/10 text-white border-2 border-white/30 rounded-[2rem] font-black uppercase tracking-widest italic transition-all flex items-center justify-center gap-2"
                 >
-                  Login to Vault
+                  Secure Login
                 </Link>
               </div>
 
               <div className="pt-8 border-t border-white/20 flex flex-wrap items-center justify-center gap-8 relative z-10">
                 <div className="flex items-center gap-2">
                   <Zap size={16} />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Enterprise Ready</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest">SOC2 Ready</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Zap size={16} />
-                  <span className="text-[10px] font-black uppercase tracking-widest">ISO 27001 Neural Sync</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest">Institutional Neural Sync</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Zap size={16} />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Infinite Scalability</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest">Global Asset Scale</span>
                 </div>
               </div>
             </motion.div>

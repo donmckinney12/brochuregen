@@ -79,7 +79,7 @@ export default function Footer() {
                 <div className="border-t border-[var(--glass-border)] pt-12 pb-8">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                         <p className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.2em]">
-                            © {new Date().getFullYear()} BROCHUREGEN_OPS [v28.5]. ALL SYSTEMS NOMINAL.
+                            © {new Date().getFullYear()} BROCHUREGEN_OPS [v28.5.1]. ALL SYSTEMS NOMINAL.
                         </p>
 
 
