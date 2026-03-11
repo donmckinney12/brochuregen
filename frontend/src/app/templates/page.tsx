@@ -3,7 +3,10 @@ import React from 'react';
 import SuiteLayout from '@/components/SuiteLayout';
 import FeaturedTemplates from '@/components/FeaturedTemplates';
 
+import { useRouter } from 'next/navigation';
+
 export default function TemplatesPage() {
+    const router = useRouter();
     return (
         <SuiteLayout>
             <div className="max-w-6xl mx-auto">
@@ -13,7 +16,11 @@ export default function TemplatesPage() {
                         High-Fidelity Neural Templates for Global Deployment
                     </p>
                 </div>
-                <FeaturedTemplates />
+                <FeaturedTemplates
+                    onSelect={(template) => {
+                        router.push(`/dashboard?template=${encodeURIComponent(template.title)}`);
+                    }}
+                />
             </div>
         </SuiteLayout>
     );

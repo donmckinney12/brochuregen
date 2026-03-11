@@ -3,7 +3,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Layers, Zap, Target, Rocket, Globe, BarChart3, ShieldCheck, Truck, Landmark, Building2, Leaf, Presentation, CalendarDays } from 'lucide-react';
 
-export default function FeaturedTemplates() {
+interface FeaturedTemplatesProps {
+    onSelect?: (template: any) => void;
+}
+
+export default function FeaturedTemplates({ onSelect }: FeaturedTemplatesProps) {
     const templates = [
         {
             title: "Tri-Fold Protocol",
@@ -126,7 +130,8 @@ export default function FeaturedTemplates() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: (index % 4) * 0.1 }}
-                        className="group relative rounded-[2.5rem] overflow-hidden shadow-2xl hover:shadow-[0_0_80px_rgba(0,0,0,0.4)] transition-all duration-700 bg-[var(--background)] border border-white/5 active:scale-[0.98]"
+                        onClick={() => onSelect?.(template)}
+                        className="group relative rounded-[2.5rem] overflow-hidden shadow-2xl hover:shadow-[0_0_80px_rgba(var(--accent-primary-rgb),0.4)] transition-all duration-700 bg-[var(--background)] border border-white/5 active:scale-[0.98] cursor-pointer"
                     >
                         <div className="aspect-[4/5] relative overflow-hidden bg-black">
                             <img
