@@ -2,138 +2,110 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Rocket, ChevronRight, Sparkles, Zap, Shield, MousePointer2, Layers, Cpu, CheckCircle2, Building2, Briefcase, BarChart3, Globe2 } from 'lucide-react';
+import { Rocket, ChevronRight, Shield, Zap, Building2, Globe2, BarChart3, Briefcase, CheckCircle2, Star, ArrowRight } from 'lucide-react';
 
 export default function LandingHero() {
     return (
-        <section className="relative pt-24 pb-20 overflow-hidden">
-            {/* Professional Ambient Layer */}
-            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_10%,var(--accent-primary)/0.02,transparent_40%)]" />
+        <section className="relative pt-32 pb-24 overflow-hidden border-b border-white/5">
+            {/* Elegant Enterprise Mesh Background */}
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,var(--accent-primary)/0.05,transparent_50%)]" />
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--accent-primary)]/20 to-transparent" />
 
             <div className="max-w-7xl mx-auto px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                <div className="flex flex-col items-center text-center space-y-12">
 
-                    {/* Messaging Node */}
-                    <div className="lg:col-span-7 space-y-12 text-center lg:text-left">
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl"
-                        >
-                            <Shield className="text-[var(--accent-primary)]" size={14} />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/60">Enterprise Marketing Automation Platform</span>
-                        </motion.div>
+                    {/* Enterprise Badge */}
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-3xl shadow-2xl"
+                    >
+                        <Shield className="text-[var(--accent-primary)]" size={16} />
+                        <span className="text-[11px] font-black uppercase tracking-[0.25em] text-[var(--foreground)]/60">Enterprise Marketing Protocol v4.0</span>
+                        <div className="w-px h-4 bg-white/10 mx-2" />
+                        <div className="flex items-center gap-1.5">
+                            <Star size={12} className="text-yellow-500 fill-yellow-500" />
+                            <span className="text-[10px] font-bold text-[var(--foreground)]/80">Leading Authority</span>
+                        </div>
+                    </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="space-y-8"
-                        >
-                            <h1 className="text-5xl sm:text-6xl md:text-8xl font-black text-[var(--foreground)] tracking-tighter uppercase leading-[0.85] lg:max-w-3xl">
-                                Scale Your <br />
-                                <span className="text-[var(--accent-primary)]">Brand DNA</span> <br />
-                                <span className="text-[var(--foreground)]/40">Autonomously</span>
-                            </h1>
-                            <p className="text-xl sm:text-2xl font-bold text-[var(--foreground)]/50 max-w-2xl mx-auto lg:mx-0 tracking-tight leading-relaxed">
-                                Deploy high-fidelity marketing collateral across every channel with a single source URL. Professional design, zero manual effort.
-                            </p>
-                        </motion.div>
+                    {/* High-Authority Headline */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        className="space-y-8 max-w-5xl"
+                    >
+                        <h1 className="text-6xl sm:text-7xl lg:text-9xl font-black text-[var(--foreground)] tracking-[calc(-0.04em)] uppercase leading-[0.8] italic">
+                            Automate Your <br />
+                            <span className="bg-gradient-to-br from-[var(--foreground)] via-[var(--accent-primary)] to-[var(--accent-secondary)] bg-clip-text text-transparent">Brand Scale</span>
+                        </h1>
+                        <p className="text-xl sm:text-2xl font-bold text-[var(--foreground)]/40 max-w-3xl mx-auto tracking-tight leading-relaxed uppercase italic">
+                            The autonomous creative engine for global marketing teams. Deploy high-fidelity collateral across every channel with infinite precision and zero manual overhead.
+                        </p>
+                    </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6"
+                    {/* Enterprise CTAs */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto"
+                    >
+                        <Link
+                            href="/dashboard"
+                            className="w-full sm:w-auto px-14 py-7 bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--accent-primary)] hover:text-white rounded-2xl font-black uppercase tracking-widest italic transition-all flex items-center justify-center gap-4 group shadow-[0_25px_60px_rgba(0,0,0,0.4)]"
                         >
-                            <Link
-                                href="/dashboard"
-                                className="w-full sm:w-auto px-12 py-6 bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--accent-primary)] hover:text-white rounded-2xl font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 group shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
-                            >
-                                <Rocket size={20} className="group-hover:rotate-12 transition-transform" />
-                                Launch Design Studio
-                            </Link>
-                            <Link
-                                href="/enterprise"
-                                className="w-full sm:w-auto px-12 py-6 bg-white/5 hover:bg-white/10 text-[var(--foreground)] border border-white/10 rounded-2xl font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 group"
-                            >
-                                Contact Sales
-                                <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                        </motion.div>
+                            Launch Studio
+                            <Rocket size={24} className="group-hover:rotate-12 transition-transform" />
+                        </Link>
+                        <Link
+                            href="/enterprise"
+                            className="w-full sm:w-auto px-14 py-7 bg-white/[0.03] hover:bg-white/[0.08] text-[var(--foreground)] border border-white/10 rounded-2xl font-black uppercase tracking-widest italic transition-all flex items-center justify-center gap-3 group"
+                        >
+                            Contact Sales
+                            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </motion.div>
 
-                        {/* Enterprise Trust Ribbon */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.6 }}
-                            className="pt-12 space-y-6"
-                        >
-                            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--foreground)]/20">Powering Modern Marketing Teams</p>
-                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-12 gap-y-8 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-                                <div className="flex items-center gap-2 font-black text-xl tracking-tighter"><Building2 size={24} /> TECHCORP</div>
-                                <div className="flex items-center gap-2 font-black text-xl tracking-tighter"><Globe2 size={24} /> GLOBAL_X</div>
-                                <div className="flex items-center gap-2 font-black text-xl tracking-tighter"><BarChart3 size={24} /> NEXUS_FINANCE</div>
-                                <div className="flex items-center gap-2 font-black text-xl tracking-tighter"><Briefcase size={24} /> STRAT_SYS</div>
+                    {/* Trust Indicators / Social Proof Ticker */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="pt-16 w-full space-y-10"
+                    >
+                        <div className="flex flex-wrap items-center justify-center gap-12 font-black uppercase tracking-[0.3em] text-[10px] text-[var(--foreground)]/20 italic">
+                            <div className="flex items-center gap-3 group hover:text-[var(--accent-primary)] transition-colors">
+                                <CheckCircle2 size={16} /> SOC2 Compliant
                             </div>
-                        </motion.div>
-                    </div>
-
-                    {/* Proportional Dashboard Preview - Column 8-12 */}
-                    <div className="lg:col-span-5 relative">
-                        <motion.div
-                            initial={{ opacity: 0, x: 40 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 1, ease: "easeOut" }}
-                            className="relative"
-                        >
-                            {/* Glow Effect */}
-                            <div className="absolute -inset-10 bg-[var(--accent-primary)]/10 blur-[100px] rounded-full" />
-
-                            <div className="relative premium-card p-2 rounded-[2.5rem] border-white/10 bg-white/5 backdrop-blur-3xl shadow-[0_50px_100px_rgba(0,0,0,0.4)]">
-                                <div className="aspect-[4/5] rounded-[2.2rem] overflow-hidden relative group">
-                                    <img
-                                        src="/hero-showcase.png"
-                                        alt="Enterprise Output"
-                                        className="h-full w-full object-cover brightness-105 group-hover:scale-105 transition-transform duration-1000"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-
-                                    {/* Action Module */}
-                                    <div className="absolute bottom-8 left-8 right-8 p-6 bg-black/60 backdrop-blur-3xl border border-white/10 rounded-2xl flex items-center justify-between">
-                                        <div className="space-y-1">
-                                            <p className="text-[8px] font-black uppercase text-white/40 tracking-widest">Protocol Status</p>
-                                            <p className="text-xs font-bold text-white uppercase tracking-tighter">Asset Synchronized</p>
-                                        </div>
-                                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
-                                            <CheckCircle2 size={18} className="text-emerald-400" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Floating Metric Card */}
-                                <motion.div
-                                    animate={{ y: [0, -10, 0] }}
-                                    transition={{ duration: 5, repeat: Infinity }}
-                                    className="absolute -right-6 top-1/4 p-5 bg-[var(--glass-bg)] border border-white/10 rounded-2xl shadow-2xl space-y-4 w-44 backdrop-blur-2xl"
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <Cpu size={14} className="text-[var(--accent-primary)]" />
-                                        <span className="text-[8px] font-black uppercase text-[var(--foreground)]/40 tracking-widest">Synthesis active</span>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <div className="flex justify-between text-[10px] font-bold italic">
-                                            <span className="text-[var(--foreground)]/60">Resonance</span>
-                                            <span className="text-[var(--accent-primary)]">99.4%</span>
-                                        </div>
-                                        <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                                            <div className="h-full w-[94%] bg-[var(--accent-primary)]" />
-                                        </div>
-                                    </div>
-                                </motion.div>
+                            <div className="flex items-center gap-3 group hover:text-[var(--accent-primary)] transition-colors">
+                                <CheckCircle2 size={16} /> GDPR Certified
                             </div>
-                        </motion.div>
-                    </div>
+                            <div className="flex items-center gap-3 group hover:text-[var(--accent-primary)] transition-colors">
+                                <CheckCircle2 size={16} /> ISO 27001 Ready
+                            </div>
+                        </div>
+
+                        <div className="relative overflow-hidden py-12 border-y border-white/5 bg-white/[0.01]">
+                            <div className="flex items-center justify-center flex-wrap gap-x-20 gap-y-10 opacity-30 grayscale saturate-0 hover:grayscale-0 hover:saturate-100 transition-all duration-1000">
+                                <div className="flex items-center gap-3 font-black text-2xl tracking-tighter italic"><Building2 size={32} /> TECHCORP</div>
+                                <div className="flex items-center gap-3 font-black text-2xl tracking-tighter italic"><Globe2 size={32} /> GLOBAL_INTEL</div>
+                                <div className="flex items-center gap-3 font-black text-2xl tracking-tighter italic"><BarChart3 size={32} /> NEXUS_CAPITAL</div>
+                                <div className="flex items-center gap-3 font-black text-2xl tracking-tighter italic"><Briefcase size={32} /> STRAT_V_OPS</div>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* High-Tech Ambient Ornament */}
+                    <motion.div
+                        animate={{
+                            scale: [1, 1.1, 1],
+                            opacity: [0.3, 0.5, 0.3]
+                        }}
+                        transition={{ duration: 10, repeat: Infinity }}
+                        className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[var(--accent-primary)]/5 blur-[120px] rounded-full pointer-events-none"
+                    />
                 </div>
             </div>
         </section>
