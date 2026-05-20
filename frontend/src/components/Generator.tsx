@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import ThreeDBrochure from '@/components/ThreeDBrochure';
 import AIRefinerModal from '@/components/AIRefinerModal';
-import NeuralLoading from '@/components/NeuralLoading';
+import NeuralLoading from '@/components/ContentLoading';
 import { AnimatePresence } from 'framer-motion';
 import { API_URL } from '@/config';
 
