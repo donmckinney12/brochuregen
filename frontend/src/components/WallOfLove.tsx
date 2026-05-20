@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Star, Quote, ShieldCheck, Heart } from 'lucide-react';
+import { Star, Quote, Heart } from 'lucide-react';
 
 const testimonials = [
     {
@@ -125,13 +125,6 @@ export default function WallOfLove() {
                     transition={{ delay: 0.5 }}
                     className="mt-20 flex flex-col sm:flex-row items-center justify-center gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-[var(--foreground)]/30"
                 >
-                    <div className="flex items-center gap-2">
-                        <ShieldCheck size={16} />
-                        Verified Institutional Users
-                    </div>
-                    <div className="w-1 h-1 bg-[var(--foreground)]/10 rounded-full hidden sm:block" />
-                    <div>Enterprise Grade Security Protocols</div>
-                    <div className="w-1 h-1 bg-[var(--foreground)]/10 rounded-full hidden sm:block" />
                     <div className="text-[var(--accent-primary)] animate-pulse">Live from Global Clusters</div>
                 </motion.div>
             </div>

@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Globe, Zap, BarChart3, CheckCircle2, Layout, Cpu, RefreshCw } from 'lucide-react';
+import { Shield, Globe, Zap, BarChart3, CheckCircle2, Layout, RefreshCw } from 'lucide-react';
 
 export default function EnterpriseFeatures() {
     const features = [
@@ -85,36 +85,6 @@ export default function EnterpriseFeatures() {
                     ))}
                 </div>
 
-                {/* Performance Metric Banner */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    className="mt-20 p-8 rounded-3xl bg-gradient-to-r from-white/[0.03] to-transparent border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8"
-                >
-                    <div className="flex items-center gap-6">
-                        <div className="p-4 bg-[var(--accent-primary)]/10 rounded-2xl">
-                            <Cpu size={32} className="text-[var(--accent-primary)]" />
-                        </div>
-                        <div>
-                            <h4 className="text-lg font-bold text-[var(--foreground)] uppercase tracking-tight">Institutional Stability</h4>
-                            <p className="text-sm text-[var(--foreground)]/40 font-medium">99.99% Uptime SLA for global design clusters.</p>
-                        </div>
-                    </div>
-                    <div className="flex gap-12 font-bold text-center">
-                        <div>
-                            <div className="text-2xl text-[var(--foreground)]">45%</div>
-                            <div className="text-[10px] uppercase tracking-widest text-[var(--foreground)]/30">Faster TTM</div>
-                        </div>
-                        <div>
-                            <div className="text-2xl text-[var(--foreground)]">120+</div>
-                            <div className="text-[10px] uppercase tracking-widest text-[var(--foreground)]/30">Languages</div>
-                        </div>
-                        <div>
-                            <div className="text-2xl text-[var(--foreground)]">0</div>
-                            <div className="text-[10px] uppercase tracking-widest text-[var(--foreground)]/30">Brand Deviance</div>
-                        </div>
-                    </div>
-                </motion.div>
             </div>
         </section>
     );
