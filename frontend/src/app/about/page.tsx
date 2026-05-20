@@ -57,6 +57,53 @@ export default function About() {
                             </p>
                         </div>
                     </div>
+
+                    {/* Meet the Founder Section */}
+                    <section className="relative overflow-hidden rounded-[2.5rem] bg-slate-950 p-1 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070')] bg-cover bg-center">
+                        <div className="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-8 md:p-16 rounded-[2.4rem] border border-white/20">
+                            <div className="grid md:grid-cols-12 gap-12 items-center">
+                                <div className="md:col-span-5 relative">
+                                    <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+                                        <img 
+                                            src="/images/founder.jpg" 
+                                            alt="Don McKinney - Founder"
+                                            className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                        />
+                                    </div>
+                                    <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-600/10 blur-3xl rounded-full"></div>
+                                </div>
+                                <div className="md:col-span-7">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest mb-6 border border-blue-100 dark:border-blue-800">
+                                        Meet the Founder
+                                    </div>
+                                    <h2 className="text-3xl md:text-5xl font-black mb-4 tracking-tighter italic uppercase text-slate-900 dark:text-white leading-none">
+                                        Don McKinney
+                                    </h2>
+                                    <p className="text-blue-600 dark:text-blue-400 font-bold uppercase tracking-[0.2em] text-xs mb-8">
+                                        Founder & AI/ML Engineer
+                                    </p>
+                                    <div className="space-y-6 text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
+                                        <p>
+                                            With a background in building complex Machine Learning models and Generative AI systems, I saw a gap between high-end design capabilities and the everyday business owner.
+                                        </p>
+                                        <p>
+                                            BrochureGen isn't just a template tool—it's the culmination of years of technical research into how AI can understand and replicate brand aesthetics. My mission is to ensure that every business, regardless of size, has access to "God-Tier" design at a fraction of the cost.
+                                        </p>
+                                    </div>
+                                    <div className="mt-10 flex gap-6">
+                                        <div className="flex flex-col">
+                                            <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter italic">15+</span>
+                                            <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">AI Projects</span>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter italic">ML</span>
+                                            <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">Architecture</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
 
                 <div className="mt-20 text-center">

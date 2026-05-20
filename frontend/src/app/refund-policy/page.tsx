@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
+import { ShieldCheck, Clock, AlertTriangle, LifeBuoy, CreditCard, ChevronRight } from 'lucide-react';
 
 export const metadata = {
     title: 'Refund Policy - BrochureGen AI',
@@ -8,61 +9,124 @@ export const metadata = {
 
 export default function RefundPolicy() {
     return (
-        <div className="min-h-screen font-sans bg-white dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300">
+        <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] relative overflow-hidden transition-colors duration-500">
+            {/* Background Layers */}
+            <div className="fixed inset-0 z-0">
+                <div className="absolute inset-0 bg-[var(--background)]" />
+                <div className="absolute inset-0 mesh-gradient opacity-20" />
+                <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-b from-[var(--accent-primary)]/10 via-[var(--accent-secondary)]/5 to-transparent blur-[120px] opacity-40"></div>
+                <div className="absolute inset-0 noise-overlay opacity-[0.03]"></div>
+            </div>
+
             <Navbar />
 
-            <main className="pt-32 pb-20 px-6 max-w-4xl mx-auto">
-                <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
-                    Refund Policy
-                </h1>
-                <p className="text-center text-slate-500 dark:text-slate-400 mb-12">
-                    Last updated: {new Date().toLocaleDateString()}
-                </p>
-
-                <div className="prose prose-slate dark:prose-invert max-w-none">
-                    <p>
-                        At BrochureGen AI, we strive to provide high-quality services and ensure customer satisfaction. This Refund Policy outlines the terms under which refunds may be granted.
+            <main className="pt-32 pb-32 px-6 max-w-5xl mx-auto relative z-10">
+                {/* Header Section */}
+                <div className="text-center mb-20 animate-in fade-in slide-in-from-top-4 duration-700">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-[10px] font-bold mb-6 border border-blue-500/20 tracking-widest uppercase">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                        Customer Protection Protocol
+                    </div>
+                    <h1 className="text-6xl md:text-7xl font-black tracking-tighter mb-6 italic uppercase">
+                        Refund <span className="gradient-text">Policy</span>
+                    </h1>
+                    <p className="text-[var(--foreground)]/60 max-w-2xl mx-auto text-lg leading-relaxed">
+                        Transparent, fair, and focused on your success. Our commitment to quality means we stand behind every generation.
                     </p>
-
-                    <h3>1. Satisfaction Guarantee & 7-Day Trial</h3>
-                    <p>
-                        We offer a <strong>7-day money-back guarantee</strong> on all first-time subscriptions. If you are not satisfied with our service within the first 7 days of your initial purchase, you may request a full refund, no questions asked.
+                    <p className="text-[10px] font-bold text-[var(--foreground)]/40 uppercase tracking-[0.3em] mt-8">
+                        Last updated: {new Date().toLocaleDateString()}
                     </p>
-                    <p>
-                        For deployments with a free trial period, you will not be charged until the trial period ends. You may cancel at any time during the trial to avoid being charged.
-                    </p>
+                </div>
 
-                    <h3>2. Eligibility for Refunds</h3>
-                    <ul>
-                        <li><strong>First-Time Subscribers:</strong> Eligible for a full refund within 7 days of the initial charge.</li>
-                        <li><strong>Technical Issues:</strong> If you experience persistent technical errors that prevent you from using the core features of the service, and our support team is unable to resolve them within a reasonable timeframe, you may be eligible for a partial or full refund.</li>
-                        <li><strong>Duplicate Charges:</strong> If you are accidentally charged twice for the same billing period, we will refund the duplicate charge immediately.</li>
-                    </ul>
+                {/* Content Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    {/* 1. Satisfaction Guarantee */}
+                    <div className="premium-card p-10 bg-[var(--card-bg)] border-[var(--glass-border)] group hover:border-blue-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 mb-8 border border-blue-500/20 group-hover:scale-110 transition-transform">
+                            <ShieldCheck size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Satisfaction Guarantee</h2>
+                        <div className="space-y-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <p>
+                                We offer a <strong className="text-blue-500">7-day money-back guarantee</strong> on all first-time subscriptions.
+                            </p>
+                            <p>
+                                If you are not satisfied with our service within the first 7 days of your initial purchase, you may request a full refund, no questions asked.
+                            </p>
+                            <p className="text-xs italic bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
+                                Free trials: You will not be charged until the trial ends. Cancel anytime to avoid charges.
+                            </p>
+                        </div>
+                    </div>
 
-                    <h3>3. Non-Refundable Circumstances</h3>
-                    <p>
-                        Refunds are generally not granted in the following situations:
-                    </p>
-                    <ul>
-                        <li>Requests made more than 7 days after the initial purchase.</li>
-                        <li>Renewal charges for ongoing subscriptions where cancellation was not requested before the renewal date.</li>
-                        <li>Violation of our Terms of Service.</li>
-                    </ul>
+                    {/* 2. Eligibility */}
+                    <div className="premium-card p-10 bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] group hover:border-cyan-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 mb-8 border border-cyan-500/20 group-hover:scale-110 transition-transform">
+                            <Clock size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Eligibility</h2>
+                        <ul className="space-y-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-cyan-500 shrink-0 mt-1" />
+                                <span><strong>First-Time Subscribers:</strong> Full refund within 7 days.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-cyan-500 shrink-0 mt-1" />
+                                <span><strong>Technical Issues:</strong> Persistent errors our team can't resolve in reasonable time.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-cyan-500 shrink-0 mt-1" />
+                                <span><strong>Duplicate Charges:</strong> Immediate refund for accidental double billing.</span>
+                            </li>
+                        </ul>
+                    </div>
 
-                    <h3>4. How to Request a Refund</h3>
-                    <p>
-                        To request a refund, please contact our support team at <a href="mailto:support@brochuregen.ai" className="text-blue-600 dark:text-blue-400 hover:underline">support@brochuregen.ai</a> with your account email and order details.
-                    </p>
+                    {/* 3. Non-Refundable */}
+                    <div className="premium-card p-10 bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] group hover:border-rose-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-8 border border-rose-500/20 group-hover:scale-110 transition-transform">
+                            <AlertTriangle size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Non-Refundable</h2>
+                        <ul className="space-y-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-rose-500 shrink-0 mt-1" />
+                                <span>Requests made after the 7-day initial purchase window.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-rose-500 shrink-0 mt-1" />
+                                <span>Renewal charges where cancellation happened after the billing date.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-rose-500 shrink-0 mt-1" />
+                                <span>Accounts in violation of our Terms of Service.</span>
+                            </li>
+                        </ul>
+                    </div>
 
-                    <h3>5. Processing Time</h3>
-                    <p>
-                        Approved refunds are typically processed within 5-10 business days, depending on your bank or credit card provider.
-                    </p>
+                    {/* 4. Support & Processing */}
+                    <div className="premium-card p-10 bg-[var(--card-bg)] border-[var(--glass-border)] group hover:border-emerald-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-8 border border-emerald-500/20 group-hover:scale-110 transition-transform">
+                            <LifeBuoy size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Support & Process</h2>
+                        <div className="space-y-6 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <p>
+                                Contact <strong>support@brochuregen.ai</strong> with your account details to initiate a refund request.
+                            </p>
+                            <div className="flex items-center gap-4 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
+                                <CreditCard size={20} className="text-emerald-500" />
+                                <span className="text-[10px] font-bold uppercase tracking-widest">Processing Time: 5-10 Business Days</span>
+                            </div>
+                        </div>
+                    </div>
 
-                    <hr className="my-8 border-slate-200 dark:border-slate-800" />
+                </div>
 
-                    <p className="text-sm text-slate-500">
-                        BrochureGen AI reserves the right to update this policy at any time. Changes will be effective immediately upon posting to this page.
+                {/* Footer Disclaimer */}
+                <div className="mt-20 text-center">
+                    <p className="text-[10px] font-bold text-[var(--foreground)]/30 uppercase tracking-[0.4em] max-w-xl mx-auto leading-relaxed">
+                        BrochureGen AI reserves the right to update this protocol. Changes are active immediately upon deployment.
                     </p>
                 </div>
             </main>

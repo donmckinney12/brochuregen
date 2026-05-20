@@ -45,7 +45,7 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
                     </div>
                     <div>
                         <h4 className="text-sm font-black italic uppercase tracking-tighter text-[var(--foreground)]">Vocal Pattern Analysis</h4>
-                        <p className="text-[10px] text-[var(--foreground)]/50 font-bold uppercase tracking-widest">Neural Calibration Lab</p>
+                        <p className="text-[10px] text-[var(--foreground)]/50 font-bold uppercase tracking-widest">Brand Voice Analysis</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
@@ -97,42 +97,42 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
                         className="w-full h-48 p-8 bg-transparent text-sm text-[var(--foreground)] font-medium leading-relaxed focus:outline-none placeholder:text-[var(--foreground)]/50 resize-none"
                         placeholder="Paste sample copy, mission statements, or brand manifestos here..."
                     />
-                    <div className="px-8 py-6 bg-[var(--foreground)]/5 border-t border-[var(--glass-border)] flex flex-col md:flex-row gap-4 items-center justify-between">
-                        <div className="flex items-center gap-4 w-full md:w-auto">
-                            <div className="relative flex-1 md:w-64">
+                    <div className="px-8 py-6 bg-[var(--foreground)]/5 border-t border-[var(--glass-border)]">
+                        <div className="flex flex-col xl:flex-row items-center gap-6">
+                            <div className="flex flex-col sm:flex-row items-center gap-4 flex-1 w-full">
                                 <input
                                     type="url"
                                     value={scanUrl}
                                     onChange={(e) => setScanUrl(e.target.value)}
-                                    placeholder="Enter Protocol URL to scan..."
-                                    className="w-full bg-[var(--background)] border border-[var(--glass-border)] rounded-xl py-3 px-4 text-[10px] text-[var(--foreground)] focus:ring-1 focus:ring-[var(--accent-primary)]/50 outline-none placeholder:text-[var(--foreground)]/80"
+                                    placeholder="Enter Website URL to scan..."
+                                    className="w-full sm:flex-1 bg-[var(--background)] border border-[var(--glass-border)] rounded-xl py-3 px-4 text-[10px] text-[var(--foreground)] focus:ring-1 focus:ring-[var(--accent-primary)]/50 outline-none placeholder:text-[var(--foreground)]/80"
                                 />
+                                <button
+                                    onClick={() => onScan(scanUrl)}
+                                    disabled={isScanning || !scanUrl}
+                                    className="w-full sm:w-auto px-6 py-3 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[var(--accent-primary)] hover:text-white transition-all disabled:opacity-30 whitespace-nowrap"
+                                >
+                                    {isScanning ? 'Running...' : 'Analyze Site'}
+                                </button>
                             </div>
                             <button
-                                onClick={() => onScan(scanUrl)}
-                                disabled={isScanning || !scanUrl}
-                                className="px-6 py-3 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[var(--accent-primary)] hover:text-white transition-all disabled:opacity-30"
+                                onClick={handleAnalyze}
+                                disabled={isAnalyzing || text === initialCalibration}
+                                className="w-full xl:w-auto px-10 py-4 bg-[var(--accent-primary)] text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[var(--accent-primary)]/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 whitespace-nowrap"
                             >
-                                {isScanning ? 'Syncing...' : 'Neural Scan'}
+                                {isAnalyzing ? (
+                                    <>
+                                        <Zap size={16} className="animate-pulse" />
+                                        Calibrating...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Sparkles size={16} />
+                                        Analyze Content
+                                    </>
+                                )}
                             </button>
                         </div>
-                        <button
-                            onClick={handleAnalyze}
-                            disabled={isAnalyzing || text === initialCalibration}
-                            className="w-full md:w-auto px-10 py-4 bg-[var(--accent-primary)] text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-[var(--accent-primary)]/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-                        >
-                            {isAnalyzing ? (
-                                <>
-                                    <Zap size={16} className="animate-pulse" />
-                                    Calibrating...
-                                </>
-                            ) : (
-                                <>
-                                    <Sparkles size={16} />
-                                    Initial Pattern Analysis
-                                </>
-                            )}
-                        </button>
                     </div>
                 </div>
             </div>
@@ -143,8 +143,8 @@ export default function VoiceTrainer({ initialCalibration, onSave, isScanning, o
                     <Shield size={20} />
                 </div>
                 <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)] italic">Neural Guard Enabled</p>
-                    <p className="text-[9px] text-[var(--foreground)]/80 font-bold uppercase tracking-tighter mt-0.5">Brand Voice consistency enforced across all generation nodes.</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)] italic">Safety Mode Active</p>
+                    <p className="text-[9px] text-[var(--foreground)]/80 font-bold uppercase tracking-tighter mt-0.5">Brand Voice consistency enforced across all generation services.</p>
                 </div>
             </div>
         </div>

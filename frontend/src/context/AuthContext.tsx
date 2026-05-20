@@ -4,7 +4,7 @@ import { useUser, useClerk, useAuth as useClerkAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { API_URL } from '@/config';
 
-type Plan = 'free' | 'pro' | 'agency' | 'enterprise' | null;
+import { Plan, hasFeature as checkTierFeature, FEATURE_GATES, PLAN_METADATA } from '@/config/tiers';
 
 interface UserProfile {
     id: string;
@@ -32,7 +32,8 @@ interface AuthContextType {
     syncError: string | null;
     signOut: () => Promise<void>;
     refreshProfile: () => Promise<void>;
-    currentPlan: Plan;
+    currentPlan: Plan | null;
+    hasFeature: (feature: keyof typeof FEATURE_GATES) => boolean;
     deductCredit: (type: 'generate' | 'refine') => Promise<{ success: boolean; error?: string }>;
     getToken: (options?: any) => Promise<string | null>;
 }
@@ -47,11 +48,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [syncError, setSyncError] = useState<string | null>(null);
     const fetchingProfileRef = React.useRef(false);
+    const isMountedRef = React.useRef(true);
     const router = useRouter();
 
     const fetchProfile = async (skipCache = false) => {
         if (fetchingProfileRef.current && !skipCache) {
-            console.log("⏭️ fetchProfile already active, skipping re-initialization.");
+            console.log("⏭️ fetchProfile already active, skipping re-fetch.");
             return;
         }
 
@@ -62,8 +64,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (!clerkUser) {
             console.log("ℹ️ No Clerk user found, clearing profile state");
-            setUser(null);
-            setIsLoadingProfile(false);
+            if (isMountedRef.current) {
+                setUser(null);
+                setIsLoadingProfile(false);
+            }
             fetchingProfileRef.current = false;
             return;
         }
@@ -111,8 +115,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (response.ok) {
                 const data = await response.json();
                 console.log("✅ Profile fetched successfully:", data.id);
-                setUser(data);
-                console.log("📊 Fetched plan:", data.plan);
+                if (isMountedRef.current) {
+                    // Normalize plan to handle potential casing or naming mismatches from backend
+                    const normalizedPlan = (data.plan?.toLowerCase() || 'free') as Plan;
+                    const validatedPlan = PLAN_METADATA[normalizedPlan] ? normalizedPlan : 'free';
+                    
+                    setUser({
+                        ...data,
+                        plan: validatedPlan
+                    });
+                    console.log("📊 Fetched & Normalized plan:", validatedPlan);
+                }
             } else if (response.status === 401) {
                 console.warn("⚠️ 401 Unauthorized. Retrying with skipCache: true...");
                 const freshToken = await getToken({ skipCache: true });
@@ -138,8 +151,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
                     if (retryResponse.ok) {
                         const data = await retryResponse.json();
-                        console.log("✅ Profile fetched after token refresh:", data.id);
-                        setUser(data);
+                        if (isMountedRef.current) {
+                            const normalizedPlan = (data.plan?.toLowerCase() || 'free') as Plan;
+                            const validatedPlan = PLAN_METADATA[normalizedPlan] ? normalizedPlan : 'free';
+                            
+                            setUser({
+                                ...data,
+                                plan: validatedPlan
+                            });
+                        }
                         return;
                     }
                 }
@@ -164,7 +184,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.error("❌ Error fetching profile:", error);
             }
         } finally {
-            setIsLoadingProfile(false);
+            if (isMountedRef.current) {
+                setIsLoadingProfile(false);
+            }
             fetchingProfileRef.current = false;
             console.log("🏁 fetchProfile completed");
         }
@@ -172,7 +194,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const warmUpBackend = async () => {
         try {
-            console.log("🔥 Initializing backend warm-up protocol...");
+            console.log("🔥 Refreshing backend connection...");
             // Non-blocking ping to wake up Fly.io machine
             fetch(`${API_URL}/health`).catch(() => { });
         } catch (e) { }
@@ -204,12 +226,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     return;
                 }
                 console.log("ℹ️ User not signed in, clearing state.");
-                setUser(null);
-                setIsLoadingProfile(false);
+                if (isMountedRef.current) {
+                    setUser(null);
+                    setIsLoadingProfile(false);
+                }
             }
         }, isPaymentReturn ? 3000 : 500);
 
-        return () => clearTimeout(stabilizeTimer);
+        return () => {
+            isMountedRef.current = false;
+            clearTimeout(stabilizeTimer);
+        };
     }, [clerkUser?.id, isClerkLoaded, isSignedIn]);
 
     const signOut = async () => {
@@ -247,6 +274,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const hasFeature = (feature: keyof typeof FEATURE_GATES) => {
+        return checkTierFeature(user?.plan, feature);
+    };
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -256,6 +287,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             signOut,
             refreshProfile: fetchProfile,
             currentPlan: user?.plan || null,
+            hasFeature,
             deductCredit,
             getToken
         }}>

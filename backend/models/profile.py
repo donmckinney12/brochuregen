@@ -73,6 +73,7 @@ class Brochure(Base):
     owner = relationship("Profile", back_populates="brochures")
     organization = relationship("Organization", back_populates="brochures")
     views = relationship("BrochureView", back_populates="brochure")
+    orders = relationship("PhysicalOrder", back_populates="brochure")
 
 class BrochureView(Base):
     __tablename__ = "brochure_views"
@@ -143,6 +144,22 @@ class BrochureEngagement(Base):
     last_interaction = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     brochure = relationship("Brochure", back_populates="engagements")
+
+class PhysicalOrder(Base):
+    __tablename__ = "physical_orders"
+    id = Column(Integer, primary_key=True, index=True)
+    brochure_id = Column(Integer, ForeignKey("brochures.id"))
+    user_id = Column(String, ForeignKey("profiles.id"))
+    quantity = Column(Integer, nullable=False)
+    paper_stock = Column(String) # e.g., '100lb Silk', '80lb Matte'
+    finish = Column(String) # e.g., 'UV Gloss', 'Matte'
+    shipping_address = Column(Text, nullable=False)
+    status = Column(String, default="pending") # pending, processing, shipped, delivered
+    tracking_number = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    brochure = relationship("Brochure", back_populates="orders")
+    user = relationship("Profile")
 
 # Append relationships after classes are defined
 Brochure.comments = relationship("BrochureComment", back_populates="brochure", cascade="all, delete-orphan")

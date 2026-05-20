@@ -18,7 +18,7 @@ export default clerkMiddleware(async (auth, req) => {
     if (isProtectedRoute(req)) await auth.protect();
 
     return NextResponse.next();
-}, { domain: process.env.NEXT_PUBLIC_CLERK_DOMAIN || "brochuregen.com" });
+}, {});
 
 export const config = {
     matcher: [

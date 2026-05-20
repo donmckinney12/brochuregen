@@ -115,7 +115,7 @@ export default function AdminDashboard() {
                             <div className="w-2 h-2 rounded-full bg-cyan-500 animate-ping shadow-[0_0_10px_rgba(6,182,212,0.5)]" />
                             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400">Primary Command Node</span>
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase">Admin <span className="bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-transparent">Matrix</span></h1>
+                        <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase">Admin <span className="bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-transparent">Matrix</span></h1>
                     </div>
                     {stats?.plan_distribution && (
                         <div className="flex items-center gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl text-[10px]">

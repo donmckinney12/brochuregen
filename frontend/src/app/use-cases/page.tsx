@@ -39,7 +39,7 @@ export default function UseCasesPage() {
                     <span className="px-4 py-1.5 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] text-[10px] font-black uppercase tracking-[0.3em] mb-6 inline-block border border-[var(--accent-primary)]/30 backdrop-blur-md">
                         Industry Sector Portal
                     </span>
-                    <h1 className="text-7xl font-black mb-6 tracking-tighter glitch-text text-[var(--foreground)]">
+                    <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter text-[var(--foreground)]">
                         Engineered for <span className="gradient-text">Vertical Growth</span>
                     </h1>
                     <p className="text-xl text-[var(--foreground)]/80 max-w-3xl mx-auto leading-relaxed font-medium">

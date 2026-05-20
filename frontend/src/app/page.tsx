@@ -2,7 +2,7 @@
 import React from 'react';
 import LandingHero from '@/components/LandingHero';
 import FeatureShowcase from '@/components/FeatureShowcase';
-import FeaturedTemplates from '@/components/FeaturedTemplates';
+import EnterpriseFeatures from '@/components/EnterpriseFeatures';
 import HowItWorks from '@/components/HowItWorks';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[var(--background)] selection:bg-[var(--accent-primary)]/30 selection:text-[var(--foreground)] transition-colors duration-500 overflow-hidden">
+    <main className="min-h-screen bg-[var(--background)] selection:bg-[var(--accent-primary)]/30 selection:text-[var(--foreground)] transition-colors duration-500 overflow-x-hidden">
       <Navbar />
 
       {/* Hero Layer */}
@@ -21,8 +21,8 @@ export default function Home() {
       <div className="space-y-32">
         <FeatureShowcase />
 
-        <div id="templates">
-          <FeaturedTemplates />
+        <div id="features">
+          <EnterpriseFeatures />
         </div>
 
         <HowItWorks />
@@ -66,11 +66,11 @@ export default function Home() {
               <div className="pt-8 border-t border-white/20 flex flex-wrap items-center justify-center gap-8 relative z-10">
                 <div className="flex items-center gap-2">
                   <Zap size={16} />
-                  <span className="text-[10px] font-black uppercase tracking-widest">SOC2 Ready</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest">Enterprise Ready</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Zap size={16} />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Institutional Neural Sync</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest">Institutional Data Sync</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Zap size={16} />
@@ -82,11 +82,7 @@ export default function Home() {
         </section>
       </div>
 
-      {/* Ambient Gloom Background */}
-      <div className="fixed inset-0 pointer-events-none opacity-50 -z-20">
-        <div className="absolute top-[20%] right-[-10%] w-[800px] h-[800px] bg-[var(--accent-primary)]/5 blur-[150px] rounded-full" />
-        <div className="absolute bottom-[20%] left-[-10%] w-[800px] h-[800px] bg-[var(--accent-secondary)]/5 blur-[150px] rounded-full" />
-      </div>
+
     </main>
   );
 }

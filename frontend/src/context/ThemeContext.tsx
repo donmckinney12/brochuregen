@@ -17,26 +17,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') as Theme | null;
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const initialTheme = savedTheme || systemTheme;
-        setTheme(initialTheme);
+        setTheme('dark');
         setMounted(true);
     }, []);
 
     useEffect(() => {
-        if (theme) {
-            document.documentElement.classList.toggle('dark', theme === 'dark');
-            localStorage.setItem('theme', theme);
+        if (mounted) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
         }
-    }, [theme]);
+    }, [mounted]);
 
     const toggleTheme = () => {
-        setTheme(prev => prev === 'light' ? 'dark' : 'light');
+        // Light mode has been purged. 
     };
 
     return (
-        <ThemeContext.Provider value={{ theme: theme || 'light', toggleTheme, isDark: theme === 'dark', mounted }}>
+        <ThemeContext.Provider value={{ theme: 'dark', toggleTheme, isDark: true, mounted }}>
             {children}
         </ThemeContext.Provider>
     );

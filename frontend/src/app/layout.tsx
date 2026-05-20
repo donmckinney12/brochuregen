@@ -70,7 +70,7 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#3b82f6" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <script
           type="application/ld+json"
@@ -88,16 +88,7 @@ export default function RootLayout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-                  if (!theme && supportDarkMode) theme = 'dark';
-                  if (theme === 'dark') document.documentElement.classList.add('dark');
-                } catch (e) {}
-              })();
-            `,
+            __html: `(function(){try{document.documentElement.classList.add("dark");localStorage.setItem("theme","dark")}catch(e){}})();`,
           }}
         />
       </head>
@@ -106,14 +97,15 @@ export default function RootLayout({
       >
         <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
           <div className="absolute inset-0 bg-[var(--background)]"></div>
-          <div className="absolute inset-0 mesh-gradient opacity-30"></div>
-          <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-b from-[var(--accent-primary)]/10 via-[var(--accent-secondary)]/10 to-transparent blur-[120px] opacity-40"></div>
-          <div className="absolute inset-0 animate-aurora mix-blend-screen opacity-20"></div>
-          <div className="scanline"></div>
+          <div className="absolute inset-0 noise-overlay"></div>
+          <div className="absolute inset-0 mesh-gradient opacity-40"></div>
+          <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-b from-[var(--accent-primary)]/20 via-[var(--accent-secondary)]/10 to-transparent blur-[140px] opacity-50"></div>
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-[var(--accent-primary)]/20 rounded-full blur-[100px] animate-pulse"></div>
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[var(--accent-tertiary)]/20 rounded-full blur-[100px] animate-flicker"></div>
+          <div className="absolute inset-0 animate-aurora mix-blend-screen opacity-30"></div>
+          <div className="scanline opacity-20"></div>
         </div>
         <ClerkProvider
-          domain={process.env.NEXT_PUBLIC_CLERK_DOMAIN || "brochuregen.com"}
-          isSatellite={false}
           afterSignOutUrl="/"
         >
           <ThemeProvider>

@@ -8,7 +8,7 @@ export default function RoadmapPage() {
         {
             status: "In Progress",
             title: "Multi-language Support",
-            description: "Generate brochures in over 20 languages with native AI localization.",
+            description: "Generate brochures in over 120+ languages with native AI localization.",
             votes: 142,
             icon: "🌐"
         },
@@ -53,7 +53,7 @@ export default function RoadmapPage() {
                         <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 inline-block mr-2 animate-pulse" />
                         Protocol: What's Coming
                     </span>
-                    <h1 className="text-6xl font-black mb-6 tracking-tighter glitch-text">
+                    <h1 className="text-6xl font-black mb-6 tracking-tighter">
                         Product <span className="gradient-text">Roadmap</span>
                     </h1>
                     <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">

@@ -36,7 +36,7 @@ export default function Generator() {
         e.preventDefault();
         setError('');
         setStep('processing');
-        setLogs(['Initializing scraper...', 'Navigating to URL...']);
+        setLogs(['Initializing AI...', 'Navigating to URL...']);
 
         try {
             // Validate URL
@@ -183,13 +183,13 @@ export default function Generator() {
                         <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 text-[var(--accent-primary)] text-sm font-black animate-pulse">
                             0{step === 'input' ? '1' : step === 'processing' ? '2' : step === 'preview' ? '3' : step === 'generating' ? '4' : '5'}
                         </span>
-                        Neural Brochure Engine
+                        AI Brochure Engine
                     </h2>
-                    <p className="text-[9px] font-bold text-[var(--foreground)]/50 tracking-[0.3em] uppercase mt-2 ml-14">Protocol Version 4.8.2 // Active</p>
+                    <p className="text-[9px] font-bold text-[var(--foreground)]/50 tracking-[0.3em] uppercase mt-2 ml-14">Build Version 4.8.2 // Active</p>
                 </div>
                 {step === 'preview' && (
                     <button onClick={() => setStep('input')} className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/80 hover:text-rose-500 transition-colors">
-                        ABORT_SYNC
+                        CANCEL
                     </button>
                 )}
             </div>
@@ -209,7 +209,7 @@ export default function Generator() {
                     <form onSubmit={handleScrape} className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
                         <div>
                             <label className="block text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.3em] mb-4 ml-1">
-                                Remote Node URL
+                                Website URL
                             </label>
                             <div className="flex flex-col lg:flex-row gap-4 mb-4">
                                 <div className="flex-1 relative group">
@@ -220,7 +220,7 @@ export default function Generator() {
                                         type="text"
                                         value={url}
                                         onChange={(e) => setUrl(e.target.value)}
-                                        placeholder="target-domain.io"
+                                        placeholder="example.com"
                                         className="w-full pl-24 pr-6 py-5 rounded-2xl bg-[var(--background)] border border-[var(--glass-border)] text-[var(--foreground)] font-mono text-xs focus:ring-1 focus:ring-[var(--accent-primary)]/50 focus:border-[var(--accent-primary)]/30 outline-none transition-all placeholder:text-[var(--foreground)]/50"
                                         required
                                     />
@@ -231,16 +231,16 @@ export default function Generator() {
                                         onChange={(e) => setLayoutTheme(e.target.value)}
                                         className="px-6 py-5 rounded-2xl bg-[var(--background)] border border-[var(--glass-border)] text-[10px] font-black uppercase tracking-widest text-[var(--foreground)] outline-none focus:ring-1 focus:ring-[var(--foreground)]/30 transition-all cursor-pointer hover:border-[var(--foreground)]/20"
                                     >
-                                        <option value="modern">Modern Matrix</option>
-                                        <option value="classic">Classic Monolith</option>
-                                        <option value="playful">Neon Pulse</option>
-                                        <option value="holographic">Holographic Nexus</option>
+                                        <option value="modern">Modern Design</option>
+                                        <option value="classic">Classic Design</option>
+                                        <option value="playful">Vibrant Design</option>
+                                        <option value="holographic">Premium Multi-Page</option>
                                     </select>
                                     <button
                                         type="submit"
                                         className="px-10 py-5 bg-[var(--foreground)] text-[var(--background)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:opacity-90 hover:scale-105 transition-all shadow-lg active:scale-95 whitespace-nowrap"
                                     >
-                                        Initialize
+                                        Analyze Content
                                     </button>
                                 </div>
                             </div>
@@ -266,7 +266,7 @@ export default function Generator() {
                             <div className="absolute inset-0 border-[3px] border-[var(--accent-primary)] rounded-full border-t-transparent animate-spin shadow-lg"></div>
                             <div className="absolute inset-4 border border-[var(--accent-secondary)]/30 rounded-full animate-pulse"></div>
                         </div>
-                        <h3 className="text-2xl font-black text-[var(--foreground)] mb-4 italic tracking-tighter uppercase glitch-text">Neural Scraper Active</h3>
+                        <h3 className="text-2xl font-black text-[var(--foreground)] mb-4 italic tracking-tighter uppercase">AI Analysis Active</h3>
                         <div className="space-y-2">
                             {logs.map((log, i) => (
                                 <p key={i} className="text-[10px] font-bold text-[var(--accent-primary)]/60 uppercase tracking-[0.3em] animate-in slide-in-from-bottom-2 fade-in italic">
@@ -283,10 +283,10 @@ export default function Generator() {
                         <div className="mb-10 flex flex-col md:flex-row items-center justify-between gap-6">
                             <div>
                                 <h3 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Visual Configuration</h3>
-                                <p className="text-[10px] font-bold text-[var(--foreground)]/50 uppercase tracking-[0.2em] mt-1">Refine neural weights via direct manipulation.</p>
+                                <p className="text-[10px] font-bold text-[var(--foreground)]/50 uppercase tracking-[0.2em] mt-1">Refine content with AI precision.</p>
                             </div>
                             <span className="px-5 py-2 bg-[var(--accent-tertiary)]/10 border border-[var(--accent-tertiary)]/30 text-[var(--accent-tertiary)] text-[10px] font-black uppercase tracking-[0.3em] rounded-full backdrop-blur-md animate-pulse">
-                                Provisional Node
+                                Draft Mode
                             </span>
                         </div>
 
@@ -315,14 +315,14 @@ export default function Generator() {
                                 onClick={() => setStep('input')}
                                 className="w-full sm:w-auto px-8 py-4 text-[var(--foreground)]/80 hover:text-[var(--foreground)] text-[10px] font-black uppercase tracking-[0.3em] transition-all"
                             >
-                                Back to Control
+                                Back to Start
                             </button>
                             <button
                                 onClick={handleGeneratePDF}
                                 className="w-full sm:w-auto px-10 py-5 bg-[var(--foreground)] text-[var(--background)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:opacity-90 hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-4 group"
                             >
                                 <svg className="w-7 h-7 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                Compile PDF Asset
+                                Download Brochure
                             </button>
                         </div>
                     </div>
@@ -347,15 +347,15 @@ export default function Generator() {
                             <div className="absolute inset-0 bg-[var(--accent-primary)]/20 blur-2xl rounded-full"></div>
                             <svg className="w-12 h-12 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7"></path></svg>
                         </div>
-                        <h3 className="text-4xl font-black text-[var(--foreground)] mb-4 italic tracking-tighter uppercase glitch-text">Sync Complete</h3>
+                        <h3 className="text-4xl font-black text-[var(--foreground)] mb-4 italic tracking-tighter uppercase">Generation Complete</h3>
                         <p className="text-[var(--foreground)]/80 mb-12 max-w-sm text-sm font-medium leading-relaxed italic">
-                            Asset successfully exported to your local file system. Protocol remains active for further generation.
+                            Brochure successfully exported. Systems remain active for further generation.
                         </p>
                         <button
                             onClick={() => { setStep('input'); setUrl(''); setData(null); }}
                             className="px-12 py-5 bg-[var(--foreground)] text-[var(--background)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:opacity-90 hover:scale-105 transition-all shadow-lg"
                         >
-                            Reset Protocol
+                            Generate New Brochure
                         </button>
                     </div>
                 )}

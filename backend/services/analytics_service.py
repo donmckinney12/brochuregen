@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from models.profile import Brochure, BrochureView, LeadCapture, BrochureComment
+from models.profile import Brochure, BrochureView, LeadCapture, BrochureComment, BrochureEngagement
+from datetime import datetime
 
 
 def get_conversion_funnel(db: Session, user_id: str) -> dict:
@@ -63,3 +64,28 @@ def get_top_performers(db: Session, user_id: str, limit: int = 5) -> list:
         })
 
     return top
+
+def track_engagement(db: Session, brochure_id: int, section_id: str, duration_ms: int):
+    """
+    Record or update engagement metrics for a specific brochure section.
+    """
+    engagement = db.query(BrochureEngagement).filter(
+        BrochureEngagement.brochure_id == brochure_id,
+        BrochureEngagement.section_id == section_id
+    ).first()
+
+    if not engagement:
+        engagement = BrochureEngagement(
+            brochure_id=brochure_id, 
+            section_id=section_id,
+            hover_count=1,
+            total_hover_time=duration_ms
+        )
+        db.add(engagement)
+    else:
+        engagement.hover_count += 1
+        engagement.total_hover_time += duration_ms
+        engagement.last_interaction = datetime.utcnow()
+
+    db.commit()
+    return engagement

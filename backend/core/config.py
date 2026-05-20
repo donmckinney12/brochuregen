@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     CLERK_FRONTEND_API: Optional[str] = os.getenv("CLERK_FRONTEND_API", "").strip()
     CLERK_SECRET_KEY: Optional[str] = os.getenv("CLERK_SECRET_KEY", "").strip()
     
+    # Go Backend
+    GO_BACKEND_URL: str = os.getenv("GO_BACKEND_URL", "http://localhost:8080").strip().rstrip("/")
+    
     class Config:
         case_sensitive = True
 

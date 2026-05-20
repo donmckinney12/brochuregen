@@ -48,8 +48,8 @@ export default function LeadForm({ shareUuid, primaryColor, onSuccess }: LeadFor
                 <div className="w-16 h-16 bg-[var(--accent-primary)] text-[var(--background)] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-[var(--accent-primary)]/20 rotate-12">
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
                 </div>
-                <h3 className="font-black text-[var(--foreground)] italic uppercase tracking-tighter text-xl mb-2">Protocol Sync Complete</h3>
-                <p className="text-[var(--foreground)]/80 text-[10px] font-bold uppercase tracking-[0.2em]">Transmission secured. A representative will reach out shortly.</p>
+                <h3 className="font-black text-[var(--foreground)] italic uppercase tracking-tighter text-xl mb-2">Submission Received</h3>
+                <p className="text-[var(--foreground)]/80 text-[10px] font-bold uppercase tracking-[0.2em]">Request secured. A representative will reach out shortly.</p>
             </motion.div>
         );
     }
@@ -67,7 +67,7 @@ export default function LeadForm({ shareUuid, primaryColor, onSuccess }: LeadFor
                 />
                 <input
                     type="text"
-                    placeholder="Organization"
+                    placeholder="Company"
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     className="w-full bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-xl px-4 py-3 text-xs text-[var(--foreground)] placeholder-[var(--foreground)]/30 focus:ring-2 focus:ring-[var(--accent-primary)]/50 outline-none transition-all font-bold uppercase tracking-widest"
@@ -76,7 +76,7 @@ export default function LeadForm({ shareUuid, primaryColor, onSuccess }: LeadFor
             <div>
                 <input
                     type="email"
-                    placeholder="Business Email"
+                    placeholder="Email Address"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -85,7 +85,7 @@ export default function LeadForm({ shareUuid, primaryColor, onSuccess }: LeadFor
             </div>
             <div>
                 <textarea
-                    placeholder="Neural Brief / Requirements"
+                    placeholder="Message / Requirements"
                     rows={2}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -98,7 +98,7 @@ export default function LeadForm({ shareUuid, primaryColor, onSuccess }: LeadFor
                 style={{ backgroundColor: primaryColor }}
                 className="w-full py-4 rounded-xl font-black text-[12px] text-white uppercase tracking-[0.3em] shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 relative overflow-hidden group"
             >
-                <span className="relative z-10">{status === 'loading' ? 'Encrypting Node...' : 'Initialize Protocol'}</span>
+                <span className="relative z-10">{status === 'loading' ? 'Sending...' : 'Send Message'}</span>
                 <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 skew-x-12"></div>
             </button>
             {status === 'error' && (

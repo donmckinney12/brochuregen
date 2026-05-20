@@ -85,11 +85,11 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                             <Sparkles className="w-6 h-6" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-black italic tracking-tighter uppercase text-[var(--foreground)]">Refinement Matrix</h2>
+                            <h2 className="text-2xl font-black italic tracking-tighter uppercase text-[var(--foreground)]">Content Editor</h2>
                             <div className="flex items-center gap-2 mt-1">
-                                <span className="text-[10px] font-black text-[var(--foreground)]/50 uppercase tracking-[0.2em]">Node: {fieldType}</span>
+                                <span className="text-[10px] font-black text-[var(--foreground)]/60 uppercase tracking-[0.2em]">Field: {fieldType}</span>
                                 <span className="w-1 h-1 rounded-full bg-[var(--accent-primary)] animate-pulse"></span>
-                                <span className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em]">Manual Override Active</span>
+                                <span className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em]">Manual Edit Active</span>
                             </div>
                         </div>
                     </div>
@@ -105,7 +105,7 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                     {/* Input Area */}
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.3em] ml-2">Direct Content Stream</label>
+                            <label className="text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.3em] ml-2">Content Source</label>
                             <button
                                 onClick={() => setCurrentText(initialText)}
                                 disabled={currentText === initialText}
@@ -129,8 +129,8 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                     {/* AI Actions */}
                     <div>
                         <div className="flex items-center justify-between mb-3">
-                            <label className="block text-sm font-bold text-[var(--foreground)]/70">AI Magic Actions</label>
-                            <span className="text-xs font-bold text-[var(--foreground)]/50 bg-[var(--foreground)]/5 px-2 py-1 rounded-md">
+                            <label className="block text-sm font-bold text-[var(--foreground)]/80">AI Assistant</label>
+                            <span className="text-xs font-bold text-[var(--foreground)]/60 bg-[var(--foreground)]/5 px-2 py-1 rounded-md">
                                 {user?.refine_credits ?? 0} Credits Left
                             </span>
                         </div>
@@ -163,7 +163,7 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                     <button
                         onClick={() => setCurrentText(initialText)}
                         disabled={isRefining || currentText === initialText}
-                        className="px-4 py-2 text-sm font-bold text-[var(--foreground)]/50 hover:text-[var(--foreground)] disabled:opacity-30 transition-colors"
+                        className="px-4 py-2 text-sm font-bold text-[var(--foreground)]/60 hover:text-[var(--foreground)] disabled:opacity-30 transition-colors"
                     >
                         Revert to Original
                     </button>

@@ -8,35 +8,34 @@
 }
 
 :root {
-  --background: #f8fafc;
-  /* Slate 50 */
-  --foreground: #0f172a;
-  /* Slate 900 */
-  --accent-primary: #4f46e5;
-  /* Indigo 600 */
-  --accent-secondary: #0ea5e9;
-  /* Sky 500 */
-  --accent-tertiary: #10b981;
-  /* Emerald 500 */
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(15, 23, 42, 0.1);
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-shadow: rgba(15, 23, 42, 0.05);
+  --background: #fdfdff; /* Luminous Pristine White */
+  --foreground: #020617; /* Deep Space Slate */
+  --accent-primary: #6366f1; /* Stellar Indigo */
+  --accent-primary-rgb: 99, 102, 241;
+  --accent-secondary: #3b82f6; /* Daybreak Blue */
+  --accent-secondary-rgb: 59, 130, 246;
+  --accent-tertiary: #ec4899; /* Radiant Nebula Pink */
+  --accent-tertiary-rgb: 236, 72, 153;
+  --glass-bg: rgba(248, 250, 252, 0.85); /* Lighter slate-tinted white for depth */
+  --glass-border: rgba(99, 102, 241, 0.15); /* More visible indigo border */
+  --card-bg: rgba(255, 255, 255, 0.9);
+  /* Luminous, airy shadow system */
+  --card-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.1), 0 4px 6px -4px rgba(99, 102, 241, 0.05);
 }
 
 .dark {
-  --background: #000000;
-  --foreground: #ffffff;
-  --accent-primary: #00f3ff;
-  /* Cyber Cyan */
-  --accent-secondary: #ff00ff;
-  /* Neon Magenta */
-  --accent-tertiary: #39ff14;
-  /* Acid Green */
-  --glass-bg: rgba(2, 6, 23, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.25);
-  --card-bg: rgba(0, 0, 0, 0.7);
-  --card-shadow: rgba(0, 0, 0, 0.8);
+  --background: #02040a; /* Ultra Dark Cosmic Charcoal */
+  --foreground: #f8fafc;
+  --accent-primary: #818cf8; /* Deep Indigo */
+  --accent-primary-rgb: 129, 140, 248;
+  --accent-secondary: #0ea5e9; /* Sky Blue */
+  --accent-secondary-rgb: 14, 165, 233;
+  --accent-tertiary: #d946ef; /* Magenta Nebula */
+  --accent-tertiary-rgb: 217, 70, 239;
+  --glass-bg: rgba(13, 17, 23, 0.7);
+  --glass-border: rgba(129, 140, 248, 0.12);
+  --card-bg: rgba(13, 17, 23, 0.85);
+  --card-shadow: rgba(0, 0, 0, 0.95);
   color-scheme: dark;
 }
 
@@ -74,6 +73,15 @@ body {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 @keyframes scanline {
   0% {
     transform: translateY(-100%) translateZ(0);
@@ -84,46 +92,20 @@ body {
   }
 }
 
-@keyframes glitch {
-  0% {
-    transform: translate(0) translateZ(0);
-  }
-
-  20% {
-    transform: translate(-1px, 1px) translateZ(0);
-  }
-
-  40% {
-    transform: translate(-1px, -1px) translateZ(0);
-  }
-
-  60% {
-    transform: translate(1px, 1px) translateZ(0);
-  }
-
-  80% {
-    transform: translate(1px, -1px) translateZ(0);
-  }
-
-  100% {
-    transform: translate(0) translateZ(0);
-  }
-}
-
 .animate-aurora {
   background: linear-gradient(270deg,
-      rgba(0, 243, 255, 0.1),
-      rgba(255, 0, 255, 0.1),
-      rgba(57, 255, 20, 0.05));
+      rgba(99, 102, 241, 0.05),
+      rgba(59, 130, 246, 0.05),
+      rgba(236, 72, 153, 0.03));
   background-size: 200% 200%;
-  animation: aurora 15s linear infinite;
+  animation: aurora 20s linear infinite;
   will-change: background-position;
 }
 
 .scanline {
   position: fixed;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 50%, rgba(0, 243, 255, 0.03) 50%);
+  background: linear-gradient(to bottom, transparent 50%, rgba(99, 102, 241, 0.01) 50%);
   background-size: 100% 4px;
   pointer-events: none;
   z-index: 999;
@@ -133,24 +115,39 @@ body {
 
 .mesh-gradient {
   background-image:
-    radial-gradient(at 0% 0%, rgba(0, 243, 255, 0.15) 0, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(255, 0, 255, 0.1) 0, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(0, 243, 255, 0.05) 0, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(var(--accent-primary-rgb), 0.08) 0, transparent 40%),
+    radial-gradient(at 100% 0%, rgba(var(--accent-secondary-rgb), 0.06) 0, transparent 40%),
+    radial-gradient(at 50% 100%, rgba(var(--accent-tertiary-rgb), 0.05) 0, transparent 40%);
+  transition: all 0.8s ease;
   transform: translateZ(0);
+}
+
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  mix-blend-mode: overlay;
+  pointer-events: none;
 }
 
 /* Glassmorphism Utilities */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(32px) saturate(200%);
   border: 1px solid var(--glass-border);
 }
 
 .glass-morphism {
   background: var(--glass-bg);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 4px 16px 0 var(--card-shadow);
+  box-shadow: 0 12px 48px -12px rgba(99, 102, 241, 0.15);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 /* Custom Gradients */
@@ -174,25 +171,22 @@ body {
 
 .premium-card {
   background-color: var(--card-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px) saturate(160%);
   border: 1px solid var(--glass-border);
   border-radius: 2.5rem;
-  box-shadow: 0 10px 40px -10px var(--card-shadow);
-  transition: all 0.3s ease;
+  box-shadow: var(--card-shadow);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   transform: translateZ(0);
-  will-change: transform, box-shadow;
+  will-change: transform, box-shadow, border-color;
 }
 
 .premium-card:hover {
-  transform: translateY(-2px) translateZ(0);
-  box-shadow: 0 20px 40px -10px var(--card-shadow);
-  border-color: var(--accent-primary);
+  transform: translateY(-12px) scale(1.02) translateZ(0);
+  box-shadow: 0 40px 80px -20px rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
-.glitch-text {
-  animation: glitch 0.5s step-end infinite;
-  transform: translateZ(0);
-}
+/* Glitch animation removed as per user request */
 
 .text-glow {
   text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);

@@ -1,7 +1,10 @@
 from fastapi import APIRouter
-from .endpoints import scrape, pdf, payment, profiles, image, brochures, enterprise, newsletter, leads, export, social, analytics, command, collaboration, retargeting, intent, admin, email, webhooks, teams, whitelabel, chat, audit, embeds, scheduling, gamification, keys
+from .endpoints import scrape, pdf, payment, profiles, image, brochures, enterprise, newsletter, leads, export, social, analytics, command, collaboration, retargeting, intent, admin, email, webhooks, teams, whitelabel, chat, audit, embeds, scheduling, gamification, keys, qr, fulfillment, strategy
 
 api_router = APIRouter()
+api_router.include_router(qr.router, prefix="/qr", tags=["qr"])
+api_router.include_router(fulfillment.router, prefix="/fulfillment", tags=["fulfillment"])
+api_router.include_router(strategy.router, prefix="/strategy", tags=["strategy"])
 api_router.include_router(scrape.router, prefix="/scrape", tags=["scrape"])
 api_router.include_router(pdf.router, prefix="/pdf", tags=["pdf"])
 api_router.include_router(payment.router, prefix="/payment", tags=["payment"])

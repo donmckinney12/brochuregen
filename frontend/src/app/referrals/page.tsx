@@ -17,7 +17,7 @@ export default function ReferralPage() {
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(referralLink);
-        alert("Referral Protocol Copied to Clipboard");
+        alert("Referral Link Copied to Clipboard");
     };
 
     return (
@@ -26,7 +26,6 @@ export default function ReferralPage() {
             <div className="fixed inset-0 z-0">
                 <div className="absolute inset-0 bg-black" />
                 <div className="absolute inset-0 mesh-gradient opacity-20" />
-                <div className="scanline" />
             </div>
 
             <Navbar />
@@ -34,13 +33,13 @@ export default function ReferralPage() {
             <main className="pt-40 pb-20 px-6 max-w-5xl mx-auto relative z-10">
                 <div className="text-center mb-20">
                     <span className="px-4 py-1.5 rounded-full bg-amber-900/20 text-amber-400 text-[10px] font-black uppercase tracking-[0.3em] mb-6 inline-block border border-amber-500/30 backdrop-blur-md">
-                        Network Expansion Protocol
+                        Referral Program
                     </span>
-                    <h1 className="text-6xl font-black mb-6 tracking-tighter glitch-text">
-                        Refer <span className="gradient-text">a Node</span>
+                    <h1 className="text-6xl font-black mb-6 tracking-tighter text-white">
+                        Refer <span className="gradient-text">a Friend</span>
                     </h1>
                     <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-medium">
-                        Expand the neural network. Every successful node synchronization rewards you with high-bandwidth generation credits.
+                        Grow our community. Every successful sign-up rewards you with additional brochure credits.
                     </p>
                 </div>
 
@@ -85,7 +84,7 @@ export default function ReferralPage() {
                             Share Link
                         </h3>
                         <p className="text-slate-400 text-sm leading-relaxed font-medium italic border-l-2 border-white/5 pl-6">
-                            Distribute your unique neural identifier via encrypted or public channels.
+                            Share your unique referral link with your friends and network.
                         </p>
                     </div>
                     <div className="premium-card p-10 border-white/5 bg-black/40">
@@ -94,7 +93,7 @@ export default function ReferralPage() {
                             Reward Sync
                         </h3>
                         <p className="text-slate-400 text-sm leading-relaxed font-medium italic border-l-2 border-white/5 pl-6">
-                            Once the node initializes their first generation protocol, your credits will sync automatically.
+                            Once your friend creates their first brochure, your credits will be added automatically.
                         </p>
                     </div>
                 </div>

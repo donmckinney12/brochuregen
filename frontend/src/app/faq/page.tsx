@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const faqs = [
     {
         q: "How does the AI analyze my URL?",
-        a: "Our neural engine uses Playwright to perform a deep-scan of your DOM. It extracts visual hierarchy, brand colors, and semantic content, which is then processed by GPT-4o to generate high-conversion marketing copy."
+        a: "Our AI engine uses Playwright to perform a deep-scan of your website. It extracts visual hierarchy, brand colors, and semantic content, which is then processed by advanced models to generate high-conversion marketing copy."
     },
     {
         q: "Are the PDFs print-ready?",
@@ -14,7 +14,7 @@ const faqs = [
     },
     {
         q: "Can I manage multiple brand identities?",
-        a: "Currently, our Pro and Agency tiers support one primary Neural Vault. Multi-brand management is part of our v0.4 Protocol Update (Enterprise API)."
+        a: "Currently, our Pro and Agency tiers support one primary Brand Library. Multi-brand management is part of our upcoming Enterprise update."
     },
     {
         q: "How do credits work?",
@@ -37,13 +37,13 @@ export default function FAQPage() {
             <main className="pt-40 pb-20 px-6 max-w-4xl mx-auto relative z-10">
                 <div className="text-center mb-20">
                     <span className="px-4 py-1.5 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] text-[10px] font-black uppercase tracking-[0.3em] mb-6 inline-block border border-[var(--accent-primary)]/30 backdrop-blur-md">
-                        Protocol Knowledge Base
+                        Help Center & FAQ
                     </span>
-                    <h1 className="text-6xl font-black mb-6 tracking-tighter glitch-text text-[var(--foreground)]">
+                    <h1 className="text-6xl font-black mb-6 tracking-tighter text-[var(--foreground)]">
                         Frequently <span className="gradient-text">Asked Questions</span>
                     </h1>
                     <p className="text-lg text-[var(--foreground)]/80 max-w-2xl mx-auto leading-relaxed font-medium">
-                        Everything you need to know about the neural brochure generation engine and account management.
+                        Everything you need to know about our AI-powered brochure generator and account management.
                     </p>
                 </div>
 
@@ -85,9 +85,9 @@ export default function FAQPage() {
                 <div className="mt-20 premium-card p-12 bg-gradient-to-br from-[var(--background)] to-[var(--accent-secondary)]/5 border-[var(--accent-secondary)]/20 text-center relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent-secondary)]/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
                     <h3 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase mb-2">Still have questions?</h3>
-                    <p className="text-[var(--foreground)]/80 mb-8 max-w-sm mx-auto text-sm font-medium">Can't find the answer you're looking for? Reach out to our neural support team.</p>
+                    <p className="text-[var(--foreground)]/80 mb-8 max-w-sm mx-auto text-sm font-medium">Can't find the answer you're looking for? Reach out to our support team.</p>
                     <button className="px-10 py-4 bg-[var(--accent-secondary)] text-[var(--foreground)] font-black text-[12px] uppercase tracking-[0.3em] rounded-2xl hover:opacity-90 hover:scale-105 transition-all shadow-lg">
-                        Initialize Contact Sync
+                        Contact Support
                     </button>
                 </div>
             </main>

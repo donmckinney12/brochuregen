@@ -20,7 +20,7 @@ export default function ThreeDBrochure({
     showHeatmap?: boolean
 }) {
     const [isHovered, setIsHovered] = useState(false);
-    const [editingNode, setEditingNode] = useState<{ id: string, text: string, index?: number } | null>(null);
+    const [editingField, setEditingField] = useState<{ id: string, text: string, index?: number } | null>(null);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
     if (!data?.ai_content) return null;
@@ -56,15 +56,34 @@ export default function ThreeDBrochure({
         setMousePos({ x, y });
     };
 
+    const handleTouchMove = (e: React.TouchEvent) => {
+        const touch = e.touches[0];
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = (touch.clientX - rect.left) / rect.width - 0.5;
+        const y = (touch.clientY - rect.top) / rect.height - 0.5;
+        
+        // Constrain movement for touch to keep it smooth
+        setMousePos({ 
+            x: Math.max(-0.5, Math.min(0.5, x)), 
+            y: Math.max(-0.5, Math.min(0.5, y)) 
+        });
+    };
+
     return (
         <div
-            className="w-full h-[600px] flex items-center justify-center perspective-[2000px] cursor-pointer group"
+            className="w-full h-[600px] flex items-center justify-center perspective-[2000px] cursor-pointer group touch-none"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => {
                 setIsHovered(false);
                 setMousePos({ x: 0, y: 0 });
             }}
             onMouseMove={handleMouseMove}
+            onTouchStart={() => setIsHovered(true)}
+            onTouchEnd={() => {
+                setIsHovered(false);
+                setMousePos({ x: 0, y: 0 });
+            }}
+            onTouchMove={handleTouchMove}
         >
             <motion.div
                 className="relative w-[300px] h-[450px] preserve-3d will-change-transform"
@@ -99,8 +118,8 @@ export default function ThreeDBrochure({
                     <div className="absolute inset-0 bg-[var(--card-bg)] backdrop-blur-3xl backface-hidden flex flex-col items-center justify-center p-6" style={{ transform: 'rotateY(180deg)' }}>
                         {/* This constitutes the back of the front cover (Inside Right) */}
                         <div className="w-full text-center mb-6">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--accent-primary)] mb-2">Neural Lead Capture</h3>
-                            <p className="text-[var(--foreground)]/80 text-[10px] font-bold uppercase tracking-widest">Connect with our protocol</p>
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--accent-primary)] mb-2">Request Information</h3>
+                            <p className="text-[var(--foreground)]/80 text-[10px] font-bold uppercase tracking-widest">Connect with our team</p>
                         </div>
                         <LeadForm
                             shareUuid={data.share_uuid}
@@ -117,24 +136,26 @@ export default function ThreeDBrochure({
                             )}
                         </div>
 
-                        <h1
-                            className={`text-3xl font-extrabold mb-4 leading-tight rounded p-2 transition-all group/node relative ${editingNode?.id === 'headline' ? 'ring-2 ring-white/50 bg-white/10' : 'hover:bg-white/10'}`}
+                        <div
+                            role="heading"
+                            aria-level={1}
+                            className={`text-3xl font-extrabold mb-4 leading-tight rounded p-2 transition-all group/field relative ${editingField?.id === 'headline' ? 'ring-2 ring-white/50 bg-white/10' : 'hover:bg-white/10'}`}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setEditingNode({ id: 'headline', text: headline });
+                                setEditingField({ id: 'headline', text: headline });
                             }}
                             onMouseEnter={() => onSectionHover?.('headline', true)}
                             onMouseLeave={() => onSectionHover?.('headline', false)}
                         >
-                            {editingNode?.id === 'headline' ? (
+                            {editingField?.id === 'headline' ? (
                                 <input
                                     autoFocus
                                     className="bg-transparent border-none outline-none text-center w-full"
-                                    value={editingNode.text}
-                                    onChange={(e) => setEditingNode({ ...editingNode, text: e.target.value })}
+                                    value={editingField.text}
+                                    onChange={(e) => setEditingField({ ...editingField, text: e.target.value })}
                                     onBlur={() => {
-                                        onUpdate?.(editingNode.text, 'headline');
-                                        setEditingNode(null);
+                                        onUpdate?.(editingField.text, 'headline');
+                                        setEditingField(null);
                                     }}
                                     onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
                                 />
@@ -149,25 +170,25 @@ export default function ThreeDBrochure({
                                     )}
                                 </>
                             )}
-                        </h1>
-                        <p
-                            className={`text-sm opacity-90 rounded p-2 transition-all relative group/node ${editingNode?.id === 'subheadline' ? 'ring-2 ring-white/50 bg-white/10' : 'hover:bg-white/10'}`}
+                        </div>
+                        <div
+                            className={`text-sm opacity-90 rounded p-2 transition-all relative group/field ${editingField?.id === 'subheadline' ? 'ring-2 ring-white/50 bg-white/10' : 'hover:bg-white/10'}`}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setEditingNode({ id: 'subheadline', text: subheadline });
+                                setEditingField({ id: 'subheadline', text: subheadline });
                             }}
                             onMouseEnter={() => onSectionHover?.('subheadline', true)}
                             onMouseLeave={() => onSectionHover?.('subheadline', false)}
                         >
-                            {editingNode?.id === 'subheadline' ? (
+                            {editingField?.id === 'subheadline' ? (
                                 <input
                                     autoFocus
                                     className="bg-transparent border-none outline-none text-center w-full"
-                                    value={editingNode.text}
-                                    onChange={(e) => setEditingNode({ ...editingNode, text: e.target.value })}
+                                    value={editingField.text}
+                                    onChange={(e) => setEditingField({ ...editingField, text: e.target.value })}
                                     onBlur={() => {
-                                        onUpdate?.(editingNode.text, 'subheadline');
-                                        setEditingNode(null);
+                                        onUpdate?.(editingField.text, 'subheadline');
+                                        setEditingField(null);
                                     }}
                                     onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
                                 />
@@ -179,7 +200,7 @@ export default function ThreeDBrochure({
                                     </div>
                                 </>
                             )}
-                        </p>
+                        </div>
 
                         {bespoke_image && (
                             <div className="mt-8 relative w-full h-32 rounded-xl overflow-hidden shadow-inner">
@@ -202,24 +223,24 @@ export default function ThreeDBrochure({
                 >
                     <div style={{ fontFamily: currentFont }}>
                         <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">About Us</h3>
-                        <p
-                            className={`text-sm leading-relaxed text-slate-600 rounded p-2 transition-all cursor-pointer relative group/node ${editingNode?.id === 'about_us' ? 'ring-2 ring-indigo-500/30 bg-indigo-500/5' : 'hover:bg-slate-100'}`}
+                        <div
+                            className={`text-sm leading-relaxed text-slate-600 rounded p-2 transition-all cursor-pointer relative group/field ${editingField?.id === 'about_us' ? 'ring-2 ring-indigo-500/30 bg-indigo-500/5' : 'hover:bg-slate-100'}`}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setEditingNode({ id: 'about_us', text: about_us });
+                                setEditingField({ id: 'about_us', text: about_us });
                             }}
                             onMouseEnter={() => onSectionHover?.('about_us', true)}
                             onMouseLeave={() => onSectionHover?.('about_us', false)}
                         >
-                            {editingNode?.id === 'about_us' ? (
+                            {editingField?.id === 'about_us' ? (
                                 <textarea
                                     autoFocus
                                     className="bg-transparent border-none outline-none w-full resize-none h-24"
-                                    value={editingNode.text}
-                                    onChange={(e) => setEditingNode({ ...editingNode, text: e.target.value })}
+                                    value={editingField.text}
+                                    onChange={(e) => setEditingField({ ...editingField, text: e.target.value })}
                                     onBlur={() => {
-                                        onUpdate?.(editingNode.text, 'about_us');
-                                        setEditingNode(null);
+                                        onUpdate?.(editingField.text, 'about_us');
+                                        setEditingField(null);
                                     }}
                                 />
                             ) : (
@@ -230,7 +251,7 @@ export default function ThreeDBrochure({
                                     </div>
                                 </>
                             )}
-                        </p>
+                        </div>
                     </div>
 
                     <div className="mt-8 border-t border-slate-100 pt-8" style={{ fontFamily: currentFont }}>
@@ -263,25 +284,25 @@ export default function ThreeDBrochure({
                             {features?.map((feature: string, i: number) => (
                                 <li
                                     key={i}
-                                    className={`text-sm p-4 ${layout === 'playful' ? 'rounded-3xl border-b-4 border-cyan-500/30' : layout === 'holographic' ? 'hologram-theme' : 'rounded-xl border border-[var(--glass-border)]'} bg-[var(--foreground)]/5 text-[var(--foreground)]/80 hover:bg-[var(--foreground)]/10 transition-all cursor-pointer flex gap-3 relative group/node`}
+                                    className={`text-sm p-4 ${layout === 'playful' ? 'rounded-3xl border-b-4 border-cyan-500/30' : layout === 'holographic' ? 'hologram-theme' : 'rounded-xl border border-[var(--glass-border)]'} bg-[var(--foreground)]/5 text-[var(--foreground)]/80 hover:bg-[var(--foreground)]/10 transition-all cursor-pointer flex gap-3 relative group/field`}
                                     style={layout === 'playful' ? { borderBottomColor: currentSecondary } : {}}
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        setEditingNode({ id: `feature_${i}`, text: feature, index: i });
+                                        setEditingField({ id: `feature_${i}`, text: feature, index: i });
                                     }}
                                     onMouseEnter={() => onSectionHover?.(`feature_${i}`, true)}
                                     onMouseLeave={() => onSectionHover?.(`feature_${i}`, false)}
                                 >
                                     <span className={`w-1.5 h-1.5 mt-1.5 shrink-0 ${layout === 'classic' ? 'rounded-none rotate-45' : 'rounded-full'}`} style={{ backgroundColor: currentSecondary }}></span>
-                                    {editingNode?.id === `feature_${i}` ? (
+                                    {editingField?.id === `feature_${i}` ? (
                                         <input
                                             autoFocus
                                             className="bg-transparent border-none outline-none w-full"
-                                            value={editingNode.text}
-                                            onChange={(e) => setEditingNode({ ...editingNode, text: e.target.value })}
+                                            value={editingField.text}
+                                            onChange={(e) => setEditingField({ ...editingField, text: e.target.value })}
                                             onBlur={() => {
-                                                onUpdate?.(editingNode.text, 'features', editingNode.index);
-                                                setEditingNode(null);
+                                                onUpdate?.(editingField.text, 'features', editingField.index);
+                                                setEditingField(null);
                                             }}
                                             onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
                                         />

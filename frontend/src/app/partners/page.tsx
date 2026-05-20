@@ -24,7 +24,7 @@ export default function PartnersPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight leading-[1.1]"
+                        className="text-4xl md:text-6xl font-extrabold mb-8 tracking-tight leading-[1.1]"
                     >
                         Grow With Us. <br />
                         <span className="gradient-text">Future-Proof Your Earnings.</span>

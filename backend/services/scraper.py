@@ -1,11 +1,33 @@
 import base64
+import requests
 from playwright.async_api import async_playwright
+from core.config import settings
 
 async def scrape_website(url: str):
     """
     Scrapes the given URL for title, text content, and a full-page screenshot.
-    Returns a dictionary with the data.
+    Delegates to Go backend if available for performance, otherwise uses Playwright.
     """
+    # Try Go backend first for speed
+    try:
+        response = requests.post(
+            f"{settings.GO_BACKEND_URL}/scrape",
+            json={"url": url},
+            timeout=10
+        )
+        if response.status_code == 200:
+            data = response.json()
+            # Note: Go scraper currently doesn't return screenshot, 
+            # so we still need to take one if required.
+            # But for simple text extraction, Go is faster.
+            return {
+                "title": data.get("title"),
+                "text": data.get("content"),
+                "screenshot": None # Go scraper doesn't do screenshots yet
+            }
+    except Exception as e:
+        print(f"Go scraper failed: {e}, falling back to Playwright")
+
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         # Use a consistent viewport for screenshots

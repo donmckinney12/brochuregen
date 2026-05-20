@@ -79,34 +79,50 @@ export default function CommandCenter() {
             <div className="h-full flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
                     <Activity className="w-12 h-12 text-indigo-500 animate-spin" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 italic">Synchronizing Protocol Pulse...</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 italic">Updating System Activity...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="max-w-6xl mx-auto space-y-10 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+        <div className="max-w-[1600px] space-y-16 pb-24 relative px-6 md:px-16">
+            {/* Atmospheric Background Layers [v30.2] */}
+            <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+                <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-indigo-500/10 blur-[140px] rounded-full animate-pulse" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-cyan-500/10 blur-[140px] rounded-full" />
+            </div>
+
             {/* Header Area */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-12">
-                <div className="min-w-0">
-                    <h1 className="text-2xl sm:text-4xl font-black italic tracking-tighter uppercase flex items-center gap-3 sm:gap-4">
-                        <span className="truncate">Unified Command Center</span>
-                        <div className="flex h-3 w-3 relative shrink-0">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                        </div>
-                    </h1>
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 mt-2">Protocol V15.0 // Autonomous Architect Hub</p>
-                </div>
-                <div className="flex gap-3 sm:gap-4 shrink-0">
-                    <div className="premium-card px-4 sm:px-6 py-2 sm:py-3 border border-white/5 bg-white/5 flex items-center gap-2 sm:gap-3">
-                        <Users className="w-4 h-4 text-cyan-400" />
-                        <span className="text-[10px] sm:text-xs font-black italic">{pulse.filter(p => p.type === 'LEAD').length} Leads</span>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-24 px-6 md:px-0">
+                <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-[2px] bg-[var(--accent-primary)]" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--accent-primary)]">Activity Dashboard Active</span>
                     </div>
-                    <div className="premium-card px-4 sm:px-6 py-2 sm:py-3 border border-indigo-500/20 bg-indigo-500/5 flex items-center gap-2 sm:gap-3">
-                        <MessageSquare className="w-4 h-4 text-indigo-400" />
-                        <span className="text-[10px] sm:text-xs font-black italic">{pulse.filter(p => p.type === 'FEEDBACK').length} Pulses</span>
+                    <h1 className="text-4xl md:text-5xl font-black text-[var(--foreground)] italic tracking-tighter uppercase leading-[0.9]">
+                        Operations <br />
+                        <span className="gradient-text">Hub</span>
+                    </h1>
+                    <p className="text-[var(--foreground)]/40 font-bold tracking-[0.4em] uppercase text-xs italic max-w-xl">
+                        Version 15.0 // Advanced Intelligence Hub
+                    </p>
+                </div>
+
+                <div className="flex gap-4 shrink-0">
+                    <div className="premium-card px-8 py-4 border border-cyan-500/20 bg-cyan-500/5 flex items-center gap-4 shadow-[0_0_20px_rgba(6,182,212,0.1)]">
+                        <Users className="w-5 h-5 text-cyan-400" />
+                        <div className="flex flex-col">
+                            <span className="text-xl font-black italic text-cyan-400 leading-none">{pulse.filter(p => p.type === 'LEAD').length}</span>
+                            <span className="text-[8px] font-black uppercase tracking-widest opacity-40">Lead Management</span>
+                        </div>
+                    </div>
+                    <div className="premium-card px-8 py-4 border border-indigo-500/20 bg-indigo-500/5 flex items-center gap-4 shadow-[0_0_20px_rgba(99,102,241,0.1)]">
+                        <MessageSquare className="w-5 h-5 text-indigo-400" />
+                        <div className="flex flex-col">
+                            <span className="text-xl font-black italic text-indigo-400 leading-none">{pulse.filter(p => p.type === 'FEEDBACK').length}</span>
+                            <span className="text-[8px] font-black uppercase tracking-widest opacity-40">Engagement Feed</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -163,7 +179,7 @@ export default function CommandCenter() {
                                                 disabled={isSuggesting}
                                             >
                                                 {isSuggesting ? <Zap size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                                                AI Assist
+                                                AI Support
                                             </button>
                                         </div>
                                     </div>
@@ -185,7 +201,7 @@ export default function CommandCenter() {
                                             <div className="flex items-center justify-between mb-4">
                                                 <div className="flex items-center gap-2 text-[10px] font-black text-indigo-400 uppercase tracking-widest">
                                                     <Sparkles size={12} />
-                                                    Neural Suggestion
+                                                    Strategic Suggestion
                                                 </div>
                                                 <button
                                                     onClick={() => suggestion && navigator.clipboard.writeText(suggestion.text)}
@@ -208,7 +224,7 @@ export default function CommandCenter() {
                 {pulse.length === 0 && (
                     <div className="py-20 flex flex-col items-center justify-center text-center opacity-20">
                         <Zap className="w-16 h-16 mb-6" />
-                        <h2 className="text-2xl font-black italic tracking-tighter uppercase">Protocol Silent</h2>
+                        <h2 className="text-2xl font-black italic tracking-tighter uppercase">System Idle</h2>
                         <p className="text-sm font-bold uppercase tracking-widest mt-2">Awaiting external engagement signals...</p>
                     </div>
                 )}

@@ -32,6 +32,7 @@ if HAS_SLOWAPI and limiter:
 base_origins = [
     settings.CLIENT_URL,
     "http://localhost:3000",
+    "http://localhost:3001",
     "https://brochuregen.netlify.app",
     "https://brochuregen.com",
     "https://www.brochuregen.com",
@@ -58,10 +59,10 @@ async def log_origin(request: Request, call_next):
         import re
         is_netlify_subdomain = bool(re.match(r"https://.*brochuregen\.netlify\.app", origin))
         if origin not in allowed_origins and not is_netlify_subdomain:
-             print(f"⚠️ [CORS ALERT] Blocked request from unauthorized origin: {origin}")
+             print(f"[CORS ALERT] Blocked request from unauthorized origin: {origin}")
         else:
              # Helpful for confirming it IS authorized
-             print(f"✅ [CORS DEBUG] Authorized origin: {origin}")
+             print(f"[CORS DEBUG] Authorized origin: {origin}")
     return await call_next(request)
 
 
@@ -102,9 +103,9 @@ async def startup_event():
     try:
         from fix_prod_db import fix_db
         fix_db()
-        print("✅ Production DB Schema Sync complete")
+        print("Production DB Schema Sync complete")
     except Exception as e:
-        print(f"❌ DB Schema Sync failed: {e}")
+        print(f"DB Schema Sync failed: {e}")
 
     print(f"{settings.PROJECT_NAME} Starting...")
     db_host = settings.DATABASE_URL.split('@')[-1] if settings.DATABASE_URL else "None"

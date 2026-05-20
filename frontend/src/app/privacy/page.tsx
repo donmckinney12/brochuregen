@@ -1,65 +1,153 @@
-"use client";
-import Navbar from "@/components/Navbar";
+import React from 'react';
+import Navbar from '@/components/Navbar';
+import { Database, Activity, Shield, Link, RefreshCw, ChevronRight, Eye, ShieldCheck } from 'lucide-react';
 
 export default function PrivacyPolicy() {
     return (
-        <div className="min-h-screen text-[var(--foreground)] font-sans text-sm md:text-base bg-transparent">
+        <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] relative overflow-hidden transition-colors duration-500">
+            {/* Background Layers */}
+            <div className="fixed inset-0 z-0">
+                <div className="absolute inset-0 bg-[var(--background)]" />
+                <div className="absolute inset-0 mesh-gradient opacity-20" />
+                <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-b from-[var(--accent-primary)]/10 via-[var(--accent-secondary)]/5 to-transparent blur-[120px] opacity-40"></div>
+                <div className="absolute inset-0 noise-overlay opacity-[0.03]"></div>
+            </div>
+
             <Navbar />
 
-            <main className="pt-32 pb-20 px-6 max-w-4xl mx-auto">
-                <header className="mb-12 border-b border-white/10 pb-12">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)]" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400">Vault Node</span>
+            <main className="pt-32 pb-32 px-6 max-w-5xl mx-auto relative z-10">
+                {/* Header Section */}
+                <div className="text-center mb-20 animate-in fade-in slide-in-from-top-4 duration-700">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-500 text-[10px] font-bold mb-6 border border-cyan-500/20 tracking-widest uppercase">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                        Data Privacy Vault
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-4 text-white">Privacy Policy</h1>
-                    <p className="text-white/40 font-bold uppercase tracking-[0.2em] text-[10px]">Last Sync: February 6, 2026</p>
-                </header>
+                    <h1 className="text-6xl md:text-7xl font-black tracking-tighter mb-6 italic uppercase">
+                        Privacy <span className="gradient-text">Policy</span>
+                    </h1>
+                    <p className="text-[var(--foreground)]/60 max-w-2xl mx-auto text-lg leading-relaxed">
+                        Your data security is our primary directive. We implement rigorous protocols to ensure your information remains shielded and private.
+                    </p>
+                    <p className="text-[10px] font-bold text-[var(--foreground)]/40 uppercase tracking-[0.3em] mt-8">
+                        Last Sync: February 6, 2026
+                    </p>
+                </div>
 
-                <article className="prose prose-invert max-w-none text-white/60 space-y-12">
-                    <section className="p-8 bg-white/5 border border-white/10 rounded-[2rem] backdrop-blur-xl">
-                        <p className="text-sm leading-relaxed">
-                            At BrochureGen, we respect your privacy and are committed to protecting the personal information you share with us. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website.
+                {/* Content Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    {/* 1. Introductory Statement */}
+                    <div className="premium-card p-10 bg-[var(--card-bg)] border-[var(--glass-border)] md:col-span-2 group hover:border-cyan-500/30 transition-all duration-500">
+                        <div className="flex flex-col md:flex-row items-center gap-10">
+                            <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 border border-cyan-500/20 shrink-0">
+                                <ShieldCheck size={28} />
+                            </div>
+                            <div className="flex-1">
+                                <h2 className="text-2xl font-black mb-2 italic uppercase tracking-tighter">Core Commitment</h2>
+                                <p className="text-[var(--foreground)]/70 text-sm leading-relaxed">
+                                    At BrochureGen, we respect your privacy and are committed to protecting the personal information you share with us. This protocol defines how we collect, use, and safeguard your matrix-level telemetry.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 2. Information Collection */}
+                    <div className="premium-card p-10 bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] group hover:border-blue-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 mb-8 border border-blue-500/20 group-hover:scale-110 transition-transform">
+                            <Database size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Data Ingestion</h2>
+                        <ul className="space-y-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-blue-500 shrink-0 mt-1" />
+                                <span><strong>Account:</strong> Name, email, and authentication credentials.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-blue-500 shrink-0 mt-1" />
+                                <span><strong>Payment:</strong> Securely processed billing parameters.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-blue-500 shrink-0 mt-1" />
+                                <span><strong>Usage:</strong> Telemetry regarding brochure generation and source URLs.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* 3. Usage Protocols */}
+                    <div className="premium-card p-10 bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] group hover:border-indigo-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500 mb-8 border border-indigo-500/20 group-hover:scale-110 transition-transform">
+                            <Activity size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Usage Matrix</h2>
+                        <ul className="space-y-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-indigo-500 shrink-0 mt-1" />
+                                <span>Optimal delivery and maintenance of core services.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-indigo-500 shrink-0 mt-1" />
+                                <span>Secure transaction management and subscription sync.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <ChevronRight size={16} className="text-indigo-500 shrink-0 mt-1" />
+                                <span>Critical security updates and administrative alerts.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* 4. Data Safeguards */}
+                    <div className="premium-card p-10 bg-[var(--card-bg)] border-[var(--glass-border)] group hover:border-emerald-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-8 border border-emerald-500/20 group-hover:scale-110 transition-transform">
+                            <Shield size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Safeguards</h2>
+                        <p className="text-[var(--foreground)]/70 text-sm leading-relaxed mb-4">
+                            We implement technical and organizational measures to protect your personal information against unauthorized access or destruction.
                         </p>
-                    </section>
+                        <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10 text-xs italic">
+                            Encryption protocols are active on all data transmission layers.
+                        </div>
+                    </div>
 
-                    <h3>1. Information We Collect</h3>
-                    <p>We collect information that you provide to us directly, such as when you create an account, subscribe to a plan, or contact support.</p>
-                    <ul>
-                        <li><strong>Account Information:</strong> Name, email address, and password.</li>
-                        <li><strong>Payment Information:</strong> Credit card details and billing address (processed securely by our payment providers).</li>
-                        <li><strong>Usage Data:</strong> Information about how you use our Service, such as the URLs you generate brochures from.</li>
-                    </ul>
+                    {/* 5. Integrations */}
+                    <div className="premium-card p-10 bg-[var(--card-bg)] border-[var(--glass-border)] group hover:border-amber-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-8 border border-amber-500/20 group-hover:scale-110 transition-transform">
+                            <Link size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Integrations</h2>
+                        <p className="text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            We use verified third-party processors for analytics and payments. Each partner adheres to independent, high-security privacy standards.
+                        </p>
+                    </div>
 
-                    <h3>2. How We Use Your Information</h3>
-                    <p>We use your information to operate and improve our Service, including:</p>
-                    <ul>
-                        <li>Providing and maintaining the Service.</li>
-                        <li>Processing your payments and managing your subscription.</li>
-                        <li>Sending you administrative messages, updates, and security alerts.</li>
-                        <li> responding to your comments and questions.</li>
-                    </ul>
+                    {/* 6. Protocol Updates */}
+                    <div className="premium-card p-10 bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] group hover:border-fuchsia-500/30 transition-all duration-500 md:col-span-2">
+                        <div className="flex flex-col md:flex-row items-center gap-10">
+                            <div className="w-14 h-14 rounded-2xl bg-fuchsia-500/10 flex items-center justify-center text-fuchsia-500 border border-fuchsia-500/20 shrink-0">
+                                <RefreshCw size={28} />
+                            </div>
+                            <div className="flex-1">
+                                <h2 className="text-2xl font-black mb-2 italic uppercase tracking-tighter">Protocol Delta</h2>
+                                <p className="text-[var(--foreground)]/70 text-sm leading-relaxed">
+                                    This Privacy Policy may be updated to reflect system changes. Notifications will be deployed directly to this node upon any significant revision.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
-                    <h3>3. Data Security</h3>
-                    <p>
-                        We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no internet transmission is completely secure, and we cannot guarantee absolute security.
+                </div>
+
+                {/* Footer Disclaimer */}
+                <div className="mt-20 text-center space-y-8">
+                    <div className="flex items-center justify-center gap-4">
+                        <div className="h-px w-20 bg-gradient-to-r from-transparent to-[var(--glass-border)]" />
+                        <Eye className="text-[var(--foreground)]/20" size={20} />
+                        <div className="h-px w-20 bg-gradient-to-l from-transparent to-[var(--glass-border)]" />
+                    </div>
+                    <p className="text-[10px] font-bold text-[var(--foreground)]/30 uppercase tracking-[0.4em] max-w-xl mx-auto leading-relaxed">
+                        For specific data inquiries, contact the privacy node at <strong className="text-[var(--foreground)]/50">support@brochuregen.com</strong>
                     </p>
-
-                    <h3>4. Third-Party Services</h3>
-                    <p>
-                        We may use third-party services (such as analytics providers and payment processors) that collect, monitor, and analyze information. These third parties have their own privacy policies addressing how they use such information.
-                    </p>
-
-                    <h3>5. Changes to This Policy</h3>
-                    <p>
-                        We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.
-                    </p>
-
-                    <h3>6. Contact Us</h3>
-                    <p>
-                        If you have any questions about this Privacy Policy, please contact us at <a href="mailto:support@brochuregen.com">support@brochuregen.com</a>.
-                    </p>
-                </article>
+                </div>
             </main>
         </div>
     );

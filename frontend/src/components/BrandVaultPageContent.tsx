@@ -48,16 +48,26 @@ export default function BrandVaultPageContent() {
         if (user?.org_id) fetchOrgBrand();
     }, [user?.org_id]);
 
+    const currentSource = (vaultContext === 'organization') ? orgBrand : user;
+
     useEffect(() => {
-        const source = (vaultContext === 'organization' && orgBrand) ? orgBrand : user;
-        if (source) {
+        if (currentSource) {
             setFormData({
-                brand_logo_url: source.brand_logo_url || '',
-                brand_primary_color: source.brand_primary_color || '#4F46E5',
-                brand_secondary_color: source.brand_secondary_color || '#EC4899',
-                brand_font: source.brand_font || 'Outfit',
-                brand_voice_tone: source.brand_voice_tone || 'Professional',
-                brand_voice_calibration: source.brand_voice_calibration || ''
+                brand_logo_url: currentSource.brand_logo_url || '',
+                brand_primary_color: currentSource.brand_primary_color || '#4F46E5',
+                brand_secondary_color: currentSource.brand_secondary_color || '#EC4899',
+                brand_font: currentSource.brand_font || 'Outfit',
+                brand_voice_tone: currentSource.brand_voice_tone || 'Professional',
+                brand_voice_calibration: currentSource.brand_voice_calibration || ''
+            });
+        } else if (vaultContext === 'organization') {
+            setFormData({
+                brand_logo_url: '',
+                brand_primary_color: '#4F46E5',
+                brand_secondary_color: '#EC4899',
+                brand_font: 'Outfit',
+                brand_voice_tone: 'Professional',
+                brand_voice_calibration: ''
             });
         }
     }, [user, orgBrand, vaultContext]);
@@ -147,64 +157,81 @@ ${profile.calibration_snippet}`;
     };
 
     return (
-        <div className="max-w-6xl mx-auto space-y-12 pb-20">
+        <div className="max-w-[1600px] space-y-12 pb-20 relative px-6 md:px-16">
+            {/* Atmospheric Background Layers [v30.2] */}
+            <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+                <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-indigo-500/10 blur-[120px] rounded-full animate-pulse" />
+                <div className="absolute bottom-[10%] right-[-10%] w-[50%] h-[50%] bg-cyan-500/10 blur-[120px] rounded-full" />
+            </div>
+
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+                <div className="space-y-4">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-3"
+                    >
+                        <div className="w-8 h-[2px] bg-[var(--accent-primary)]" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--accent-primary)]">Brand Asset Management</span>
+                    </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="text-4xl font-black text-[var(--foreground)] italic tracking-tighter uppercase"
+                        transition={{ delay: 0.1 }}
+                        className="text-6xl md:text-7xl font-black text-[var(--foreground)] italic tracking-tighter uppercase leading-[0.8]"
                     >
-                        Neural Brand Vault
+                        Strategic <br />
+                        <span className="gradient-text">Brand Vault</span>
                     </motion.h1>
-                    <p className="text-[var(--foreground)]/80 font-bold tracking-[0.3em] uppercase mt-2 text-xs italic">
-                        Configure Core Identity Matrix & Synchronization Parameters
-                    </p>
                 </div>
 
-                {user?.org_id && (
-                    <div className="flex bg-[var(--foreground)]/5 p-1 rounded-2xl border border-[var(--glass-border)]">
-                        <button
-                            onClick={() => setVaultContext('personal')}
-                            className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'personal'
-                                ? 'bg-[var(--foreground)] text-[var(--background)] shadow-lg'
-                                : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]'
-                                }`}
-                        >
-                            Personal
-                        </button>
-                        <button
-                            onClick={() => setVaultContext('organization')}
-                            className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'organization'
-                                ? 'bg-[var(--accent-primary)] text-white shadow-lg'
-                                : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]'
-                                }`}
-                        >
-                            Organization
-                        </button>
-                    </div>
-                )}
+                <div className="flex flex-col sm:flex-row items-center gap-6">
+                    {user?.org_id && (
+                        <div className="flex bg-[var(--foreground)]/5 p-1 rounded-2xl border border-white/5 backdrop-blur-xl">
+                            <button
+                                onClick={() => setVaultContext('personal')}
+                                className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'personal'
+                                    ? 'bg-[var(--foreground)] text-[var(--background)] shadow-2xl'
+                                    : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]'
+                                    }`}
+                            >
+                                Personal
+                            </button>
+                            <button
+                                onClick={() => setVaultContext('organization')}
+                                className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${vaultContext === 'organization'
+                                    ? 'bg-indigo-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]'
+                                    : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]'
+                                    }`}
+                            >
+                                Organization
+                            </button>
+                        </div>
+                    )}
 
-                <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className="flex items-center space-x-3 bg-[var(--foreground)] text-[var(--background)] px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg transition-all hover:opacity-90 disabled:opacity-50"
-                >
-                    {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Zap size={18} />}
-                    <span>{isSaving ? 'SYNCHRONIZING...' : 'Push to Core'}</span>
-                </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        className="relative group overflow-hidden flex items-center space-x-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-[0_0_30px_rgba(99,102,241,0.3)] transition-all disabled:opacity-50"
+                    >
+                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                        {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Zap size={18} className="group-hover:scale-125 transition-transform" />}
+                        <span className="relative z-10">{isSaving ? 'UPDATING...' : 'Save to Vault'}</span>
+                    </motion.button>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Visual Identity Column */}
                 <div className="lg:col-span-2 space-y-8">
                     {/* Visual Signature Card */}
-                    <div className="premium-card p-10 border-[var(--glass-border)] bg-[var(--background)]/40 backdrop-blur-xl">
-                        <div className="flex items-center space-x-4 mb-10">
-                            <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                    <div className="premium-card p-12 md:p-16 group/card relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.03] to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-1000" />
+                        <div className="flex items-center space-x-4 mb-10 relative z-10">
+                            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
                                 <Palette size={24} />
                             </div>
                             <h3 className="text-xl font-black italic uppercase tracking-tighter text-[var(--foreground)]">Visual Signature</h3>
@@ -279,7 +306,7 @@ ${profile.calibration_snippet}`;
                     </div>
 
                     {/* Neural Voice Card - Upgraded to Voice Trainer */}
-                    <div className="premium-card p-10 border-[var(--glass-border)] bg-[var(--background)]/40 backdrop-blur-xl">
+                    <div className="premium-card p-10">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                             <div className="flex items-center space-x-4">
                                 <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
@@ -346,11 +373,10 @@ ${profile.calibration_snippet}`;
                     <div className="premium-card p-8 border-[var(--accent-primary)]/20 bg-[var(--accent-primary)]/5 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent-primary)]/10 rounded-full blur-3xl -z-10" />
                         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--accent-primary)] mb-6">Synchronization Status</h4>
-
                         <div className="space-y-6">
                             {[
-                                { name: 'Visual ID', status: user?.brand_logo_url ? 'Active' : 'Missing' },
-                                { name: 'Neural Voice', status: user?.brand_voice_calibration ? 'Calibrated' : 'Offline' },
+                                { name: 'Visual ID', status: formData.brand_logo_url ? 'Active' : 'Missing' },
+                                { name: 'Neural Voice', status: formData.brand_voice_calibration ? 'Calibrated' : 'Offline' },
                                 { name: 'Color Echoes', status: 'Synchronized' },
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center justify-between">

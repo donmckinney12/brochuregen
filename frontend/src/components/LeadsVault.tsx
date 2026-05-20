@@ -142,14 +142,14 @@ export default function LeadsVault() {
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 relative">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Neural Lead Vault</h2>
-                    <p className="text-[10px] text-[var(--foreground)]/50 font-bold tracking-[0.3em] uppercase mt-1">Status: Monitoring Incoming Nodes</p>
+                    <h2 className="text-xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Leads Dashboard</h2>
+                    <p className="text-[10px] text-[var(--foreground)]/60 font-bold tracking-[0.4em] uppercase mt-1">Status: Monitoring incoming requests</p>
                 </div>
                 <button
                     onClick={handleExport}
                     className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-cyan-500/20 hover:scale-105 active:scale-95 transition-all"
                 >
-                    Neural Export (.CSV)
+                    Export Leads (.CSV)
                 </button>
             </div>
 
@@ -178,7 +178,7 @@ export default function LeadsVault() {
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-3">
-                                        <h4 className="font-black text-[var(--foreground)] italic tracking-tight text-lg">{lead.name || 'Anonymous Node'}</h4>
+                                        <h4 className="font-black text-[var(--foreground)] italic tracking-tight text-lg">{lead.name || 'Lead'}</h4>
                                         <span className="px-2 py-0.5 bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 rounded text-[8px] font-black text-[var(--accent-primary)] uppercase tracking-widest leading-none">Verified</span>
                                     </div>
                                     <p className="text-sm text-[var(--foreground)]/80 font-medium font-mono">{lead.email}</p>
@@ -186,7 +186,7 @@ export default function LeadsVault() {
                             </div>
 
                             <div className="flex flex-col xl:items-end gap-1 relative z-10">
-                                <span className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em]">{lead.company || 'Direct Protocol'}</span>
+                                <span className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em]">{lead.company || 'Direct Link'}</span>
                                 <span className="text-[10px] text-[var(--foreground)]/80 font-bold uppercase tracking-widest">Captured: {new Date(lead.created_at).toLocaleDateString()}</span>
                             </div>
 
@@ -210,12 +210,12 @@ export default function LeadsVault() {
                                     {followupLoading === lead.id ? (
                                         <>
                                             <span className="w-2 h-2 border-2 border-[var(--background)] border-t-transparent rounded-full animate-spin"></span>
-                                            Syncing...
+                                            Loading...
                                         </>
                                     ) : (
                                         <>
                                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                            Neural Follow-up
+                                            AI Follow-up
                                         </>
                                     )}
                                 </button>
@@ -240,8 +240,8 @@ export default function LeadsVault() {
                         >
                             <div className="p-8 border-b border-[var(--glass-border)] flex items-center justify-between">
                                 <div>
-                                    <h2 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">Neural Follow-up Matrix</h2>
-                                    <p className="text-[10px] text-[var(--accent-primary)] font-bold tracking-[0.4em] uppercase mt-1">Status: Sequenced & Ready</p>
+                                    <h2 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">AI Follow-up Planner</h2>
+                                    <p className="text-[10px] text-[var(--accent-primary)] font-bold tracking-[0.4em] uppercase mt-1">Status: Drafted & Ready</p>
                                 </div>
                                 <button onClick={() => setSelectedFollowup(null)} className="p-2 hover:bg-[var(--foreground)]/5 rounded-xl transition-all">
                                     <svg className="w-6 h-6 text-[var(--foreground)]/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -290,7 +290,7 @@ export default function LeadsVault() {
                                     }}
                                     className="px-8 py-4 bg-[var(--foreground)] text-[var(--background)] font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:opacity-90 transition-all"
                                 >
-                                    Copy Matrix
+                                    Copy Sequence
                                 </button>
                                 <button onClick={() => setSelectedFollowup(null)} className="px-8 py-4 border border-[var(--glass-border)] text-[var(--foreground)] font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-[var(--foreground)]/5 transition-all">
                                     Close Feed

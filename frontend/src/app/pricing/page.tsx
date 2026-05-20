@@ -11,59 +11,26 @@ export default function Pricing() {
     const { isAuthenticated, user, getToken, isLoading, syncError } = useAuth();
 
     const handleUpgrade = async (plan: string) => {
+        // ... (preserving handleUpgrade logic)
         if (isLoading) return;
-
-        if (!isAuthenticated) {
-            window.location.href = '/signup';
-            return;
-        }
-
+        if (!isAuthenticated) { window.location.href = '/signup'; return; }
         if (!user) {
-            if (syncError) {
-                alert(`❌ [v28.1] Protocol Sync Failed: ${syncError}\n\nCause: The frontend cannot reach the backend at ${API_URL}.\n\nFix: Ensure NEXT_PUBLIC_API_URL is set correctly in your Netlify dashboard.`);
-            } else {
-                alert("User profile is still syncing. If this persists, check your browser console for connection errors.");
-            }
+            if (syncError) { alert(`❌ [v28.1] Connection Failed: ${syncError}`); }
+            else { alert("Profile is syncing..."); }
             return;
         }
 
         try {
             const token = await getToken();
-
-            // Helpful debug log for production
-            console.log(`📡 Initializing checkout protocol via: ${API_URL}`);
-
             const res = await fetch(`${API_URL}/api/v1/payment/create-checkout-session`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    user_id: user.id,
-                    email: user.email,
-                    plan: plan,
-                    billing_cycle: billingCycle
-                }),
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ user_id: user.id, email: user.email, plan, billing_cycle: billingCycle }),
             });
-
-            if (!res.ok) {
-                const errBody = await res.text();
-                throw new Error(`Backend Error (${res.status}): ${errBody}`);
-            }
-
+            if (!res.ok) throw new Error(`Backend Error (${res.status})`);
             const result = await res.json();
-            if (result.url) {
-                console.log("🔗 Redirecting to Stripe...");
-                window.location.href = result.url;
-            } else {
-                console.error("❌ Checkout Error (No URL):", result);
-                alert(`Failed to initiate checkout: ${result.detail || 'Service did not return a checkout URL'}`);
-            }
-        } catch (e: any) {
-            console.error("❌ Payment Initiation Failed:", e);
-            alert(`Error communicating with payment server: ${e.message || 'Check your internet connection or API settings'}`);
-        }
+            if (result.url) window.location.href = result.url;
+        } catch (e: any) { alert(`Error: ${e.message}`); }
     };
 
     const prices = {
@@ -74,171 +41,141 @@ export default function Pricing() {
     };
 
     return (
-        <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--accent-primary)]/30 selection:text-[var(--foreground)] transition-colors duration-500">
-            <Navbar />
-            <div className="fixed inset-0 scanline opacity-[0.03] dark:opacity-20 pointer-events-none z-50"></div>
+        <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] relative overflow-hidden transition-colors duration-500">
+            {/* Background Layers - Solarized Genesis */}
+            <div className="fixed inset-0 z-0">
+                <div className="absolute inset-0 bg-[var(--background)]" />
+                <div className="absolute inset-0 mesh-gradient opacity-20" />
+                <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-b from-[var(--accent-primary)]/10 via-[var(--accent-secondary)]/5 to-transparent blur-[120px] opacity-40"></div>
+                <div className="absolute inset-0 noise-overlay opacity-[0.03]"></div>
+            </div>
 
-            <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto relative z-10">
-                <div className="text-center mb-12 animate-in slide-in-from-bottom-5 fade-in duration-1000">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-[var(--foreground)]/5 border border-[var(--glass-border)] text-[10px] font-black uppercase tracking-[0.3em] text-[var(--accent-primary)] mb-8 mx-auto">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        Neural Upgrade Protocol
+            <Navbar />
+
+            <main className="pt-40 pb-32 px-6 max-w-7xl mx-auto relative z-10">
+                <div className="text-center mb-24 animate-in slide-in-from-top-4 fade-in duration-1000">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-500 text-[10px] font-black uppercase tracking-[0.4em] mb-8 border border-indigo-500/20">
+                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                        Value Accumulation Nodes
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-black mb-8 text-[var(--foreground)] tracking-tighter italic uppercase">
-                        Scale your impact <br />
-                        <span className="gradient-text">with God-Tier Design.</span>
+                    
+                    <h1 className="text-6xl md:text-7xl font-black mb-8 text-[var(--foreground)] tracking-tighter italic uppercase leading-[0.95]">
+                        Transform your brand <br />
+                        <span className="gradient-text">with Elite Design.</span>
                     </h1>
-                    <p className="text-lg text-[var(--foreground)]/80 font-bold max-w-2xl mx-auto mb-12 uppercase tracking-widest leading-relaxed">
-                        The ultimate AI Studio for precision marketing. <br />Initialize your protocol today.
+                    
+                    <p className="text-lg text-[var(--foreground)]/50 font-bold max-w-2xl mx-auto mb-16 italic leading-relaxed">
+                        Deploy the world's most advanced AI brochure engine. <br />
+                        High-fidelity synthesis for high-performance teams.
                     </p>
 
                     {/* Billing Toggle */}
-                    <div className="flex items-center justify-center gap-6 mb-20 p-2 bg-[var(--foreground)]/5 border border-[var(--glass-border)] rounded-2xl w-fit mx-auto">
+                    <div className="flex items-center justify-center gap-4 mb-20 p-1.5 bg-[var(--foreground)]/[0.03] border border-[var(--glass-border)] rounded-2xl w-fit mx-auto backdrop-blur-xl">
                         <button
                             onClick={() => setBillingCycle('monthly')}
-                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${billingCycle === 'monthly' ? 'bg-[var(--foreground)] text-[var(--background)] shadow-lg' : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]/80'}`}
+                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${billingCycle === 'monthly' ? 'bg-[var(--foreground)] text-[var(--background)] shadow-xl scale-[1.02]' : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]/60'}`}
                         >
                             Monthly Sync
                         </button>
                         <button
                             onClick={() => setBillingCycle('yearly')}
-                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${billingCycle === 'yearly' ? 'bg-[var(--accent-secondary)] text-white shadow-lg' : 'text-[var(--foreground)]/80 hover:text-[var(--foreground)]/80'}`}
+                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${billingCycle === 'yearly' ? 'bg-[var(--accent-secondary)] text-white shadow-xl scale-[1.02]' : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)]/60'}`}
                         >
-                            Annual Sync <span className="ml-2 opacity-60">(-20%)</span>
+                            Annual Matrix <span className="ml-2 opacity-60">(-20%)</span>
                         </button>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto mb-32">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto mb-40">
                     {[
                         {
-                            name: 'Starter',
-                            price: prices.starter,
-                            features: [
-                                '15 Neural Syncs',
-                                'Leads Vault Basic',
-                                'Neural SEO Meta',
-                                'Modern Themes',
-                                'Standard Export'
-                            ],
-                            color: 'cyan',
-                            border: 'border-white/10'
+                            name: 'Starter', price: prices.starter, color: 'indigo', border: 'border-[var(--glass-border)]',
+                            features: ['50 Brochure Generations', 'Lead Management Basic', 'SEO Meta Optimization', 'Professional Themes', 'High-Res Export']
                         },
                         {
-                            name: 'Professional',
-                            price: prices.professional,
-                            features: [
-                                '60 Neural Syncs',
-                                'Studio Insights (Analytics)',
-                                'A/B Testing Protocol',
-                                'Live Collaboration (2 Nodes)',
-                                'Precision Refiner'
-                            ],
-                            color: 'fuchsia',
-                            border: 'border-fuchsia-500/50',
-                            popular: true
+                            name: 'Professional', price: prices.professional, color: 'blue', border: 'border-blue-500/30', popular: true,
+                            features: ['150 Brochure Generations', 'Analytics Dashboard', 'A/B Testing Integration', 'Team Collaboration', 'Precision Content Refiner']
                         },
                         {
-                            name: 'Enterprise',
-                            price: prices.enterprise,
-                            features: [
-                                '250 Neural Syncs',
-                                'Autonomous Retargeting',
-                                'Live Collaboration (Unlimited)',
-                                'Neural Follow-up Sync',
-                                'Brand Vault Synchronization'
-                            ],
-                            color: 'amber',
-                            border: 'border-white/10'
+                            name: 'Enterprise', price: prices.enterprise, color: 'cyan', border: 'border-[var(--glass-border)]',
+                            features: ['300 Brochure Generations', 'Automated Follow-ups', 'Unlimited Team Members', 'Advanced Reporting', 'Brand Asset Management']
                         },
                         {
-                            name: 'Ultimate',
-                            price: 'Custom',
-                            features: [
-                                'Unlimited Neural Syncs',
-                                'White-Label Protocol',
-                                'SSO / Enterprise Sync',
-                                'Custom Model Tuning',
-                                'Executive Concierge'
-                            ],
-                            color: 'white',
-                            border: 'border-white/20'
+                            name: 'Ultimate', price: 'Custom', color: 'slate', border: 'border-[var(--glass-border)]',
+                            features: ['Unlimited Generations', 'White-Label Branding', 'SSO Security', 'Custom AI Models', 'Dedicated Manager']
                         }
                     ].map((plan, i) => (
-                        <div key={i} className={`premium-card p-10 flex flex-col relative group overflow-hidden ${plan.border} ${plan.popular ? 'scale-105 shadow-[0_0_50px_rgba(255,0,255,0.1)]' : ''}`}>
+                        <div key={i} className={`premium-card p-10 flex flex-col relative group transition-all duration-500 ${plan.border} ${plan.popular ? 'bg-[var(--foreground)]/[0.01] ring-1 ring-blue-500/20' : 'bg-[var(--card-bg)]'}`}>
                             {plan.popular && (
-                                <div className="absolute top-0 right-0 bg-fuchsia-500 text-white text-[8px] font-black px-4 py-1.5 uppercase tracking-widest">
-                                    Status: Optimal
+                                <div className="absolute top-0 right-10 bg-blue-500 text-white text-[8px] font-extrabold px-4 py-1.5 rounded-b-xl uppercase tracking-widest shadow-lg">
+                                    Recommended
                                 </div>
                             )}
-                            <div className="mb-8">
-                                <h3 className={`text-[10px] font-black uppercase tracking-[0.3em] mb-4 ${plan.color === 'cyan' ? 'text-[var(--accent-primary)]' : plan.color === 'fuchsia' ? 'text-[var(--accent-secondary)]' : plan.color === 'amber' ? 'text-[var(--accent-tertiary)]' : 'text-[var(--foreground)]'}`}>
-                                    {plan.name}
+                            <div className="mb-10">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-4 text-[var(--foreground)]/40 italic">
+                                    {plan.name} Tier
                                 </h3>
                                 <div className="flex items-baseline gap-2 text-[var(--foreground)]">
-                                    <span className="text-5xl font-black italic tracking-tighter">{typeof plan.price === 'number' ? `$${plan.price}` : plan.price}</span>
-                                    {typeof plan.price === 'number' && <span className="text-[var(--foreground)]/80 text-[10px] font-black uppercase tracking-widest">/sync cycle</span>}
+                                    <span className="text-5xl font-black italic tracking-tighter uppercase">{typeof plan.price === 'number' ? `$${plan.price}` : plan.price}</span>
+                                    {typeof plan.price === 'number' && <span className="text-[var(--foreground)]/40 text-[10px] font-black uppercase tracking-widest">/sync</span>}
                                 </div>
                             </div>
 
-                            <ul className="flex-1 space-y-5 mb-10">
+                            <ul className="flex-1 space-y-5 mb-12">
                                 {plan.features.map((feat, fi) => (
-                                    <li key={fi} className="flex items-center gap-3 text-[var(--foreground)]/80 text-xs font-bold uppercase tracking-wide">
-                                        <div className={`w-1.5 h-1.5 rounded-full ${plan.color === 'cyan' ? 'bg-[var(--accent-primary)]' : plan.color === 'fuchsia' ? 'bg-[var(--accent-secondary)]' : plan.color === 'amber' ? 'bg-[var(--accent-tertiary)]' : 'bg-[var(--foreground)]'}`} />
+                                    <li key={fi} className="flex items-start gap-3 text-[var(--foreground)]/60 text-[11px] font-bold uppercase tracking-wider leading-tight">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500/40 mt-1 shrink-0" />
                                         {feat}
                                     </li>
                                 ))}
                             </ul>
 
-                            {plan.name === 'Ultimate' ? (
-                                <Link href="/enterprise" className="w-full py-4 text-center bg-[var(--foreground)] text-[var(--background)] font-black text-[10px] uppercase tracking-[0.2em] rounded-xl hover:scale-105 transition-all">
-                                    Contact Intake
-                                </Link>
-                            ) : (
-                                <button
-                                    onClick={() => handleUpgrade(plan.name.toLowerCase())}
-                                    className={`w-full py-4 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl transition-all hover:scale-105 active:scale-95 ${plan.popular ? 'bg-[var(--accent-secondary)] text-white shadow-lg' : 'bg-[var(--foreground)] text-[var(--background)] shadow-lg'}`}
-                                >
-                                    Initialize Protocol
-                                </button>
-                            )}
+                            <button
+                                onClick={() => plan.name === 'Ultimate' ? window.location.href='/enterprise' : handleUpgrade(plan.name.toLowerCase())}
+                                className={`w-full py-5 font-black text-[10px] uppercase tracking-[0.3em] rounded-2xl transition-all hover:scale-[1.02] active:scale-95 shadow-xl ${plan.popular ? 'bg-blue-600 text-white border-b-4 border-blue-800' : 'bg-[var(--foreground)] text-[var(--background)] border-b-4 border-[var(--background)]/20'}`}
+                            >
+                                {plan.name === 'Ultimate' ? 'Initialize Contact' : 'Activate Node'}
+                            </button>
                         </div>
                     ))}
                 </div>
 
-                {/* System FAQ */}
-                <div className="max-w-4xl mx-auto mb-32 premium-card p-16 border-[var(--glass-border)] glass relative overflow-hidden transition-colors duration-500">
-                    <div className="absolute inset-0 scanline opacity-5 pointer-events-none"></div>
-                    <h2 className="text-3xl font-black text-[var(--foreground)] mb-16 text-center italic tracking-tighter uppercase">Protocol Diagnostics</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        {[
-                            { q: "What are Neural Syncs?", a: "Each sync facilitates one full-spectrum AI brochure generation, including SEO metadata, OpenGraph tags, and persistent storage in your Enterprise Suite." },
-                            { q: "What is the Leads Vault?", a: "A centralized node for capturing and managing prospects directly from your brochure assets. Professional and Enterprise tiers include advanced CSV exports and AI-generated follow-up sequences." },
-                            { q: "Is Studio Insights included?", a: "Affirmative. Real-time engagement analytics and Protocol A/B variant testing are active on all Professional and Enterprise operational nodes." },
-                            { q: "Does it support team collaboration?", a: "The Enterprise Matrix allows for shared organization-level ownership of brochures, brand assets, and leads, powered by the Clerk Enterprise infrastructure." }
-                        ].map((faq, i) => (
-                            <div key={i}>
-                                <h3 className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-[0.2em] mb-4">{faq.q}</h3>
-                                <p className="text-[var(--foreground)]/80 text-xs font-bold leading-relaxed uppercase tracking-widest">{faq.a}</p>
-                            </div>
-                        ))}
+                {/* FAQ Section with Premium Styling */}
+                <div className="max-w-4xl mx-auto mb-40 premium-card p-20 border-[var(--glass-border)] bg-[var(--foreground)]/[0.01] relative overflow-hidden group">
+                    <div className="absolute inset-0 noise-overlay opacity-[0.02]"></div>
+                    <div className="relative z-10">
+                        <h2 className="text-4xl font-black text-[var(--foreground)] mb-20 text-center italic tracking-tighter uppercase">Query Intelligence</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                            {[
+                                { q: "Brochure Generations?", a: "Each generation allows you to synthesize one multi-fold brochure from a single URL node." },
+                                { q: "Lead Processing?", a: "Centralized matrix for capturing prospects directly from your brochure assets." },
+                                { q: "Analytics Sync?", a: "Real-time engagement telemetry and A/B variant testing active in mid-to-high tiers." },
+                                { q: "Team Scaling?", a: "Multi-user organizations with shared assets and lead data sync capabilities." }
+                            ].map((faq, i) => (
+                                <div key={i} className="space-y-4">
+                                    <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] italic">{faq.q}</h3>
+                                    <p className="text-[var(--foreground)]/50 text-xs font-bold leading-relaxed uppercase tracking-widest">{faq.a}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Final Protocol CTA */}
-                <div className="max-w-5xl mx-auto p-20 premium-card bg-gradient-to-br from-[var(--background)] via-[var(--accent-secondary)]/5 to-[var(--background)] border-[var(--accent-secondary)]/20 text-center relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-secondary)]/10 rounded-full blur-[150px] -mr-32 -mt-32"></div>
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--accent-primary)]/10 rounded-full blur-[150px] -ml-32 -mb-32"></div>
+                {/* Final CTA */}
+                <div className="max-w-5xl mx-auto p-24 premium-card bg-gradient-to-br from-[var(--accent-primary)]/10 via-transparent to-[var(--accent-secondary)]/10 border-[var(--glass-border)] text-center relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] -mr-64 -mt-64 group-hover:bg-blue-500/20 transition-all duration-1000"></div>
+                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] -ml-64 -mb-64 group-hover:bg-indigo-500/20 transition-all duration-1000"></div>
 
-                    <h2 className="text-4xl md:text-7xl font-black text-[var(--foreground)] mb-12 relative z-10 italic tracking-tighter uppercase">
-                        Master the matrix. <br /> Initialize BrochureGen.
+                    <h2 className="text-4xl md:text-6xl font-black text-[var(--foreground)] mb-12 relative z-10 italic tracking-tighter uppercase leading-tight">
+                        Ready to scale <br /> <span className="gradient-text">your operations?</span>
                     </h2>
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-8 relative z-10">
-                        <Link href="/signup" className="px-16 py-6 bg-[var(--foreground)] text-[var(--background)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all">
-                            SYNC NOW
+                    
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 relative z-10">
+                        <Link href="/signup" className="w-full md:w-auto px-16 py-6 bg-[var(--foreground)] text-[var(--background)] font-black text-[10px] uppercase tracking-[0.4em] rounded-[2rem] shadow-2xl hover:scale-105 active:scale-95 transition-all outline outline-offset-4 outline-transparent hover:outline-[var(--foreground)]/20">
+                            Deploy Now
                         </Link>
-                        <Link href="/enterprise" className="px-16 py-6 bg-transparent border border-[var(--foreground)] text-[var(--foreground)] font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:bg-[var(--foreground)]/5 transition-all">
-                            ENTERPRISE INTAKE
+                        <Link href="/enterprise" className="w-full md:w-auto px-16 py-6 bg-white/10 backdrop-blur-3xl border border-[var(--foreground)]/10 text-[var(--foreground)] font-black text-[10px] uppercase tracking-[0.4em] rounded-[2rem] hover:bg-white/20 transition-all">
+                            Consultation
                         </Link>
                     </div>
                 </div>

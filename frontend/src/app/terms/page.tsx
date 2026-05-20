@@ -1,71 +1,155 @@
-"use client";
-import Navbar from "@/components/Navbar";
+import React from 'react';
+import Navbar from '@/components/Navbar';
+import { User, CreditCard, Lock, Power, Scale, Globe, RefreshCcw, ChevronRight, Gavel } from 'lucide-react';
 
 export default function TermsOfService() {
     return (
-        <div className="min-h-screen text-[var(--foreground)] font-sans text-sm md:text-base bg-transparent">
+        <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] relative overflow-hidden transition-colors duration-500">
+            {/* Background Layers */}
+            <div className="fixed inset-0 z-0">
+                <div className="absolute inset-0 bg-[var(--background)]" />
+                <div className="absolute inset-0 mesh-gradient opacity-20" />
+                <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-b from-[var(--accent-primary)]/10 via-[var(--accent-secondary)]/5 to-transparent blur-[120px] opacity-40"></div>
+                <div className="absolute inset-0 noise-overlay opacity-[0.03]"></div>
+            </div>
+
             <Navbar />
 
-            <main className="pt-32 pb-20 px-6 max-w-4xl mx-auto">
-                <header className="mb-12 border-b border-white/10 pb-12">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-400">Vault Node</span>
+            <main className="pt-32 pb-32 px-6 max-w-5xl mx-auto relative z-10">
+                {/* Header Section */}
+                <div className="text-center mb-20 animate-in fade-in slide-in-from-top-4 duration-700">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-500 text-[10px] font-bold mb-6 border border-indigo-500/20 tracking-widest uppercase">
+                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                        Usage Protocol Entity
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-4 text-white">Terms of Service</h1>
-                    <p className="text-white/40 font-bold uppercase tracking-[0.2em] text-[10px]">Last Sync: February 6, 2026</p>
-                </header>
+                    <h1 className="text-6xl md:text-7xl font-black tracking-tighter mb-6 italic uppercase">
+                        Terms of <span className="gradient-text">Service</span>
+                    </h1>
+                    <p className="text-[var(--foreground)]/60 max-w-2xl mx-auto text-lg leading-relaxed">
+                        Establishing the technical and legal framework for our partnership. Please review these operational parameters carefully.
+                    </p>
+                    <p className="text-[10px] font-bold text-[var(--foreground)]/40 uppercase tracking-[0.3em] mt-8">
+                        Last Sync: February 6, 2026
+                    </p>
+                </div>
 
-                <article className="prose prose-invert max-w-none text-white/60 space-y-12">
-                    <section className="p-8 bg-white/5 border border-white/10 rounded-[2rem] backdrop-blur-xl">
-                        <p className="text-sm leading-relaxed">
-                            Please read these Terms of Service ("Terms") carefully before using the BrochureGen website operated by BrochureGen.
+                {/* Content Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    {/* 1. Accounts */}
+                    <div className="premium-card p-10 bg-[var(--card-bg)] border-[var(--glass-border)] group hover:border-indigo-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500 mb-8 border border-indigo-500/20 group-hover:scale-110 transition-transform">
+                            <User size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Account Integrity</h2>
+                        <div className="space-y-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <p>
+                                When you create an account, you must provide accurate, complete, and current information at all times.
+                            </p>
+                            <p>
+                                Failure to do so constitutes a breach of terms, which may result in immediate termination of your service node.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* 2. Subscriptions */}
+                    <div className="premium-card p-10 bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] group hover:border-blue-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 mb-8 border border-blue-500/20 group-hover:scale-110 transition-transform">
+                            <CreditCard size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Billing Matrix</h2>
+                        <div className="space-y-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <p>
+                                Service parts are billed on a recurring and periodic basis (monthly or annually).
+                            </p>
+                            <p>
+                                You will be billed in advance. You may cancel your subscription at any time to prevent further automatic renewals.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* 3. Intellectual Property */}
+                    <div className="premium-card p-10 bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] group hover:border-cyan-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 mb-8 border border-cyan-500/20 group-hover:scale-110 transition-transform">
+                            <Lock size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Asset Ownership</h2>
+                        <div className="space-y-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <p>
+                                The Service and its original content remain the exclusive property of BrochureGen.
+                            </p>
+                            <p className="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/10 italic text-xs">
+                                Note: Brochures generated using your own content remain your exclusive property.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* 4. Termination */}
+                    <div className="premium-card p-10 bg-[var(--card-bg)] border-[var(--glass-border)] group hover:border-rose-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-8 border border-rose-500/20 group-hover:scale-110 transition-transform">
+                            <Power size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Node Termination</h2>
+                        <div className="space-y-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            <p>
+                                We may terminate or suspend access immediately, without prior notice or liability, for any reason whatsoever.
+                            </p>
+                            <p>
+                                This includes, without limitation, a breach of the operational protocols defined in these Terms.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* 5. Limitation of Liability */}
+                    <div className="premium-card p-10 bg-[var(--card-bg)] border-[var(--glass-border)] group hover:border-amber-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-8 border border-amber-500/20 group-hover:scale-110 transition-transform">
+                            <Scale size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Liability Limits</h2>
+                        <p className="text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            In no event shall BrochureGen or its affiliates be liable for any indirect, incidental, or consequential damages resulting from your use of the service.
                         </p>
-                    </section>
-                    <p>
-                        Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users, and others who access or use the Service.
-                    </p>
+                    </div>
 
-                    <h3>1. Accounts</h3>
-                    <p>
-                        When you create an account with us, you must provide us information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.
-                    </p>
+                    {/* 6. Governing Law */}
+                    <div className="premium-card p-10 bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] group hover:border-teal-500/30 transition-all duration-500">
+                        <div className="w-14 h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-500 mb-8 border border-teal-500/20 group-hover:scale-110 transition-transform">
+                            <Globe size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-4 italic uppercase tracking-tighter">Governing Law</h2>
+                        <p className="text-[var(--foreground)]/70 text-sm leading-relaxed">
+                            These Terms shall be governed and construed in accordance with the laws of the United States, without regard to its conflict of law provisions.
+                        </p>
+                    </div>
 
-                    <h3>2. Subscription and Payments</h3>
-                    <p>
-                        Some parts of the Service are billed on a subscription basis ("Subscription(s)"). You will be billed in advance on a recurring and periodic basis (such as monthly or annually). You may cancel your Subscription at any time.
-                    </p>
+                    {/* 7. Changes */}
+                    <div className="premium-card p-10 bg-[var(--foreground)]/[0.02] border-[var(--glass-border)] group hover:border-fuchsia-500/30 transition-all duration-500 md:col-span-2">
+                        <div className="flex flex-col md:flex-row items-center gap-10">
+                            <div className="w-14 h-14 rounded-2xl bg-fuchsia-500/10 flex items-center justify-center text-fuchsia-500 border border-fuchsia-500/20 shrink-0">
+                                <RefreshCcw size={28} />
+                            </div>
+                            <div className="flex-1">
+                                <h2 className="text-2xl font-black mb-2 italic uppercase tracking-tighter">Protocol Revisions</h2>
+                                <p className="text-[var(--foreground)]/70 text-sm leading-relaxed">
+                                    We reserve the right to modify or replace these Terms at any time. For material revisions, we will attempt to provide 30 days notice prior to any new terms taking effect.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
-                    <h3>3. Intellectual Property</h3>
-                    <p>
-                        The Service and its original content, features, and functionality are and will remain the exclusive property of BrochureGen and its licensors. The brochures you generate using your own content remain your property.
-                    </p>
+                </div>
 
-                    <h3>4. Termination</h3>
-                    <p>
-                        We may terminate or suspend access to our Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.
+                {/* Footer Disclaimer */}
+                <div className="mt-20 text-center space-y-8">
+                    <div className="flex items-center justify-center gap-4">
+                        <div className="h-px w-20 bg-gradient-to-r from-transparent to-[var(--glass-border)]" />
+                        <Gavel className="text-[var(--foreground)]/20" size={20} />
+                        <div className="h-px w-20 bg-gradient-to-l from-transparent to-[var(--glass-border)]" />
+                    </div>
+                    <p className="text-[10px] font-bold text-[var(--foreground)]/30 uppercase tracking-[0.4em] max-w-xl mx-auto leading-relaxed">
+                        If you have any questions about these Terms, contact us at <strong className="text-[var(--foreground)]/50">support@brochuregen.com</strong>
                     </p>
-
-                    <h3>5. Limitation of Liability</h3>
-                    <p>
-                        In no event shall BrochureGen, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
-                    </p>
-
-                    <h3>6. Governing Law</h3>
-                    <p>
-                        These Terms shall be governed and construed in accordance with the laws of the United States, without regard to its conflict of law provisions.
-                    </p>
-
-                    <h3>7. Changes</h3>
-                    <p>
-                        We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will try to provide at least 30 days notice prior to any new terms taking effect.
-                    </p>
-
-                    <h3>8. Contact Us</h3>
-                    <p>
-                        If you have any questions about these Terms, please contact us at <a href="mailto:support@brochuregen.com">support@brochuregen.com</a>.
-                    </p>
-                </article>
+                </div>
             </main>
         </div>
     );

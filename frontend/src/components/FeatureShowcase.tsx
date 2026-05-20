@@ -46,7 +46,7 @@ export default function FeatureShowcase() {
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        className="text-4xl sm:text-5xl font-black text-[var(--foreground)] uppercase leading-tight tracking-tighter"
+                        className="text-4xl sm:text-5xl font-black text-[var(--foreground)] uppercase leading-tight tracking-tighter italic"
                     >
                         Built for <span className="text-[var(--accent-primary)]">Infinite</span> Scale
                     </motion.h2>
