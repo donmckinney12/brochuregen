@@ -45,11 +45,12 @@ print(f"CORS Authorized Origins: {allowed_origins}")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_origin_regex=r"https://.*brochuregen\.netlify\.app", # Resilient Netlify subdomain support
+    allow_origin_regex=r"https://.*brochuregen\.netlify\.app",  # Resilient Netlify subdomain support
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Diagnostic Middleware: Log Origin for production debugging
 @app.middleware("http")
@@ -57,12 +58,15 @@ async def log_origin(request: Request, call_next):
     origin = request.headers.get("origin")
     if origin:
         import re
-        is_netlify_subdomain = bool(re.match(r"https://.*brochuregen\.netlify\.app", origin))
+
+        is_netlify_subdomain = bool(
+            re.match(r"https://.*brochuregen\.netlify\.app", origin)
+        )
         if origin not in allowed_origins and not is_netlify_subdomain:
-             print(f"[CORS ALERT] Blocked request from unauthorized origin: {origin}")
+            print(f"[CORS ALERT] Blocked request from unauthorized origin: {origin}")
         else:
-             # Helpful for confirming it IS authorized
-             print(f"[CORS DEBUG] Authorized origin: {origin}")
+            # Helpful for confirming it IS authorized
+            print(f"[CORS DEBUG] Authorized origin: {origin}")
     return await call_next(request)
 
 
@@ -78,7 +82,9 @@ async def add_security_headers(request: Request, call_next):
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
-    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Strict-Transport-Security"] = (
+        "max-age=31536000; includeSubDomains"
+    )
 
     # Request timing
     response.headers["X-Process-Time"] = str(round(time.time() - start_time, 4))
@@ -89,26 +95,30 @@ async def add_security_headers(request: Request, call_next):
 # Include API Router
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Advance Brochure Generator API"}
+
 
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
 
+
 @app.on_event("startup")
 async def startup_event():
     # --- DB Schema Auto-Fix ---
     try:
-        from fix_prod_db import fix_db
+        from scripts.archive.fix_prod_db import fix_db
+
         fix_db()
         print("Production DB Schema Sync complete")
     except Exception as e:
         print(f"DB Schema Sync failed: {e}")
 
     print(f"{settings.PROJECT_NAME} Starting...")
-    db_host = settings.DATABASE_URL.split('@')[-1] if settings.DATABASE_URL else "None"
+    db_host = settings.DATABASE_URL.split("@")[-1] if settings.DATABASE_URL else "None"
     print(f"Database Host: {db_host}")
     if settings.PRICE_PRO_MONTHLY:
         print("Stripe Price IDs loaded")
@@ -117,4 +127,3 @@ async def startup_event():
     if HAS_SLOWAPI:
         print("Rate limiter active (60/min)")
     print("Security headers enabled")
-

@@ -195,7 +195,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const warmUpBackend = async () => {
         try {
             console.log("🔥 Refreshing backend connection...");
-            // Non-blocking ping to wake up Fly.io machine
             fetch(`${API_URL}/health`).catch(() => { });
         } catch (e) { }
     };
