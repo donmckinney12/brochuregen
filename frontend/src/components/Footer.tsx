@@ -64,7 +64,7 @@ export default function Footer() {
 
                     {/* Links Columns */}
                     {[
-                        { title: 'Product', links: [{ n: 'Pricing', h: '/pricing' }, { n: 'Reviews & Testimonials', h: '/wall-of-love' }, { n: 'Layout Templates', h: '/templates' }, { n: 'API & Docs', h: '/developers' }, { n: 'Help Center', h: '/faq' }] },
+                        { title: 'Product', links: [{ n: 'Pricing', h: '/pricing' }, { n: 'Layout Templates', h: '/templates' }, { n: 'API & Docs', h: '/developers' }, { n: 'Help Center', h: '/faq' }] },
                         { title: 'Company', links: [{ n: 'About', h: '/about' }, { n: 'Contact', h: '/contact' }, { n: 'Blog', h: '/blog' }, { n: 'Enterprise', h: '/enterprise' }] },
                         { title: 'Legal', links: [{ n: 'Privacy Policy', h: '/privacy' }, { n: 'Terms of Use', h: '/terms' }, { n: 'Refund Policy', h: '/refund-policy' }, { n: 'Referrals', h: '/referrals' }] }
                     ].map((col) => (

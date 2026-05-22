@@ -53,12 +53,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.7,
         },
         {
-            url: `${baseUrl}/wall-of-love`,
-            lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.7,
-        },
-        {
             url: `${baseUrl}/developers`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
