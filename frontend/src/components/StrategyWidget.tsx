@@ -23,7 +23,7 @@ interface StrategyData {
 }
 
 interface StrategyWidgetProps {
-    brochureContent: any;
+    brochureContent: Record<string, any>;
 }
 
 export default function StrategyWidget({ brochureContent }: StrategyWidgetProps) {
@@ -50,7 +50,7 @@ export default function StrategyWidget({ brochureContent }: StrategyWidgetProps)
             
             const result = await res.json();
             setStrategy(result.strategy);
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             setError(err.message);
         } finally {
             setLoading(false);

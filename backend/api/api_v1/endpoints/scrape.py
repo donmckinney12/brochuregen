@@ -109,3 +109,30 @@ async def extract_voice(request: VoiceExtractRequest, db: Session = Depends(get_
         return voice_res
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/demo-scrape")
+async def scrape_demo_url(request: ScrapeRequest):
+    try:
+        from services.scraper import scrape_website
+        result = await scrape_website(request.url)
+        if "error" in result:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+        # Limit text length to 3000 chars for the public demo to save AI compute costs
+        scraped_text = result.get("text", "")[:3000]
+        
+        # Generate AI content
+        ai_content = await ai_service.generate_brochure_content(
+            scraped_text, 
+            request.url, 
+            is_campaign=False,
+            brand_voice=None,
+            tone="professional",
+            layout_theme="modern"
+        )
+        result["ai_content"] = ai_content
+        result["is_campaign"] = False
+        
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

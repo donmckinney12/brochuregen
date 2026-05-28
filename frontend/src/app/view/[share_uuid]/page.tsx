@@ -54,7 +54,7 @@ export default async function SharedBrochurePage({ params }: Props) {
 
     const data = await res.json();
 
-    const formattedData: any = {
+    const formattedData: Record<string, any> = {
         title: data.title,
         url: data.url,
         is_campaign: data.is_campaign,

@@ -30,7 +30,7 @@ export default function Pricing() {
             if (!res.ok) throw new Error(`Backend Error (${res.status})`);
             const result = await res.json();
             if (result.url) window.location.href = result.url;
-        } catch (e: any) { alert(`Error: ${e.message}`); }
+        } catch (e_unk: unknown) { const e = e_unk as Error; alert(`Error: ${e.message}`); }
     };
 
     const prices = {

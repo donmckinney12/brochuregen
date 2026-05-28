@@ -1,12 +1,11 @@
 "use client";
 import React from 'react';
-import SuiteLayout from '@/components/SuiteLayout';
 import InsightsDashboard from '@/components/InsightsDashboard';
 import TierGuard from '@/components/TierGuard';
 
 export default function InsightsPage() {
     return (
-        <SuiteLayout>
+        <>
             <TierGuard feature="ANALYTICS">
                 <div className="max-w-6xl mx-auto">
                     <div className="mb-12">
@@ -18,6 +17,6 @@ export default function InsightsPage() {
                     <InsightsDashboard />
                 </div>
             </TierGuard>
-        </SuiteLayout>
+        </>
     );
 }

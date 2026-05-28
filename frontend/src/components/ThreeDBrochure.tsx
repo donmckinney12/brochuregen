@@ -12,7 +12,7 @@ export default function ThreeDBrochure({
     activeVault,
     showHeatmap = false
 }: {
-    data: any,
+    data: Record<string, any>,
     onOpenRefiner?: (text: string, type: string, index?: number) => void,
     onSectionHover?: (sectionId: string, isEntering: boolean) => void,
     onUpdate?: (text: string, type: string, index?: number) => void,

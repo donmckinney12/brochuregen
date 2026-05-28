@@ -65,7 +65,7 @@ export default function AIRefinerModal({ isOpen, initialText, fieldType, onClose
                 setCurrentText(result.refined_text);
                 await refreshProfile(); // Update credit count
             }
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             setError(err.message);
         } finally {
             setIsRefining(false);

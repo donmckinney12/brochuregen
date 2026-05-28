@@ -40,7 +40,7 @@ export default function EnterprisePage() {
             } else {
                 throw new Error('Failed to submit inquiry');
             }
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             console.error(err);
             setStatus('idle');
             alert(`❌ [v28.1] Submission Failed: ${err.message || 'Connection Error'}\n\nCause: The frontend cannot reach the backend at ${API_URL}.\n\nFix: Ensure NEXT_PUBLIC_API_URL is set correctly in your Netlify dashboard.`);

@@ -14,7 +14,7 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
     const [variantData, setVariantData] = useState<{ variant_id: number; views: number }[]>([]);
     const [activities, setActivities] = useState<{ id: number; action: string; details: string; created_at: string }[]>([]);
     const [engagementData, setEngagementData] = useState<{ section_id: string; hover_count: number; total_hover_time: number }[]>([]);
-    const [feedback, setFeedback] = useState<{ id: number; text: string; section_id: string; created_at: string; brochure?: any }[]>([]);
+    const [feedback, setFeedback] = useState<{ id: number; text: string; section_id: string; created_at: string; brochure?: unknown }[]>([]);
     const [funnel, setFunnel] = useState<{ views: number; leads: number; feedback: number; view_to_lead_rate: number; lead_to_feedback_rate: number } | null>(null);
     const [topPerformers, setTopPerformers] = useState<{ id: number; title: string; share_uuid: string; views: number; leads: number }[]>([]);
 
@@ -29,7 +29,7 @@ export default function InsightsDashboard({ onOpenVault }: { onOpenVault?: () =>
                     const payload = await res.json();
                     setVariantData(payload.variant_performance || []);
                     const timeline = payload.timeline || [];
-                    const formatted = timeline.map((item: any) => ({
+                    const formatted = timeline.map((item: Record<string, any>) => ({
                         ...item,
                         date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                         views: item.views || 0,

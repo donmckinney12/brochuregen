@@ -82,7 +82,7 @@ export default function FeatureShowcase() {
             </div>
 
             {/* Professional Grid Background */}
-            <div className="absolute inset-0 -z-10 opacity-[0.03] [mask-image:radial-gradient(ellipse_at_center,black,transparent)] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat" />
+            <div className="absolute inset-0 -z-10 noise-overlay opacity-[0.03] [mask-image:radial-gradient(ellipse_at_center,black,transparent)]" />
         </section>
     );
 }

@@ -72,7 +72,7 @@ export default function Generator() {
                 throw new Error('No AI content generated');
             }
 
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             setError(err.message);
             setStep('input');
         }
@@ -122,7 +122,7 @@ export default function Generator() {
             await refreshProfile();
             setStep('success');
 
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             setError(err.message);
             setStep('preview'); // Go back to preview so they can try again
         }

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from 'react';
-import SuiteLayout from '@/components/SuiteLayout';
 import {
     Settings,
     Shield,
@@ -64,7 +63,7 @@ export default function SettingsPage() {
     };
 
     return (
-        <SuiteLayout>
+        <>
             <div className="max-w-[1600px] space-y-16 pb-24 relative px-6 md:px-16">
                 {/* Atmospheric Background Layers [v30.2] */}
                 <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
@@ -352,6 +351,6 @@ export default function SettingsPage() {
                     </div>
                 </div>
             </div>
-        </SuiteLayout>
+        </>
     );
 }

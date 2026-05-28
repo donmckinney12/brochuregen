@@ -4,11 +4,16 @@ import Link from "next/link";
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const [messages, setMessages] = useState<{ role: 'ai' | 'user'; text: string; link?: { url: string; label: string } }[]>([
         { role: 'ai', text: "Hi there! 👋 I'm the BrochureGen Assistant. How can I help you today?" }
     ]);
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -60,6 +65,8 @@ export default function ChatWidget() {
             setIsTyping(false);
         }, 1000);
     };
+
+    if (!mounted) return null;
 
     return (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">

@@ -65,7 +65,7 @@ export default function SocialEngagementKit({ posts, brochureId }: SocialEngagem
             if (!res.ok) throw new Error('Publishing failed');
 
             setPublishedIndices(prev => [...prev, index]);
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             alert(err.message);
         } finally {
             setPublishingIndex(null);

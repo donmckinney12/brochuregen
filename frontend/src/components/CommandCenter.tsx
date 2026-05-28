@@ -17,7 +17,7 @@ interface PulseItem {
     brochure_title: string;
     content: string;
     timestamp: string;
-    metadata: any;
+    metadata: Record<string, any>;
 }
 
 export default function CommandCenter() {

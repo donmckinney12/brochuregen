@@ -102,7 +102,7 @@ export default function GenerationStudio() {
         return () => socketRef.current?.close();
     }, [user?.org_id]);
 
-    const broadcastChange = (newData: any) => {
+    const broadcastChange = (newData: unknown) => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
             socketRef.current.send(JSON.stringify({
                 type: 'content_update',
@@ -147,7 +147,7 @@ export default function GenerationStudio() {
             setData(result);
             broadcastChange(result);
             setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: 'Generation complete', type: 'success' }]);
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             setError(err.message || 'Service communication failure');
             setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: 'Connection failed', type: 'warn' }]);
         } finally {
@@ -242,7 +242,7 @@ export default function GenerationStudio() {
             if (!res.ok) throw new Error(result.detail || 'Publishing failed');
             setData({ ...data, share_uuid: result.share_uuid, id: result.id });
             await refreshProfile();
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             alert(err.message);
         } finally {
             setIsLaunching(false);
@@ -266,7 +266,7 @@ export default function GenerationStudio() {
             } else {
                 throw new Error(result.detail || 'Publishing failed');
             }
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             setError(err.message);
             setSystemLogs(prev => [...prev.slice(-4), { id: Date.now(), msg: 'Storage connection lost', type: 'warn' }]);
         } finally {

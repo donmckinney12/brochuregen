@@ -15,7 +15,7 @@ export default async function EmbedBrochurePage({ params }: Props) {
 
     const data = await res.json();
 
-    const formattedData: any = {
+    const formattedData: Record<string, any> = {
         title: data.title,
         url: data.url,
         ai_content: JSON.parse(data.content),

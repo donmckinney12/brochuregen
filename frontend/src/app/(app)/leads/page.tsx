@@ -1,12 +1,11 @@
 "use client";
 import React from 'react';
-import SuiteLayout from '@/components/SuiteLayout';
 import LeadsVault from '@/components/LeadsVault';
 import TierGuard from '@/components/TierGuard';
 
 export default function LeadsPage() {
     return (
-        <SuiteLayout>
+        <>
             <TierGuard feature="LEADS">
                 <div className="max-w-6xl mx-auto">
                     <div className="mb-12">
@@ -18,6 +17,6 @@ export default function LeadsPage() {
                     <LeadsVault />
                 </div>
             </TierGuard>
-        </SuiteLayout>
+        </>
     );
 }

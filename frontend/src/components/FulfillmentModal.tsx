@@ -81,7 +81,7 @@ export default function FulfillmentModal({ isOpen, onClose, brochureId, brochure
             }
 
             setOrderSuccess(true);
-        } catch (err: any) {
+        } catch (err_unk: unknown) { const err = err_unk as Error;
             setError(err.message);
         } finally {
             setLoading(false);

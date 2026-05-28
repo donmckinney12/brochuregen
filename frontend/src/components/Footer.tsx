@@ -5,9 +5,17 @@ import Logo from './Logo';
 import { Globe, Users, Terminal, Mail, Shield, Zap, Sparkles, MessageSquare, ExternalLink } from 'lucide-react';
 import { API_URL } from '@/config';
 
+import { usePathname } from 'next/navigation';
+
 export default function Footer() {
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+    const pathname = usePathname();
+
+    const appRoutes = ['/dashboard', '/command', '/brand', '/templates', '/insights', '/leads', '/feedback', '/settings'];
+    if (appRoutes.some(route => pathname?.startsWith(route))) {
+        return null;
+    }
 
     const socialLinks = [
         { name: 'Website', icon: Globe, href: '#' },

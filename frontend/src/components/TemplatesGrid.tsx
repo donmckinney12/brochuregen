@@ -91,7 +91,7 @@ const templates = [
 ];
 
 interface TemplatesGridProps {
-    onSelect?: (template: any) => void;
+    onSelect?: (template: Record<string, any>) => void;
     suggestedTemplate?: string | null;
 }
 

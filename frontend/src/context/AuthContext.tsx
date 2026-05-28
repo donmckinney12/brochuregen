@@ -35,7 +35,7 @@ interface AuthContextType {
     currentPlan: Plan | null;
     hasFeature: (feature: keyof typeof FEATURE_GATES) => boolean;
     deductCredit: (type: 'generate' | 'refine') => Promise<{ success: boolean; error?: string }>;
-    getToken: (options?: any) => Promise<string | null>;
+    getToken: (options?: unknown) => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -176,7 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.error(`❌ Backend error (${response.status}):`, errDoc);
                 setSyncError(`Backend Error ${response.status}`);
             }
-        } catch (error: any) {
+        } catch (error_unk: unknown) { const error = error_unk as Error;
             setSyncError(error.message || "Connection Error");
             if (error.name === 'AbortError') {
                 console.error("❌ Profile fetch aborted due to timeout");

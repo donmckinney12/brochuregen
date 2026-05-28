@@ -113,7 +113,7 @@ export default function DeveloperPortal() {
             });
 
             if (res.ok) {
-                const newKey: any = await res.json();
+                const newKey: Record<string, any> = await res.json();
                 setKeys([...keys, newKey]);
                 setRecentlyCreatedKey({ id: newKey.id, secret: newKey.secret });
                 setShowNewKeyModal(false);

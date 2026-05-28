@@ -150,6 +150,22 @@ The engine uses **Playwright** with a headless-optimized profile to bypass basic
 
 ---
 
+## 6. Infrastructure & Deployment (Docker Ecosystem)
+
+BrochureGen is fully containerized across all three internal nodes, orchestrated by a unified `docker-compose.yml`.
+
+### The Containerized Stack
+- **`backend-go`**: Highly-optimized multi-stage Alpine build for rapid web scraping. Exposes `8080`.
+- **`backend` (Python)**: Playwright-ready image executing the heavy AI orchestrations. Connects to the Go node internally via `http://backend-go:8080`.
+- **`frontend` (Next.js)**: Runs in `node:20-alpine`, mapping local directories as volumes to preserve **Turbopack** and hot-reloading for local development.
+
+**Quickstart**:
+```bash
+docker-compose up --build
+```
+
+---
+
 <p align="center">
   <b>BrochureGen v5.0</b>: The Future of AI Marketing Materials.
 </p>

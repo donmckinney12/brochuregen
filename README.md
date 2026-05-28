@@ -14,7 +14,7 @@
 - [x] **v16.0** - Zenith State (Absolute God-Tier Finalization)
 - [x] **v17.0** - Master Protocol (The Final Ascension)
 - [x] **v18.0** - True Grand Finale (Total Platform Synthesis)
-- [x] **v21.0** - Resolution Protocol (Fly.io Enterprise Genesis)
+- [x] **v21.0** - Resolution Protocol (Containerized Enterprise Genesis)
 - [x] **v22.0** - Responsive Protocol (Multi-Device Design Mastery)
 - [x] **v23.0** - Fortification Protocol (Admin, Email, Templates, Analytics, Notifications)
 - [x] **v24.0** - Sentinel Protocol (Security, SEO, PWA, Webhooks, UI Polish)
@@ -93,9 +93,9 @@ The definitive final synthesis of BrochureGen. Project lockdown complete.
 
 The **Resolution Protocol** finalizes the backend infrastructure for enterprise stability:
 
--   **🚀 Fly.io Ascension**: Full migration to Fly.io for global edge distribution and low-latency synthesis.
+-   **🚀 Docker Ascension**: Full migration to containerized infrastructure for scalable distribution and low-latency synthesis.
 -   **🐋 Docker Containerization**: 100% containerized backend architecture for immutable deployments and elastic scaling.
--   **🔐 Secret Vaulting**: Enhanced environmental security synchronized via Fly.io secret management.
+-   **🔐 Secret Vaulting**: Enhanced environmental security synchronized via Docker secrets management.
 
 ---
 
@@ -170,7 +170,7 @@ Experience the application in two premium, "God-Tier" aesthetics:
 
 ### Backend (`/backend`)
 -   **API**: FastAPI (Python 3.12+)
--   **Infrastructure**: Docker + Fly.io (Enterprise Distributed)
+-   **Infrastructure**: Docker Compose (Enterprise Distributed)
 -   **Scraping**: Playwright (Neural Crawler)
 -   **AI**: OpenAI GPT-4o
 -   **Database**: SQLite -> PostgreSQL Ready
@@ -181,12 +181,20 @@ Experience the application in two premium, "God-Tier" aesthetics:
 ## 🏁 Getting Started
 
 ### 1. Prerequisites
--   Node.js 20+
--   Python 3.12+
+- Docker & Docker Compose
+- (Optional) Node.js 20+ and Python 3.12+ for manual dev environments
 
-### 2. Backend Setup
+### 2. Quickstart (Docker Compose)
+The easiest way to run the entire architecture (Go Backend, Python Backend, and Next.js Frontend) is using the unified Docker Compose file:
 
-#### Local Development
+```bash
+docker-compose up --build
+```
+*Note: This mounts your local `frontend` directory so Next.js Hot-Reloading and Turbopack remain active.*
+
+### 3. Manual Setup (Alternative)
+
+**Backend (Python)**:
 ```bash
 cd backend
 python -m venv .venv
@@ -196,17 +204,11 @@ playwright install chromium
 python run.py
 ```
 
-#### Containerized Deployment (Production)
-```bash
-docker build -t brochuregen-backend .
-docker run -p 8080:8080 brochuregen-backend
-```
-
-### 3. Frontend Setup
+**Frontend**:
 ```bash
 cd frontend
-npm install
-npm run dev
+npm install --legacy-peer-deps
+npm run dev --turbo
 ```
 
 ---

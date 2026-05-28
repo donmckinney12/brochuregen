@@ -77,8 +77,8 @@ export default function SuiteSidebar({ mobileOpen, onClose }: SuiteSidebarProps)
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    const unreadLeads = data.filter((p: any) => p.type === 'LEAD' && !p.metadata.is_read).length;
-                    const unreadFeedback = data.filter((p: any) => p.type === 'FEEDBACK' && !p.metadata.is_read).length;
+                    const unreadLeads = data.filter((p: Record<string, any>) => p.type === 'LEAD' && !p.metadata.is_read).length;
+                    const unreadFeedback = data.filter((p: Record<string, any>) => p.type === 'FEEDBACK' && !p.metadata.is_read).length;
                     setPulse({ unread_comments: unreadFeedback, unread_leads: unreadLeads, total_pulse: data.length });
                 }
             } catch (err) {

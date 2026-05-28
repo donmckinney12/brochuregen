@@ -16,8 +16,8 @@ interface Comment {
 
 interface SharedViewClientProps {
     shareUuid: string;
-    data: any;
-    activeVault: any;
+    data: Record<string, any>;
+    activeVault: Record<string, any>;
     initialComments: Comment[];
 }
 

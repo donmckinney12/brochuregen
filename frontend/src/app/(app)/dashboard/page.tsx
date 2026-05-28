@@ -2,7 +2,6 @@
 import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import SuiteLayout from '@/components/SuiteLayout';
 import GenerationStudio from '@/components/GenerationStudio';
 import { CheckCircle2, X } from 'lucide-react';
 
@@ -84,10 +83,10 @@ function DashboardContent() {
 
 export default function DashboardPage() {
     return (
-        <SuiteLayout>
+        <>
             <Suspense fallback={null}>
                 <DashboardContent />
             </Suspense>
-        </SuiteLayout>
+        </>
     );
 }

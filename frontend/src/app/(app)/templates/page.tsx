@@ -1,6 +1,5 @@
 "use client";
 import React from 'react';
-import SuiteLayout from '@/components/SuiteLayout';
 import TemplatesGrid from '@/components/TemplatesGrid';
 import { motion } from 'framer-motion';
 import { Rocket, Sparkles, Brain, Search, Loader2 } from 'lucide-react';
@@ -40,7 +39,7 @@ export default function TemplatesPage() {
     };
 
     return (
-        <SuiteLayout>
+        <>
             <div className="max-w-[1600px] space-y-24 py-24 px-6 md:px-16 relative overflow-hidden">
                 {/* Atmospheric Background Layers [v30.2] */}
                 <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
@@ -149,6 +148,6 @@ export default function TemplatesPage() {
                     </div>
                 </motion.div>
             </div>
-        </SuiteLayout>
+        </>
     );
 }

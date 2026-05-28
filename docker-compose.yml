@@ -1,4 +1,14 @@
 services:
+  backend-go:
+    build:
+      context: ./backend-go
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - brochuregen-network
+
   backend:
     build:
       context: ./backend
@@ -7,7 +17,14 @@ services:
       - "8002:8000"
     env_file:
       - ./backend/.env
+    environment:
+      # Tell Python to hit the internal Docker service name "backend-go"
+      - GO_BACKEND_URL=http://backend-go:8080
+    depends_on:
+      - backend-go
     restart: unless-stopped
+    networks:
+      - brochuregen-network
 
   frontend:
     image: node:20-alpine
@@ -15,13 +32,22 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - /app/.next
     ports:
       - "3001:3000"
     env_file:
       - ./frontend/.env.local
     environment:
+      # Browser needs to hit localhost since it runs on host machine, 
+      # but if SSR is used, Next.js internal calls can use http://backend:8000
       - NEXT_PUBLIC_API_URL=http://localhost:8002
-    command: sh -c "npm install --legacy-peer-deps && npm run dev"
+    command: sh -c "npm install --legacy-peer-deps && npm run dev --turbo"
     depends_on:
       - backend
     restart: unless-stopped
+    networks:
+      - brochuregen-network
+
+networks:
+  brochuregen-network:
+    driver: bridge

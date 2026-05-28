@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import LandingHero from '@/components/LandingHero';
+import ProductDemo from '@/components/ProductDemo';
 import FeatureShowcase from '@/components/FeatureShowcase';
 import EnterpriseFeatures from '@/components/EnterpriseFeatures';
 import HowItWorks from '@/components/HowItWorks';
@@ -16,6 +17,9 @@ export default function Home() {
 
       {/* Hero Layer */}
       <LandingHero />
+      
+      {/* Live Demo Simulation */}
+      <ProductDemo />
 
       {/* Content Layers */}
       <div className="space-y-32">
