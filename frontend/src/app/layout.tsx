@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
-import Footer from "@/components/Footer";
+import ConditionalFooter from "@/components/ConditionalFooter";
 import { AuthProvider } from '@/context/AuthContext';
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
 
@@ -111,7 +111,7 @@ export default function RootLayout({
           <ThemeProvider>
             <AuthProvider>
               {children}
-              <Footer />
+              <ConditionalFooter />
             </AuthProvider>
           </ThemeProvider>
         </ClerkProvider>
