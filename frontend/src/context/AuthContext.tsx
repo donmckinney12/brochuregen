@@ -35,7 +35,7 @@ interface AuthContextType {
     currentPlan: Plan | null;
     hasFeature: (feature: keyof typeof FEATURE_GATES) => boolean;
     deductCredit: (type: 'generate' | 'refine') => Promise<{ success: boolean; error?: string }>;
-    getToken: (options?: unknown) => Promise<string | null>;
+    getToken: (options?: any) => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
