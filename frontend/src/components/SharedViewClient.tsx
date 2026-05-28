@@ -17,7 +17,12 @@ interface Comment {
 interface SharedViewClientProps {
     shareUuid: string;
     data: Record<string, any>;
-    activeVault: Record<string, any> | null;
+    activeVault: {
+        primaryColor: string;
+        secondaryColor: string;
+        font: string;
+        logoUrl?: string;
+    } | null;
     initialComments: Comment[];
 }
 
