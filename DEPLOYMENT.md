@@ -116,3 +116,21 @@ Run Caddy to automatically provision a Let's Encrypt SSL certificate and route t
 - [ ] Ensure `sql_app.db` is correctly mounted as a volume so data is not lost when the Python container restarts.
 - [ ] Ensure your CORS settings in FastAPI (`backend/main.py` or similar) are updated to only accept requests from your exact Netlify domain, rather than `*` or `localhost`.
 - [ ] Hide the Go backend behind the Docker internal network (do not map port 8080 to the host). It should only be accessible internally by the Python service.
+
+---
+
+## 🤝 External Services Handoff
+
+When transferring ownership of the project to a buyer (e.g., via Acquire.com), it is critical to properly hand off third-party services so that you are no longer billed for their usage.
+
+### 🔄 Services to Transfer Directly
+These are accounts/projects where you can transfer ownership directly to the buyer's email address:
+- **Netlify Project**: Transfer the site to the buyer's Netlify team.
+- **Domain Name (DNS)**: Push the domain via your registrar (Namecheap, GoDaddy, Route53, etc.) to the buyer's account.
+- **VPS/Hosting**: If using DigitalOcean, you can transfer the Droplet/Project. Otherwise, the buyer must provision their own server and you deploy the code there.
+
+### 🔑 Keys the Buyer Must Generate Themselves
+**DO NOT** leave your personal API keys in the production `.env` files. The buyer must create their own accounts for the following services and provide you the keys to insert, or insert them themselves:
+- **OpenAI**: Requires their own billing account for AI generations.
+- **Clerk**: Requires them to set up their own Clerk application (they will need to update `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY`).
+- **Stripe**: Requires them to set up their own Stripe account and webhooks to receive subscription payments.
