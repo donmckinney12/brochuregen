@@ -116,7 +116,7 @@ export default function Pricing() {
                                     {plan.name} Tier
                                 </h3>
                                 <div className="flex items-baseline gap-2 text-[var(--foreground)]">
-                                    <span className="text-5xl font-black italic tracking-tighter uppercase">{typeof plan.price === 'number' ? `$${plan.price}` : plan.price}</span>
+                                    <span className={`text-5xl font-black italic tracking-tighter uppercase ${typeof plan.price === 'string' ? 'pr-4 py-1' : ''}`}>{typeof plan.price === 'number' ? `$${plan.price}` : plan.price}</span>
                                     {typeof plan.price === 'number' && <span className="text-[var(--foreground)]/40 text-[10px] font-black uppercase tracking-widest">/sync</span>}
                                 </div>
                             </div>
